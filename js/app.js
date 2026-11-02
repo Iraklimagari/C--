@@ -478,7 +478,7 @@ var NAHLIO = (function () {
   }
 
   /* --- Hero: Stationen in den Geraeten ------------------------------------------------------- */
-  var heroEl = document.querySelector(".hero");
+  var heroEl = document.querySelector(".hx, .hero");
   var arts = [], artLens = [];
   function heroPoints() {
     arts = Array.prototype.slice.call(document.querySelectorAll(".hero .art"))
@@ -626,9 +626,12 @@ var NAHLIO = (function () {
       h = Math.atan2(pe.y - pp.y, pe.x - pp.x) / rad;
       heroEndY = Math.max(lv.y, heroBottom - vh * 0.02);
     } else {
-      x = W * 0.8; y = -vh * 0.15; h = 112;
+      /* Vollbild-Hero (hero.js): Dort zeichnet sich die Schleifenlinie am unteren Rand und verlaesst das Bild
+         rechts. Die Seitenlinie nimmt sie genau dort auf (rechts, knapp ueber der Hero-Unterkante) und schwingt
+         beim Scrollen nach links unten in den naechsten Abschnitt. */
+      x = W * 1.02; y = heroBottom - vh * 0.1; h = 150;
       piece();                                    /* leeres Hero-Stueck: Stueck 0 ist immer der Hero */
-      heroEndY = 0;
+      heroEndY = heroBottom;
     }
 
     /* Danach (Wunsch 27.10., Vorbild: riesige, weiche Linie): wenige, sehr grosse Boegen von Seite zu Seite; die

@@ -1,0 +1,2 @@
+Inter, Google Fonts (rsms/inter). Variable 100-900, Subsets latin und latin-ext.
+License: SIL Open Font License 1.1, siehe Inter-OFL.txt

@@ -1,0 +1,327 @@
+/* ==========================================================================
+   NAHLIO — Auffrischung (Hero im Vollbild, Archivo, Schleifenlinie)
+   Wird nach styles.css geladen. Eigene Klassen (.hx*), damit die alten
+   Hero-Regeln aus styles.css nicht greifen. Bilder: img/hero/*-1920.webp
+   (in Figma erzeugt, Datei "NAHLIO — Hero & Leistungen 1920x1080").
+   ========================================================================== */
+
+/* --- Schrift: Archivo fuer grosse Ueberschriften (lag bereits in fonts/) --- */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/archivo-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+                 U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/archivo-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+                 U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --font-display: "Archivo", "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  /* staerkere Kurven (Emil Kowalski): Bewegung auf dem Bildschirm / Eintritt */
+  --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-enter: cubic-bezier(0.23, 1, 0.32, 1);
+  --hx-switch: 1100ms;           /* Bildwechsel (Marketing, darf laenger sein) */
+}
+
+/* Grosse Ueberschriften der ganzen Seite in Archivo: kraeftiger, enger */
+h1, h2,
+.t-h2, .blick__title, .uebergang__title, .sc__intro-title, .plans__title, .process__title,
+.faq-sec__title, .cta__title, .customer-path__title, .legal h1, .legal h2 {
+  font-family: var(--font-display);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.hx {
+  position: relative;
+  isolation: isolate;
+  height: 100vh;
+  height: 100svh;
+  min-height: 36rem;
+  max-height: 72rem;
+  margin-top: calc(-1 * var(--nav-h));     /* liegt unter der (transparenten) Navigation */
+  overflow: hidden;
+  color: var(--white);
+  background: var(--ink);
+  scroll-margin-top: 0;
+}
+
+/* --- Bilder ----------------------------------------------------------------- */
+.hx__media { position: absolute; inset: 0; z-index: 0; will-change: transform; }
+.hx__slide {
+  position: absolute; inset: 0; margin: 0;
+  opacity: 0;
+  transform: translate3d(4%, 0, 0);
+  transition: opacity var(--hx-switch) var(--ease-move), transform var(--hx-switch) var(--ease-move);
+}
+.hx__slide.is-active { opacity: 1; transform: translate3d(0, 0, 0); z-index: 1; }
+.hx__slide.is-leaving { opacity: 0; transform: translate3d(-4%, 0, 0); z-index: 0; }
+html:not(.js) .hx__slide:first-child { opacity: 1; transform: none; }
+
+.hx__img {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover; object-position: var(--pos, 60% 50%);
+  transform-origin: var(--origin, 60% 50%);
+}
+/* Jedes Bild bewegt sich (Ken Burns): langsam, gleichmaessig, je Bild andere Richtung */
+.hx__slide:nth-child(1) { --origin: 70% 60%; --kx: -1.6%; --ky: -0.8%; }
+.hx__slide:nth-child(2) { --origin: 30% 40%; --kx: 1.4%;  --ky: 0.6%; }
+.hx__slide:nth-child(3) { --origin: 80% 50%; --kx: -1.8%; --ky: 0.4%; }
+.hx__slide:nth-child(4) { --origin: 60% 70%; --kx: 1.2%;  --ky: -1%; }
+.hx__slide:nth-child(5) { --origin: 75% 35%; --kx: -1.2%; --ky: 1%; }
+.hx__slide:nth-child(6) { --origin: 45% 55%; --kx: 1.6%;  --ky: -0.6%; }
+@keyframes hx-drift {
+  from { transform: scale(1.12) translate3d(0, 0, 0); }
+  to   { transform: scale(1.02) translate3d(var(--kx), var(--ky), 0); }
+}
+html.js .hx__slide.is-active .hx__img,
+html.js .hx__slide.is-leaving .hx__img { animation: hx-drift 8.4s linear both; }
+.hx.is-paused .hx__img { animation-play-state: paused; }
+
+/* Abdunklung nur unter Text und Linie (die einzige Verlaufsflaeche, als Lesehilfe) */
+.hx__scrim {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    linear-gradient(115deg, rgb(11 17 20 / 0.86) 0%, rgb(11 17 20 / 0.62) 32%, rgb(11 17 20 / 0.12) 62%, rgb(11 17 20 / 0) 78%),
+    linear-gradient(0deg, rgb(11 17 20 / 0.7) 0%, rgb(11 17 20 / 0) 34%);
+}
+
+/* --- Text oben links --------------------------------------------------------- */
+.hx__copy {
+  position: absolute; z-index: 3;
+  top: calc(var(--nav-h) + clamp(1.75rem, 7vh, 6rem));
+  left: var(--gutter); right: var(--gutter);
+  max-width: 66rem;
+  will-change: transform, opacity;
+}
+.hx__eyebrow {
+  margin: 0 0 clamp(1rem, 2.4vh, 1.75rem);
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: var(--tr-label);
+  color: var(--aqua);
+}
+.hx__eyebrow::before {
+  content: ""; display: inline-block; width: 0.55em; height: 0.55em; margin-right: 0.7em;
+  border-radius: 50%; background: var(--brand); vertical-align: 0.06em;
+}
+.hx__title {
+  margin: 0;
+  max-width: 12em;
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: clamp(2.5rem, min(1.1rem + 4.6vw, 8.4vh), 6.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.024em;
+  color: var(--white);
+  text-wrap: balance;
+}
+.hx__hl { color: var(--brand); }
+.hx__sub {
+  margin: clamp(1.25rem, 3vh, 2rem) 0 0;
+  max-width: 34em;
+  font-size: clamp(1.05rem, 0.92rem + 0.5vw, 1.45rem);
+  line-height: 1.5;
+  color: var(--mist);
+  text-wrap: pretty;
+}
+.hx__actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 2rem;
+  margin-top: clamp(1.5rem, 4vh, 2.75rem);
+}
+.hx .hx__cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 3.5rem; padding: 0 2rem;
+  border-radius: var(--r-pill);
+  background: var(--brand); color: var(--ink);
+  font-weight: 600; font-size: 1.0625rem; text-decoration: none;
+  transition: transform 160ms var(--ease-enter), background-color 200ms ease;
+}
+.hx .hx__cta:active { transform: scale(0.97); }
+.hx__more {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  min-height: 3rem;
+  color: var(--white); font-weight: 600; font-size: 1.0625rem; text-decoration: none;
+  transition: color 200ms ease;
+}
+.hx__more svg { width: 1.1em; height: 1.1em; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+                transition: transform 200ms var(--ease-enter); }
+.hx__more:active svg { transform: translateX(3px); }
+@media (hover: hover) and (pointer: fine) {
+  .hx .hx__cta:hover { background: #5FE3F2; }
+  .hx__more:hover { color: var(--aqua); }
+  .hx__more:hover svg { transform: translateX(4px); }
+}
+.hx a:focus-visible, .hx button:focus-visible { outline: 3px solid var(--aqua); outline-offset: 3px; }
+
+/* --- Linie unten -------------------------------------------------------------- */
+.hx__line {
+  position: absolute; z-index: 3; left: 0; right: 0;
+  bottom: clamp(3.5rem, 7vh, 5.5rem);
+  height: clamp(6rem, 11vw, 14rem);
+  pointer-events: none;
+  will-change: transform;
+}
+.hx__svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hx__track, .hx__draw { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.hx__track { stroke: var(--white); stroke-opacity: 0.2; stroke-width: 3; }
+.hx__draw { stroke: url(#hx-grad) var(--brand); stroke-width: 7; }
+@media (max-width: 47.99em) {
+  .hx__track { stroke-width: 4; }
+  .hx__draw { stroke-width: 8; }
+}
+
+/* --- Leiste: Bilder waehlen, anhalten ------------------------------------------- */
+.hx__bar {
+  position: absolute; z-index: 4; left: var(--gutter); right: var(--gutter);
+  bottom: clamp(1rem, 3vh, 2rem);
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.hx__tabs {
+  display: flex; gap: clamp(0.25rem, 1.4vw, 1.5rem);
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  min-width: 0;
+}
+.hx__tabs::-webkit-scrollbar { display: none; }
+.hx__tab {
+  flex: none;
+  min-height: 2.75rem; padding: 0 0.6rem;
+  border: 0; border-radius: var(--r-pill); background: transparent;
+  font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: rgb(232 242 244 / 0.72);
+  cursor: pointer;
+  transition: color 200ms ease, background-color 200ms ease, transform 160ms var(--ease-enter);
+}
+.hx__tab:active { transform: scale(0.97); }
+.hx__tab[aria-current="true"] { color: var(--ink); background: var(--aqua); }
+@media (hover: hover) and (pointer: fine) {
+  .hx__tab:not([aria-current="true"]):hover { color: var(--white); background: rgb(255 255 255 / 0.1); }
+}
+.hx__pause {
+  flex: none; display: grid; place-items: center;
+  width: 2.75rem; height: 2.75rem;
+  border: 0; border-radius: 50%;
+  background: rgb(255 255 255 / 0.12); color: var(--white);
+  cursor: pointer;
+  transition: background-color 200ms ease, transform 160ms var(--ease-enter);
+}
+.hx__pause:active { transform: scale(0.94); }
+@media (hover: hover) and (pointer: fine) { .hx__pause:hover { background: rgb(255 255 255 / 0.22); } }
+.hx__pause svg { width: 1.1rem; height: 1.1rem; }
+.hx__ic-pause { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; }
+.hx__ic-play { fill: currentColor; display: none; }
+.hx__pause[aria-pressed="true"] .hx__ic-pause { display: none; }
+.hx__pause[aria-pressed="true"] .hx__ic-play { display: block; }
+html:not(.js) .hx__bar { display: none; }
+
+/* --- Auftakt beim Laden: Text steigt gestaffelt auf ----------------------------- */
+@keyframes hx-rise { from { opacity: 0; transform: translate3d(0, 24px, 0); } to { opacity: 1; transform: none; } }
+html.js.motion-ok .hx__eyebrow,
+html.js.motion-ok .hx__title,
+html.js.motion-ok .hx__sub,
+html.js.motion-ok .hx__actions { animation: hx-rise 900ms var(--ease-enter) both; }
+html.js.motion-ok .hx__title   { animation-delay: 70ms; }
+html.js.motion-ok .hx__sub     { animation-delay: 150ms; }
+html.js.motion-ok .hx__actions { animation-delay: 230ms; }
+@keyframes hx-fade { from { opacity: 0; } to { opacity: 1; } }
+html.js.motion-ok .hx__bar { animation: hx-fade 700ms ease 400ms both; }
+
+/* --- Handy ------------------------------------------------------------------------ */
+@media (max-width: 47.99em) {
+  .hx { min-height: 40rem; }
+  .hx__scrim {
+    background:
+      linear-gradient(180deg, rgb(11 17 20 / 0.84) 0%, rgb(11 17 20 / 0.55) 48%, rgb(11 17 20 / 0.2) 70%, rgb(11 17 20 / 0.72) 100%);
+  }
+  .hx__line { bottom: 4.25rem; }
+  .hx__tab { font-size: var(--fs-xs); padding: 0 0.75rem; }
+}
+
+/* --- Weniger Bewegung: kein Zoom, kein Seitwaertsgleiten, nur Ueberblenden ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .hx__slide, .hx__slide.is-active, .hx__slide.is-leaving { transform: none; transition: opacity 400ms ease; }
+  html.js .hx__slide.is-active .hx__img, html.js .hx__slide.is-leaving .hx__img { animation: none; transform: none; }
+  .hx__media, .hx__line, .hx__copy { transform: none !important; opacity: 1 !important; }
+}
+
+/* ==========================================================================
+   Leistungen: grosses Bild der aktiven Leistung hinter der Karte
+   ========================================================================== */
+.zoom { isolation: isolate; }
+.zoom__bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.zoom__bg-pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
+.zoom__bg-pin::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgb(11 17 20 / 0.72) 0%, rgb(11 17 20 / 0.84) 55%, rgb(11 17 20 / 0.94) 100%);
+}
+.zoom__bg-img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transform: scale(1.06);
+  transition: opacity 900ms var(--ease-move), transform 2400ms var(--ease-enter);
+}
+.zoom__bg-img.is-active { opacity: 1; transform: scale(1); }
+@media (prefers-reduced-motion: reduce) {
+  .zoom__bg-img, .zoom__bg-img.is-active { transform: none; transition: opacity 300ms ease; }
+}
+
+/* ==========================================================================
+   Unterseiten (Impressum, Datenschutz): Kopf mit Bild und Schleifenlinie
+   Die Linie zeichnet sich beim Laden an und waechst dann mit dem Lesefortschritt.
+   ========================================================================== */
+.phead {
+  position: relative; isolation: isolate; overflow: hidden;
+  margin-top: calc(-1 * var(--nav-h));
+  min-height: clamp(22rem, 58vh, 36rem);
+  display: flex; flex-direction: column; justify-content: flex-start;
+  padding-top: calc(var(--nav-h) + clamp(2.5rem, 8vh, 6rem));
+  padding-bottom: clamp(7rem, 16vh, 11rem);
+  background: var(--ink); color: var(--white);
+}
+.phead__img {
+  position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%;
+  animation: hx-drift 14s linear both;
+}
+.phead::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(110deg, rgb(11 17 20 / 0.9) 0%, rgb(11 17 20 / 0.7) 45%, rgb(11 17 20 / 0.35) 100%);
+}
+.phead__label { margin: 0 0 1rem; font-size: var(--fs-xs); font-weight: 600; letter-spacing: var(--tr-label); color: var(--aqua); }
+.phead__label::before {
+  content: ""; display: inline-block; width: 0.55em; height: 0.55em; margin-right: 0.7em;
+  border-radius: 50%; background: var(--brand); vertical-align: 0.06em;
+}
+.phead__title {
+  margin: 0; max-width: 14em;
+  font-family: var(--font-display); font-weight: 650;
+  font-size: clamp(2.4rem, 1.2rem + 4.2vw, 5.6rem); line-height: 1; letter-spacing: -0.024em;
+  color: var(--white); overflow-wrap: anywhere; hyphens: auto;
+}
+.phead__line {
+  position: absolute; left: 0; right: 0; bottom: clamp(0.75rem, 3vh, 2rem);
+  height: clamp(5.5rem, 10vw, 12rem); pointer-events: none;
+}
+.phead__svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.phead__track, .phead__draw { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.phead__track { stroke: var(--white); stroke-opacity: 0.18; stroke-width: 3; }
+.phead__draw { stroke: url(#ph-grad) var(--brand); stroke-width: 7; }
+html.js.motion-ok .phead__label, html.js.motion-ok .phead__title { animation: hx-rise 900ms var(--ease-enter) both; }
+html.js.motion-ok .phead__title { animation-delay: 70ms; }
+
+/* Rechtstexte: ruhigere, gut lesbare Spalte mit Markenakzenten */
+.legal { max-width: 46rem; }
+.legal h2 { margin-top: 2.75rem; font-size: clamp(1.4rem, 1.1rem + 0.9vw, 2rem); line-height: 1.15; }
+.legal h3 { margin-top: 2rem; font-family: var(--font-display); font-weight: 650; letter-spacing: -0.01em; }
+.legal a { color: var(--brand-deep); text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--brand); }
+@media (hover: hover) and (pointer: fine) { .legal a:hover { color: var(--ink); } }
+@media (prefers-reduced-motion: reduce) { .phead__img { animation: none; } }

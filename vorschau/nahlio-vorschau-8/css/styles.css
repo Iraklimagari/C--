@@ -1,0 +1,2621 @@
+/* NAHLIO — erzeugt von build.py. Quellen liegen in static/css/. */
+
+/* ==== tokens.css ==== */
+/* ==========================================================================
+   NAHLIO — Design Tokens
+   Einzige Quelle fuer Farbe, Typografie, Raster und Bewegung.
+   Es gibt bewusst KEINE Farben ausserhalb der Markenpalette. Wo eine
+   Zwischenstufe noetig ist, entsteht sie ausschliesslich als Mischung oder
+   Transparenz zweier Palettenfarben (siehe --ink-70 / --mist-70).
+   ========================================================================== */
+
+:root {
+  /* --- Markenpalette (unveraenderlich) ------------------------------------ */
+  --brand:        #01ABC3;  /* Brand Turquoise  — grosse Akzente, Elemente auf Dunkel */
+  --brand-deep:   #007F91;  /* Deep Turquoise   — Links, Buttons, kleine Elemente auf Hell */
+  --ink:          #0B1114;  /* NAHLIO Ink       — Haupttext, sehr dunkle Flaechen */
+  --graphite:     #1B252A;  /* Graphite         — dunkle Flaechen, Navigation */
+  --slate:        #667A7A;  /* Slate Gray       — sekundaer, NUR mit geprueftem Kontrast */
+  --mist:         #E8F2F4;  /* Light Mist */
+  --aqua:         #D9F7FB;  /* Aqua Tint */
+  --soft:         #F7FAFA;  /* Soft White */
+  --wa:           #25D366;  /* WhatsApp-Gruen — nur fuer WhatsApp-Knoepfe und die Chat-Darstellung */
+  --wa-deep:      #075E54;  /* dunkles WhatsApp-Gruen fuer die Chat-Kopfzeile */
+  --white:        #FFFFFF;  /* Pure White */
+
+  /* --- Abgeleitete Textstufen ---------------------------------------------
+     Alle Werte im Browser nachgemessen (WCAG 2.1 AA, normaler Text >= 4.5:1):
+       --ink        auf --soft  = 18.0 : 1
+       --ink-70     auf --soft  =  7.5 : 1
+       --ink-65     auf --soft  =  5.8 : 1
+       --ink-65     auf --mist  =  5.4 : 1
+       --ink-65     auf --aqua  =  5.4 : 1
+       --mist-70    auf --ink   =  9.5 : 1
+       --mist-62    auf --ink   =  6.8 : 1
+       --mist-62    auf --graphite = 5.6 : 1
+       --brand-deep auf --white =  4.7 : 1
+       --brand-deep auf --soft  =  4.5 : 1
+       --teal-deep  auf --mist  =  5.4 : 1
+       --teal-deep  auf --aqua  =  5.5 : 1
+       --brand      auf --ink   =  6.9 : 1
+
+     Nicht bestanden und daher NICHT fuer Text im Einsatz:
+       --slate      auf --soft  =  4.4 : 1
+       --slate      auf --ink   =  4.2 : 1
+       --slate      auf --graphite = 3.4 : 1
+       --brand-deep auf --mist  =  4.2 : 1
+       --brand      auf --soft  =  2.5 : 1
+     Slate Gray bleibt Teil der Palette, wird aber nur noch fuer Linien und
+     grafische Konturen verwendet, nicht mehr fuer lesbaren Text.
+     ------------------------------------------------------------------------ */
+  --ink-70:   color-mix(in srgb, var(--ink) 92%, var(--soft));   /* Wunsch 29.10.: kein Grau, fast schwarz */
+  --mist-70:  color-mix(in srgb, var(--mist) 94%, var(--ink));   /* auf Dunkel entsprechend fast weiss */
+  --ink-65:   color-mix(in srgb, var(--ink) 88%, var(--soft));
+  --mist-62:  color-mix(in srgb, var(--mist) 88%, var(--ink));
+  --teal-deep: color-mix(in srgb, var(--brand-deep) 82%, var(--ink));
+
+  /* --- Rollen: helle Flaeche ---------------------------------------------- */
+  --bg:          var(--soft);
+  --surface:     var(--white);
+  --text:        var(--ink);
+  --text-2:      var(--ink-70);
+  --text-3:      var(--ink-65);
+  --accent:      var(--brand-deep);
+  --accent-loud: var(--brand);
+  --line:        color-mix(in srgb, var(--ink) 12%, transparent);
+  --line-soft:   color-mix(in srgb, var(--ink) 7%, transparent);
+  --focus:       var(--brand-deep);
+  --focus-halo:  var(--white);
+
+  /* --- Typografie ---------------------------------------------------------- */
+  /* Geist auf allen Geraeten gleich (Wunsch 28.10.); Systemschrift nur, bis Geist geladen ist. */
+  --font-display: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-platform: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+
+  --fs-display: clamp(2.75rem, 1.6rem + 5.1vw, 5.25rem);
+  --fs-h1:      clamp(2.4rem,  1.5rem + 3.6vw, 5.2rem);
+  --fs-h2:      clamp(2rem,    1.4rem + 2.6vw, 3.6rem);
+  --fs-h3:      clamp(1.28rem, 1.1rem + 0.6vw, 1.8rem);
+  --fs-lead:    clamp(1.12rem, 1rem + 0.42vw, 1.6rem);
+  --fs-body:    1.0625rem;
+  --fs-sm:      0.9375rem;
+  --fs-xs:      0.8125rem;
+  --fs-label:   0.75rem;
+
+  --lh-display: 0.98;
+  --lh-head:    1.06;
+  --lh-body:    1.56;
+
+  --tr-display: -0.032em;   /* enge Headline-Laufweite */
+  --tr-head:    -0.022em;
+  --tr-label:    0.14em;    /* Versalien-Labels */
+
+  --measure:      62ch;     /* Fliesstext max. ~65 Zeichen */
+  --measure-tight: 46ch;
+
+  /* --- Raster und Raum ------------------------------------------------------ */
+  --page-max:   112rem;
+  --gutter:     clamp(1.25rem, 3.6vw, 4.5rem);
+  --rail:       0px;                     /* Breite der Wegespur, ab lg gesetzt */
+  --nav-h:      68px;
+
+  --s-1: 0.25rem;  --s-2: 0.5rem;   --s-3: 0.75rem;  --s-4: 1rem;
+  --s-5: 1.5rem;   --s-6: 2rem;     --s-7: 3rem;     --s-8: 4rem;
+  --s-9: 6rem;
+
+  --section-y: clamp(3.5rem, 2.4rem + 4.4vw, 7rem);
+
+  --r-sm: 6px;
+  --r-md: 14px;
+  --r-lg: 24px;
+  --r-pill: 999px;
+
+  /* --- Bewegung ------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 160ms;
+  /* Einblenden: weich auftauchen, kurz nach oben, ruhig auslaufen (--ease-out, kein Ueberschwingen).
+     Gleichzeitig sichtbar werdende Gruppen ueberlappen in Lesereihenfolge um --pop-step (30-pop.js). */
+  --t-reveal: 540ms;
+  --reveal-y: 10px;
+  --pop-step: 60ms;
+  --t-title: 560ms;
+  --t-media: 600ms;
+  --t-hero-line: 900ms;
+  --t-scene: 250ms;
+  --t-copy: 190ms;
+  --t-faq: 360ms;
+  --ease-expand: cubic-bezier(0.33, 1, 0.68, 1);   /* Aufklappen: gleichmaessiger auslaufend als --ease-out, die Hoehe waechst sichtbar ueber ~300 ms */
+  --t-answer: 200ms;
+
+}
+
+/* --- Rollen: dunkle Flaeche ------------------------------------------------
+   Wird pro Sektion ueber [data-theme="dark"] gesetzt, nicht global.
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --bg:          var(--ink);
+  --surface:     var(--graphite);
+  --text:        var(--soft);
+  --text-2:      var(--mist-70);
+  --text-3:      var(--mist-62);
+  --accent:      var(--brand);
+  --accent-loud: var(--brand);
+  --line:        color-mix(in srgb, var(--mist) 16%, transparent);
+  --line-soft:   color-mix(in srgb, var(--mist) 9%, transparent);
+  --focus:       var(--brand);
+  --focus-halo:  var(--ink);
+}
+
+[data-theme="graphite"] {
+  --bg:          var(--graphite);
+  --surface:     color-mix(in srgb, var(--ink) 55%, var(--graphite));
+  --text:        var(--soft);
+  --text-2:      var(--mist-70);
+  --text-3:      var(--mist-62);
+  --accent:      var(--brand);
+  --accent-loud: var(--brand);
+  --line:        color-mix(in srgb, var(--mist) 16%, transparent);
+  --line-soft:   color-mix(in srgb, var(--mist) 9%, transparent);
+  --focus:       var(--brand);
+  --focus-halo:  var(--ink);
+}
+
+/* Auf den getoenten hellen Gruenden reicht Deep Turquoise fuer kleinen Text
+   nicht mehr aus (4,2 : 1). Dort greift eine abgedunkelte Stufe. */
+[data-theme="mist"]  { --bg: var(--mist); --surface: var(--white); --accent: var(--teal-deep); }
+[data-theme="aqua"]  { --bg: var(--aqua); --surface: var(--white); --accent: var(--teal-deep); }
+[data-theme="white"] { --bg: var(--white); --surface: var(--soft); }
+
+@media (min-width: 64em) {
+  :root { --nav-h: 76px; }
+}
+
+/* ==== base.css ==== */
+/* ==========================================================================
+   NAHLIO — Basis: Schriften, Reset, Typografie, Fokus, Buttons
+   ========================================================================== */
+
+/* Geist (Vercel, SIL OFL 1.1, variabel 100-900; Wunsch 28.10.): freie Schrift in der Art von Apples SF Pro, auf
+   allen Geraeten gleich. Lokal aus static/fonts/, latin und latin-ext. */
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/geist-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/geist-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --- Reset ---------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  /* Auf grossen Fenstern waechst alles (alles ist in rem) mit Breite UND Hoehe;
+     bis 1280 x 730 bleibt es bei 16 px. */
+  font-size: clamp(16px, min(9.2px + 0.93vh, 10px + 0.47vw), 20px);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--nav-h) + 1.5rem);
+  /* Kein overflow auf html/body: das wuerde aus beiden einen Clip-Container
+     machen und position:sticky (Navigation, Story-Stage) ausser Kraft setzen.
+     Ueberstehende Grafik wird stattdessen je Sektion beschnitten. */
+}
+html.js.motion-ok { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--soft);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, p, figure, blockquote, dl, dd, ul, ol { margin: 0; }
+h1, h2, h3, h4 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+ul, ol { padding: 0; list-style: none; }
+img, svg, picture { display: block; max-width: 100%; }
+img { height: auto; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+
+/* --- Typografie ----------------------------------------------------------- */
+.t-display, .t-h1, .t-h2, .t-h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-wrap: balance;
+}
+.t-display { font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--tr-display); }
+.t-h1      { font-size: var(--fs-h1);      line-height: var(--lh-head);    letter-spacing: var(--tr-display); }
+.t-h2      { font-size: var(--fs-h2);      line-height: var(--lh-head);    letter-spacing: var(--tr-head); }
+.t-h3      { font-size: var(--fs-h3);      line-height: 1.25;              letter-spacing: -0.012em; font-weight: 600; }
+
+.t-lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--text-2);
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+.t-body { max-width: var(--measure); color: var(--text-2); text-wrap: pretty; }
+.t-sm   { font-size: var(--fs-sm); }
+.t-xs   { font-size: var(--fs-xs); }
+
+.nobr { white-space: nowrap; }                 /* Zahl und Einheit bzw. Paragraf und Nummer zusammenhalten */
+
+.t-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.t-num {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+
+strong, b { font-weight: 600; }
+
+/* --- Platzhalter -----------------------------------------------------------
+   Jeder [[WERT]] aus content/ wird sichtbar markiert. Vor Veroeffentlichung
+   duerfen keine .ph-Elemente mehr im HTML stehen; build.py listet sie auf.
+   -------------------------------------------------------------------------- */
+.ph {
+  display: inline;
+  background: color-mix(in srgb, var(--brand) 16%, transparent);
+  box-shadow: inset 0 -0.62em 0 color-mix(in srgb, var(--brand) 10%, transparent);
+  color: inherit;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.92em;
+  letter-spacing: 0.02em;
+  padding: 0.05em 0.35em;
+  border-radius: var(--r-sm);
+  outline: 1px dashed color-mix(in srgb, var(--brand) 55%, transparent);
+  outline-offset: -1px;
+}
+
+/* --- Fokus ---------------------------------------------------------------- */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--focus-halo) 85%, transparent);
+}
+
+/* --- Skip-Link ------------------------------------------------------------- */
+.skip {
+  position: fixed;
+  top: var(--s-3);
+  left: var(--s-3);
+  z-index: 200;
+  padding: var(--s-3) var(--s-5);
+  background: var(--ink);
+  color: var(--soft);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform var(--t-fast) var(--ease-out);
+}
+.skip:focus-visible { transform: translateY(0); }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Buttons ---------------------------------------------------------------
+   Grosszuegige Trefferflaeche: min. 44px Hoehe ueberall.
+   -------------------------------------------------------------------------- */
+.btn {
+  --btn-bg: var(--accent);
+  --btn-fg: var(--white);
+  --btn-bd: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border: 1.5px solid var(--btn-bd);
+  border-radius: var(--r-pill);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  text-decoration: none;
+  text-align: center;
+  transition: background var(--t-fast) var(--ease-out),
+              color var(--t-fast) var(--ease-out),
+              border-color var(--t-fast) var(--ease-out),
+              transform var(--t-fast) var(--ease-out);
+}
+.btn:hover { background: var(--ink); border-color: var(--ink); color: var(--white); text-decoration: none; }
+.btn:active { transform: translateY(1px); }
+
+.btn--ghost { --btn-bg: transparent; --btn-fg: var(--ink); --btn-bd: color-mix(in srgb, var(--ink) 28%, transparent); }
+.btn--ghost:hover { background: transparent; border-color: var(--ink); color: var(--ink); }
+
+.btn--sm { min-height: 44px; padding: 0.55rem 1.15rem; font-size: var(--fs-xs); }
+
+/* Markentuerkis mit dunkler Schrift: Weiss auf diesem Ton haette zu
+   wenig Kontrast (2,4 : 1), Ink liegt bei 8,3 : 1. */
+.btn--brand { --btn-bg: var(--brand); --btn-fg: var(--ink); --btn-bd: var(--brand); }
+
+[data-theme="dark"] .btn,
+[data-theme="graphite"] .btn { --btn-bg: var(--brand); --btn-fg: var(--ink); --btn-bd: var(--brand); }
+[data-theme="dark"] .btn:hover,
+[data-theme="graphite"] .btn:hover { background: var(--soft); border-color: var(--soft); color: var(--ink); }
+[data-theme="dark"] .btn--ghost,
+[data-theme="graphite"] .btn--ghost { --btn-bg: transparent; --btn-fg: var(--soft); --btn-bd: color-mix(in srgb, var(--mist) 34%, transparent); }
+[data-theme="dark"] .btn--ghost:hover,
+[data-theme="graphite"] .btn--ghost:hover { background: transparent; border-color: var(--soft); color: var(--soft); }
+
+.btn[disabled], .btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Icon-Buttons (Carousel-Pfeile) ---------------------------------------- */
+.iconbtn {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  color: var(--text);
+  background: transparent;
+  transition: background var(--t-fast) var(--ease-out),
+              border-color var(--t-fast) var(--ease-out),
+              color var(--t-fast) var(--ease-out);
+}
+.iconbtn:hover:not([disabled]) { border-color: var(--accent); color: var(--accent); }
+.iconbtn[disabled] { opacity: 0.35; cursor: not-allowed; }
+.iconbtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+/* --- WhatsApp: ruhig, wird beim Hinfahren gruen --------------------------- */
+.btn--wa {
+  --btn-bg: transparent;
+  --btn-fg: var(--ink);
+  --btn-bd: color-mix(in srgb, var(--ink) 28%, transparent);
+  gap: 0.55rem;
+  transition: background-color 280ms var(--ease-out), border-color 280ms var(--ease-out),
+              color 280ms var(--ease-out), transform 280ms var(--ease-out), box-shadow 280ms var(--ease-out);
+}
+.btn--wa .wa-ico { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.7;
+                   stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+.btn--wa:hover, .btn--wa:focus-visible {
+  background: var(--wa); border-color: var(--wa); color: var(--ink);
+  box-shadow: 0 0.6rem 1.6rem color-mix(in srgb, var(--wa) 45%, transparent);
+  transform: translateY(-1px);
+}
+[data-theme="dark"] .btn--wa { --btn-bg: transparent; --btn-fg: var(--soft); --btn-bd: color-mix(in srgb, var(--mist) 40%, transparent); }
+[data-theme="dark"] .btn--wa:hover { background: var(--wa); border-color: var(--wa); color: var(--ink); }
+
+/* ==== layout.css ==== */
+/* ==========================================================================
+   NAHLIO — Layout: Seitenraster und Sektionen (Fassung 2)
+
+   Shared content grid and section surfaces. The decorative line is local to Hero.
+   ========================================================================== */
+
+main { position: relative; isolation: isolate; }
+
+.shell {
+  position: relative;
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section,
+.hero,
+.blick,
+.uebergang {
+  position: relative;
+  color: var(--text);
+  /* html hat scroll-padding-top = Navigationshoehe + 1,5 rem. Ein Anker landet so, dass die
+     Ueberschrift 28 px unter der Navigation steht: 28 px - Innenabstand oben (--pt) - 1,5 rem.
+     (Frueher kamen +1 rem dazu und Abschnitte rutschten zu tief.) */
+  --pt: var(--section-y);
+  scroll-margin-top: calc(28px - var(--pt) - 1.5rem);
+}
+.section { padding-block: var(--pt, var(--section-y)); }
+.hero { scroll-margin-top: -1.5rem; }   /* fuellt den Bildschirm: buendig unter der Navigation */
+.section.plans--stack { padding-block: 0; }
+
+.section::before,
+.hero::before,
+.blick::before,
+.uebergang::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--bg);
+  pointer-events: none;
+}
+
+/* --- Sektionskopf ---------------------------------------------------------- */
+.sec-head {
+  position: relative;
+  display: grid;
+  gap: var(--s-4);
+  margin-bottom: var(--s-8);
+  max-width: 54rem;
+}
+.sec-head__title { max-width: 22ch; }
+.sec-head__intro { font-size: var(--fs-lead); color: var(--text-2); max-width: 58ch; margin-top: var(--s-2); text-wrap: pretty; }
+
+/* --- Rasterhilfen ---------------------------------------------------------- */
+.stack   { display: grid; gap: var(--s-5); }
+.stack-6 { display: grid; gap: var(--s-6); }
+.cluster { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: center; }
+
+
+/* ==== nav.css ==== */
+/* ==========================================================================
+   NAHLIO — Navigation
+   Zustandslogik: die Leiste liest die Sektion unter ihrer Unterkante und
+   uebernimmt deren Helligkeit. Ueber dem Hero ist sie transparent, danach
+   bekommt sie einen Hintergrund in der Farbe der Sektion darunter — dunkel
+   ueber dunklen Kapiteln, Soft White ueber hellen. Ist das mobile Menue offen
+   (.is-open), bilden Leiste und Panel immer eine dunkle Flaeche.
+   Reihenfolge der Zustaende: Die Regeln stehen in :where() und haben dadurch
+   alle dieselbe Gewichtung; es gilt die Reihenfolge in dieser Datei
+   (hell -> dunkel -> angeheftet -> geoeffnet). So kann ein angehefteter heller
+   Zustand das offene Menue nicht mehr ueberschreiben (heller Grund mit heller
+   Schrift).
+   ========================================================================== */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav:where(*) {
+  --nav-fg: var(--ink);
+  --nav-fg-2: color-mix(in srgb, var(--ink) 90%, var(--soft));
+  --nav-bg: transparent;
+  --nav-line: transparent;
+  --nav-accent: var(--brand-deep);
+}
+.nav:where([data-state="dark"]) {
+  --nav-fg: var(--soft);
+  --nav-fg-2: color-mix(in srgb, var(--mist) 92%, var(--ink));
+  --nav-accent: var(--brand);
+}
+/* Bewusst deckende Flaechen statt backdrop-filter: ein permanenter Filter auf
+   einer sticky Leiste kostet in jedem Frame Compositing-Zeit und fuehrt in
+   mehreren Engines zu Darstellungsfehlern beim Scrollen. */
+.nav:where(.is-stuck) { --nav-line: color-mix(in srgb, var(--ink) 10%, transparent); }
+.nav:where(.is-stuck[data-state="light"]) { --nav-bg: var(--soft); }
+.nav:where(.is-stuck[data-state="dark"]) {
+  --nav-bg: var(--ink);
+  --nav-line: color-mix(in srgb, var(--mist) 14%, transparent);
+}
+/* Leistungen-Menue offen: die Leiste ist deckend (auch ganz oben ueber dem Hero), das Menue setzt sie fort. */
+.nav:where(.has-sub[data-state="light"]) { --nav-bg: var(--soft); --nav-line: color-mix(in srgb, var(--ink) 10%, transparent); }
+.nav:where(.has-sub[data-state="dark"]) { --nav-bg: var(--ink); --nav-line: color-mix(in srgb, var(--mist) 14%, transparent); }
+/* Mobiles Menue offen: Leiste und Panel sind eine dunkle Flaeche, unabhaengig vom Abschnitt darunter. */
+.nav:where(.is-open) {
+  --nav-fg: var(--soft);
+  --nav-fg-2: color-mix(in srgb, var(--mist) 92%, var(--ink));
+  --nav-bg: var(--ink);
+  --nav-line: color-mix(in srgb, var(--mist) 14%, transparent);
+  --nav-accent: var(--brand);
+}
+
+.nav__bar {
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-line);
+  color: var(--nav-fg);
+  transition: background-color 350ms var(--ease-out),
+              border-color 350ms var(--ease-out),
+              color 350ms var(--ease-out);
+}
+.nav:where(.has-sub) .nav__bar { transition-duration: 0s; }   /* gleichzeitig mit dem Menue deckend */
+.nav__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  min-height: var(--nav-h);
+}
+
+/* --- Logo ------------------------------------------------------------------ */
+.nav__logo {
+  display: flex;
+  align-items: center;
+  /* Trefferflaeche mindestens 44 px hoch, auch wenn die Marke kleiner ist. */
+  min-height: 44px;
+  padding-right: var(--s-2);
+  color: var(--nav-fg);
+  text-decoration: none;
+  flex: 0 0 auto;
+  transition: color 350ms var(--ease-out);
+}
+/* Wortmarke gut lesbar, Leiste 68 / 76 px hoch. */
+.nav__logo svg { height: 46px; width: auto; }
+@media (min-width: 64em) { .nav__logo svg { height: 52px; } }
+
+/* --- Links ----------------------------------------------------------------- */
+.nav__links { display: none; }
+
+@media (min-width: 64em) {
+  .nav__links { display: block; margin-inline: auto; }
+  .nav__list { display: flex; align-items: center; gap: var(--s-6); }
+  .nav__link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0;
+    color: var(--nav-fg-2);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--t-fast) var(--ease-out);
+  }
+  .nav__link:hover { color: var(--nav-fg); }
+  .nav__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--nav-accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 260ms var(--ease-out);
+  }
+  /* Aktiver Zustand: Farbe + Gewicht + Unterstrich, nie nur Farbe. */
+  .nav__link[aria-current="true"] { color: var(--nav-fg); font-weight: 700; }
+  .nav__link[aria-current="true"]::after { transform: scaleX(1); }
+
+  /* --- Untermenue "Leistungen": Link + Aufklapp-Knopf, darunter eine kompakte Liste ---------- */
+  .nav__item--sub { position: relative; }
+  .nav__subhead { display: flex; align-items: center; }
+  .nav__subbtn {
+    display: grid; place-items: center; width: 30px; height: 44px; margin-right: -8px;
+    color: var(--nav-fg-2); border-radius: var(--r-sm);
+    transition: color var(--t-fast) var(--ease-out);
+  }
+  .nav__subbtn:hover, .nav__subbtn[aria-expanded="true"] { color: var(--nav-fg); }
+  .nav__subbtn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+                     transition: transform 200ms var(--ease-out); }
+  .nav__subbtn[aria-expanded="true"] svg { transform: rotate(180deg); }
+  /* Wunsch 29.10.: Das Menue ist eine Verlaengerung der Leiste: es schliesst buendig an ihre Unterkante an, gleiche
+     Flaeche, eckig. Es waechst von der linken oberen Ecke aus als Rechteck (clip-path an der Liste). Die Bruecke
+     (::before) fuellt den Weg vom Link bis zur Unterkante der Leiste, damit der Zeiger den Bereich nie verlaesst. */
+  .nav__sub {
+    position: absolute; top: calc(50% + var(--nav-h) / 2); left: -18px; z-index: 2;
+    width: 320px; visibility: hidden;
+    transition: visibility 0s linear 360ms;
+  }
+  .nav__sub::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(var(--nav-h) / 2); }
+  .nav__sub.is-open { visibility: visible; transition-delay: 0s; }
+  /* Ohne Skript: beim Zeigen oder per Tastatur (Fokus im Bereich) sichtbar. */
+  html:not(.js) .nav__item--sub:hover .nav__sub,
+  html:not(.js) .nav__item--sub:focus-within .nav__sub { visibility: visible; transition-delay: 0s; }
+  html:not(.js) .nav__subbtn { display: none; }
+  .nav__sublist {
+    display: grid; gap: 0; padding: 6px;
+    border-radius: 0; color: var(--nav-fg);
+    background: var(--nav-bg);
+    border: 1px solid var(--nav-line); border-top: 0;
+    box-shadow: 0 16px 28px -14px color-mix(in srgb, var(--ink) 30%, transparent);
+    clip-path: inset(0 100% 100% 0);
+    transition: clip-path 360ms cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+  .nav__sub.is-open .nav__sublist,
+  html:not(.js) .nav__item--sub:hover .nav__sublist,
+  html:not(.js) .nav__item--sub:focus-within .nav__sublist { clip-path: inset(0 -40px -40px -40px); }
+  .nav__sublink {
+    display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: 10px;
+    min-height: 46px; padding: 6px 8px; border-radius: 0;
+    color: inherit; text-decoration: none; transform-origin: 50% 50%;
+    transition: background-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out),
+                transform 240ms cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+  .nav__sublink:hover, .nav__sublink:focus-visible {
+    transform: scale(1.03);
+    background: color-mix(in srgb, var(--brand) 20%, var(--nav-bg));
+    box-shadow: inset 3px 0 0 var(--nav-accent);
+  }
+  .nav__sublink-ic { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 0;
+                     background: color-mix(in srgb, var(--brand) 12%, transparent); color: var(--nav-accent);
+                     transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out); }
+  .nav__sublink:hover .nav__sublink-ic, .nav__sublink:focus-visible .nav__sublink-ic { background: var(--nav-accent); color: var(--white); }
+  .nav:where([data-state="dark"]) .nav__sublink:hover .nav__sublink-ic { color: var(--ink); }
+  .nav__sublink-ic svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .nav__sublink-txt { display: grid; gap: 0; min-width: 0; }
+  .nav__sublink-txt b { font-size: 14.5px; font-weight: 600; line-height: 1.3; transition: color 200ms var(--ease-out); }
+  .nav__sublink:hover .nav__sublink-txt b { color: var(--nav-accent); }
+  .nav__sublink-txt small { font-size: 12.5px; line-height: 1.35; color: var(--nav-fg-2); }
+  @media (prefers-reduced-motion: reduce) { .nav__sublist { transition: none; } }
+}
+
+.nav__actions { display: none; }
+@media (min-width: 64em) {
+  .nav__actions { display: flex; align-items: center; gap: var(--s-3); flex: 0 0 auto; }
+  .nav[data-state="light"] .nav__cta { --btn-bg: var(--brand-deep); --btn-bd: var(--brand-deep); --btn-fg: var(--white); }
+  .nav[data-state="dark"]  .nav__cta { --btn-bg: var(--brand);      --btn-bd: var(--brand);      --btn-fg: var(--ink); }
+  .nav[data-state="dark"]  .nav__cta:hover { background: var(--soft); border-color: var(--soft); color: var(--ink); }
+  .nav[data-state="light"] .nav__wa { --btn-fg: var(--ink); --btn-bd: color-mix(in srgb, var(--ink) 26%, transparent); }
+  .nav[data-state="dark"]  .nav__wa { --btn-fg: var(--soft); --btn-bd: color-mix(in srgb, var(--mist) 38%, transparent); }
+  .nav .nav__wa:hover, .nav .nav__wa:focus-visible { background: var(--wa); border-color: var(--wa); color: var(--ink); }
+  /* Wunsch 29.10.: "Kontakt aufnehmen" springt beim Zeigen genauso leicht wie der WhatsApp-Knopf (.btn--wa). */
+  .nav .nav__cta { transition: background-color 280ms var(--ease-out), border-color 280ms var(--ease-out),
+                               color 280ms var(--ease-out), transform 280ms var(--ease-out), box-shadow 280ms var(--ease-out); }
+  .nav .nav__cta:hover, .nav .nav__cta:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 0.6rem 1.6rem color-mix(in srgb, var(--brand) 45%, transparent);
+  }
+}
+/* Zwischen 1024 und 1279 px ist es eng: WhatsApp zeigt dann nur das Zeichen. */
+@media (min-width: 64em) and (max-width: 79.99em) {
+  .nav__wa span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .nav__wa { padding-inline: 0.8rem; }
+  .nav__list { gap: var(--s-5); }
+}
+
+/* --- Mobile: Umschalter und Panel ------------------------------------------ */
+.nav__toggle {
+  margin-left: auto;
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-right: -6px;
+  color: var(--nav-fg);
+  border-radius: var(--r-pill);
+}
+@media (min-width: 64em) { .nav__toggle { display: none; } }
+
+.nav__toggle-bars { display: block; width: 22px; height: 12px; position: relative; }
+.nav__toggle-bars::before,
+.nav__toggle-bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 260ms var(--ease-out), top 200ms var(--ease-out);
+}
+.nav__toggle-bars::before { top: 0; }
+.nav__toggle-bars::after  { top: 10px; }
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars::before { top: 5px; transform: rotate(45deg); }
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars::after  { top: 5px; transform: rotate(-45deg); }
+
+.nav__panel {
+  position: fixed;
+  inset: var(--nav-h) 0 0 0;
+  background: var(--ink);
+  color: var(--soft);
+  padding: var(--s-5) var(--gutter) var(--s-8);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  align-content: start;
+  gap: var(--s-2);
+}
+.nav__panel[hidden] { display: none; }
+@media (min-width: 64em) { .nav__panel { display: none !important; } }
+
+.nav__panel-link {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--mist) 14%, transparent);
+  color: var(--soft);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: var(--tr-head);
+  text-decoration: none;
+}
+.nav__panel-link[aria-current="true"] { color: var(--brand); }
+.nav__panel-link[aria-current="true"]::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--brand);
+  flex: 0 0 auto;
+  transform: translateY(-0.3em);
+}
+.nav__panel-link:not([aria-current="true"])::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+}
+/* Leistungen im Panel: Link und Aufklapp-Knopf in einer Zeile, darunter die fuenf Leistungen. */
+.nav__panel-group { border-bottom: 1px solid color-mix(in srgb, var(--mist) 14%, transparent); }
+.nav__panel-row { display: flex; align-items: center; }
+.nav__panel-row .nav__panel-link { flex: 1; border-bottom: 0; }
+.nav__panel-subbtn {
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; margin-right: -8px;
+  border-radius: var(--r-pill); color: var(--soft);
+}
+.nav__panel-subbtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+                         transition: transform 200ms var(--ease-out); }
+.nav__panel-subbtn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.nav__panel-sub { display: grid; gap: 2px; padding: 0 0 var(--s-4) 25px; }
+.nav__panel-sub[hidden] { display: none; }
+.nav__panel-sublink {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 12px;
+  min-height: 48px; padding: 6px 0; color: var(--soft); text-decoration: none;
+}
+.nav__panel-sublink-ic { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+                         background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); }
+.nav__panel-sublink-ic svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav__panel-sublink-txt { display: grid; gap: 1px; min-width: 0; }
+.nav__panel-sublink-txt b { font-size: 16px; font-weight: 600; line-height: 1.3; }
+.nav__panel-sublink-txt small { font-size: 14px; line-height: 1.35; color: var(--mist-70); }
+
+.nav__panel-cta { margin-top: var(--s-5); display: grid; gap: var(--s-3); }
+.nav__panel-cta .btn { width: 100%; --btn-bg: var(--brand); --btn-bd: var(--brand); --btn-fg: var(--ink); }
+.nav__panel-cta .btn--wa { --btn-bg: transparent; --btn-fg: var(--soft); --btn-bd: color-mix(in srgb, var(--mist) 40%, transparent); }
+
+body.nav-open { overflow: hidden; }
+
+/* Neue Leistungs-Symbole (components.SERVICE_ICONS): Flaechen .d leicht getoent, Striche in currentColor. */
+.nav__sublink-ic svg .d, .nav__panel-sublink-ic svg .d { fill: currentColor; opacity: 0.18; stroke: none; }
+
+/* ==== line.css ==== */
+/* ==========================================================================
+   NAHLIO — durchgehende Linie (25-line.js), wieder wie in nahlio-site-neu
+   Eine Ebene in <main> ueber die ganze Startseite: dick, in grossen weichen Boegen, helles Cyan mit
+   Farbverlauf, rund, ohne Punkt am Ende. Ebenen: Abschnittsflaechen (::before, z -2) -> Linie
+   (z -1) -> Inhalt. Dunkle Abschnitte (Uebergang, Beispiele, Kontakt) haben eine eigene
+   Ebene (z-index 0) und decken die Linie ab. Die vordere Ebene zeigt die Linie nur ueber
+   Elementen mit data-line-front (derzeit keine: im Hero liegen alle Bilder vor der Linie, Wunsch 28.10.).
+   ========================================================================== */
+
+.pageline {
+  position: absolute; inset: 0; z-index: -1;
+  pointer-events: none; overflow: hidden;          /* Schleifen duerfen am Rand anschneiden, ohne waagerechtes Scrollen */
+  /* Eigene Grafikebene: Beim Nachzeichnen (stroke-dashoffset, jedes Bild) wird nur die Linie neu gemalt,
+     nicht die Texte und die Geraete darueber. Ohne das ruckelte das Scrollen. */
+  will-change: transform; contain: layout paint;
+}
+.pageline__svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.pageline--front { z-index: 4; }
+
+/* Die Linie besteht aus mehreren Stuecken (25-line.js). Die Deckkraft liegt deshalb auf der Ebene, nicht auf den
+   Pfaden: so verdoppelt sie sich an den Stoessen nicht, und die Grafikkarte erledigt sie ohne Neumalen. */
+.pageline { opacity: 1; }
+.pageline__main {
+  fill: none;
+  /* Verlauf aus 25-line.js (#pageline-grad), dahinter die bisherige Farbe als Rueckfall */
+  stroke: url(#pageline-grad) #47D3EB;
+  stroke-width: 40;                                 /* gross wie in der Vorlage; Wunsch 28.10.: zwischen 44 und 36 */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Helles Aqua -> Cyan -> Himmelblau (Vorlage des Inhabers, 27.10.); schwarzer Text bleibt darauf gut lesbar. */
+.pageline__stop--a { stop-color: #74EAF2; }
+.pageline__stop--b { stop-color: #47D3EB; }
+.pageline__stop--c { stop-color: #2BB6E2; }
+@media (max-width: 47.99em) {
+  .pageline__main { stroke-width: 22; }
+}
+
+/* Hero und Einleitung teilen eine Flaeche: sie liegt jetzt UNTER der Linie (kein eigener Stapel mehr). */
+main .opening { isolation: auto; background: none; }
+main .opening .opening__surface { z-index: -2; }
+main .opening > .customer-path::before { background: var(--white); }
+
+/* Kontakt deckt die Linie ab wie die Beispiele (Formular und Fuss bleiben frei). Der Uebergang ist hell: die Linie laeuft durch. */
+main .cta { z-index: 0; }
+main .uebergang { z-index: auto; background: transparent; }
+
+html:not(.js) .pageline { display: none; }
+@media print { .pageline { display: none; } }
+
+/* Lesbarkeit: kein Hof und keine Aufhellung unter Text (Vorlage des Inhabers): Die Linie ist hell genug, dunkle
+   Schrift liegt einfach darueber. */
+
+/* ==== hero.css ==== */
+/* ==========================================================================
+   NAHLIO — Hero
+   Manrope headline and approved devices in a shared local Hero scene.
+   Both line layers and media move together during their entrance.
+   Die Hoehe richtet sich nach dem Fenster: Text oben, die Bilder fuellen den Rest.
+   ========================================================================== */
+
+.hero { position: relative; padding: 0; background: transparent; }
+/* One background surface spans the Hero row and reaches into the intro row.
+   The absolute grid item never contributes height; media clipping stays local. */
+.opening { --opening-blend: clamp(140px, 13vw, 200px); position: relative; display: grid; grid-template-columns: minmax(0,1fr); isolation: isolate; background: var(--white); }
+.opening > .hero { grid-area: 1 / 1; }
+.opening > .customer-path { grid-area: 2 / 1; }
+.opening__surface {
+  position: absolute; grid-area: 1 / 1 / 2 / 2; inset: 0 0 calc(var(--opening-blend) * -.55); z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(to bottom, transparent calc(100% - var(--opening-blend) * .35), var(--white)),
+    radial-gradient(ellipse 56% var(--opening-blend) at 48% 100%, var(--white) 25%, transparent 80%),
+    radial-gradient(ellipse 49% calc(var(--opening-blend) * 1.25) at 0 90%, color-mix(in srgb, var(--brand) 8%, transparent), transparent 76%),
+    radial-gradient(ellipse 35% calc(var(--opening-blend) * .85) at 100% 94%, color-mix(in srgb, var(--brand-deep) 6%, transparent), transparent 78%),
+    linear-gradient(to bottom, var(--soft) calc(100% - var(--opening-blend)), var(--white));
+}
+.opening > .hero::before, .opening > .customer-path::before { background: transparent; }
+@media (max-width: 47.99em) { .opening { --opening-blend: 100px; } }
+.hero__glow {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(56% 46% at 50% 22%, color-mix(in srgb, var(--brand) 13%, transparent), transparent 72%);
+}
+
+/* Titelgroesse: an Breite und Hoehe des Fensters gekoppelt (breit etwa 60-76 px, Handy 32-40 px). */
+.hero__stage {
+  --t: clamp(44px, min(4.9vw, 8.4svh), 76px);
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(280px, 1fr); justify-items: center;
+  height: max(640px, calc(100svh - var(--nav-h)));        /* feste Hoehe (mindestens 640 px): die Bilder fuellen, was unter dem Text bleibt */
+  padding-top: clamp(28px, 6svh, 68px);
+  overflow: clip;
+}
+.hero__copy { position: relative; z-index: 2; display: grid; justify-items: center; text-align: center; }
+
+.hero__eyebrow {
+  font-family: var(--font-sans); font-size: 13px; font-weight: 600; line-height: 1.4;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal-deep);
+  margin-bottom: clamp(12px, 1.9svh, 20px);
+}
+.hero__title {
+  /* Apple setzt grosse Ueberschriften halbfett mit enger Laufweite. */
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--t); line-height: 1.05; letter-spacing: -0.025em;
+  max-width: 17em; text-wrap: balance; color: var(--ink);
+  font-feature-settings: "kern", "liga", "calt";
+}
+.hero__hl {
+  color: var(--brand-deep);
+}
+.hero__sub {
+  margin-top: clamp(14px, 2.2svh, 24px);
+  max-width: 40em; font-size: clamp(17px, 15px + 0.5vw, 21px); line-height: 1.52; letter-spacing: normal;
+  color: var(--text-2); text-wrap: pretty;
+}
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 30px; margin-top: clamp(16px, 2.8svh, 30px); }
+.hero__cta {
+  --btn-bg: var(--brand-deep); --btn-bd: var(--brand-deep); --btn-fg: var(--white);
+  min-height: 48px; padding: 0 28px; font-size: 17px; font-weight: 500; letter-spacing: -0.012em;
+}
+.hero__cta:hover { background: var(--ink); border-color: var(--ink); color: var(--white); }
+.hero__more {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 48px;
+  font-size: 17px; font-weight: 500; letter-spacing: -0.012em; color: var(--brand-deep); text-decoration: none;
+}
+.hero__more svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--t-fast) var(--ease-out); }
+.hero__more:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+.hero__more:hover svg { transform: translateX(3px); }
+
+/* --- Die Leistungen als Bilder ------------------------------------------------------------
+   Lage und Bewegung sind getrennt: .art traegt nur Groesse und Lage (Hoehe, margin-bottom, auf schmalen
+   Fenstern top/left/right/bottom), nie transform/translate. Die Drehung sitzt eine Ebene tiefer
+   (.hero-asset: rotate; .art__img bzw. .sz: transform/rotate), der Auftakt auf .hero__scene (transform)
+   und .art (nur opacity). */
+.hero__scene { position: relative; isolation: isolate; z-index: 1; width: 100%; height: 100%; min-height: 280px; }
+.hero__art {
+  position: relative; z-index: 1; width: 100%; height: 100%; box-sizing: border-box;
+  padding-top: 28px;                                       /* Platz fuer die Etiketten ueber den Bildern */
+  padding-bottom: clamp(10px, 2.4svh, 26px);               /* kein Geraet reicht an die Unterkante */
+  display: flex; align-items: flex-end; justify-content: center; gap: clamp(12px, 2.2vw, 46px);
+  container-type: size;                                    /* --u misst den Platz unter dem Text */
+  pointer-events: none;
+}
+/* --u: Hoehe der Reihe = Platz unter dem Text, aber nie mehr, als die Reihe in die Breite passt.
+   --k: Hoehe des Bildes; --lift: Anhebung (hoch/tief im Wechsel). k + lift <= 1: nichts wird beschnitten. */
+.art {
+  --u: min(100cqh, 25vw);
+  position: relative; flex: none; height: calc(var(--u) * var(--k)); aspect-ratio: var(--ar); z-index: var(--z, 1);
+  margin-bottom: calc(var(--u) * var(--lift, 0));
+}
+.art__visual { position: absolute; inset: 0; transform-origin: 50% 75%; }
+.art__img {
+  display: block; width: 100%; height: 100%; object-fit: contain;
+  transform: rotate(var(--r, 0deg));
+  filter: drop-shadow(0 1.6rem 2.2rem rgba(11, 17, 20, 0.22)) drop-shadow(0 0.3rem 0.6rem rgba(11, 17, 20, 0.10));
+}
+.art__tag {
+  position: absolute; top: -4px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+  padding: 5px 11px; border-radius: 999px; font-family: var(--font-sans); font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; line-height: 1.3;
+  color: #fff; background: rgba(11, 17, 20, 0.84); z-index: 2;
+}
+/* Rhythmus tief - hoch - tief - hoch - tief. Die Kaesten von WhatsApp und Google-Profil sind auf das
+   sichtbare Geraet zugeschnitten (site.json > hero.media > display_ar), gleiche Werte ergeben gleich grosse
+   Telefone. WhatsApp steht aufrecht. */
+.art--fotos   { --k: 0.82; --lift: 0;    --r: -4deg; --z: 1; }
+.art--kontakt { --k: 0.94; --lift: 0.06; --r: 0deg;  --z: 2; }
+.art--karte   { --k: 0.90; --lift: 0;    --r: 0deg;  --z: 3; }
+.art--google  { --k: 0.94; --lift: 0.06; --r: 0deg;  --z: 2; }   /* gerade, nach vorn (Wunsch 27.10.) */
+.art--website { --k: 0.80; --lift: 0;    --r: 2deg;  --z: 1; }
+
+/* Handy und Tablet (Wunsch 29.10.): alle fuenf Bilder, kleiner, in U-Form im Raum: aussen gross und hoch, zur Mitte
+   hin kleiner und tiefer, die aeusseren Bilder sind zur Mitte gedreht (rotateY mit perspective auf .hero__art).
+   --cx = Mitte des Bildes, --by = Abstand von unten, --k = Hoehe, alles als Anteil der Breite --U. .art traegt hier
+   die Drehung; Auftakt und Zoom bleiben auf .art__visual. */
+@media (max-width: 63.99em) {
+  .hero__stage { padding-top: 28px; padding-bottom: 8px; height: auto; grid-template-rows: auto auto; }
+  .hero__stage { --t: clamp(32px, 8.6vw, 52px); }
+  .hero__copy { width: 100%; }
+  .hero__title { max-width: 12em; }
+  .hero__scene { height: auto; min-height: 0; margin-top: 18px; container-type: inline-size; }
+  .hero__art {
+    --U: min(100cqw, 620px);
+    display: block; width: var(--U); height: calc(var(--U) * 0.78); margin-inline: auto; padding: 0; container-type: normal;
+    perspective: calc(var(--U) * 0.95); perspective-origin: 50% 40%;
+  }
+  .art {
+    --H: calc(var(--U) * var(--k));
+    position: absolute; margin: 0; height: var(--H);
+    left: calc(var(--U) * var(--cx) - var(--H) * var(--ar) / 2); bottom: calc(var(--U) * var(--by));
+    transform: rotateY(var(--ry)); transform-origin: 50% 50%;
+  }
+  .art--fotos   { --k: 0.36; --cx: 0.15;  --by: 0.40; --ry: 34deg;  --r: 0deg; --z: 3; }
+  .art--kontakt { --k: 0.41; --cx: 0.32;  --by: 0.11; --ry: 18deg;  --r: 0deg; --z: 2; }
+  .art--karte   { --k: 0.34; --cx: 0.50;  --by: 0.01; --ry: 0deg;   --r: 0deg; --z: 1; }
+  .art--google  { --k: 0.41; --cx: 0.68;  --by: 0.09; --ry: -18deg; --r: 0deg; --z: 2; }
+  .art--website { --k: 0.26; --cx: 0.80;  --by: 0.50; --ry: -34deg; --r: 0deg; --z: 3; }
+}
+@media (max-width: 47.99em) { .art__tag { display: none; } }     /* bei fuenf kleinen Bildern waeren die Etiketten nur Gedraenge */
+
+/* One finite schedule in 25-line.js owns line/reveals/pulses and completion.
+   CSS retains the common scene entrance and immediately readable text. Layout:
+   .art; emphasis: .art__visual; rotation: its existing image/asset/scene child. */
+@keyframes hero-rise { from { transform: translate3d(0, var(--reveal-y), 0); } to { transform: none; } }
+@keyframes hero-ink { from { opacity: 0.6; } to { opacity: 1; } }
+.hero { --hero-step: 220ms; --hero-reveal: 380ms; }
+.art--fotos { --hero-order: 0; } .art--kontakt { --hero-order: 1; } .art--karte { --hero-order: 2; }
+.art--google { --hero-order: 3; } .art--website { --hero-order: 4; }
+html.js.motion-ok.hero-intro .hero .hero__eyebrow { animation: hero-rise var(--t-title) var(--ease-out) both, hero-ink var(--t-title) var(--ease-out) both; }
+html.js.motion-ok.hero-intro .hero .hero__title { animation: hero-rise var(--t-title) var(--ease-out) both; }
+html.js.motion-ok.hero-intro .hero .hero__phrase,
+html.js.motion-ok.hero-intro .hero .hero__hl { animation: hero-ink var(--t-title) var(--ease-out) both; }
+html.js.motion-ok.hero-intro .hero .hero__hl { animation-delay: 60ms; }
+html.js.motion-ok.hero-intro .hero .hero__scene { animation: hero-rise var(--t-media) var(--ease-out) 80ms both; }
+html.js.motion-ok.hero-intro .hero .art { opacity: 0; will-change: opacity; }
+/* Waehrend des Auftakts setzt 25-line.js Deckkraft und Zoom je Bild: als eigene Ebenen, sonst wuerden die
+   Geraete samt Inhalt in jedem Bild neu gemalt (ruckelt). Danach faellt das weg. */
+html.js.motion-ok.hero-intro .hero .art__visual { will-change: transform; }
+
+/* Supplied images with transparent padding: the device span is the visible device (optical bounds from
+   site.json), the image is scaled and centred on it. No frame is painted here. */
+.hero-asset { position: absolute; inset: 0; rotate: var(--r, 0deg); }
+.hero-asset__device { position: absolute; display: block; }
+.hero-asset__device--kontakt { inset: 0; }
+.hero-asset__device--google { left: 50%; top: 1%; height: 98%; aspect-ratio: 706 / 1504; translate: -50% 0; }
+.hero-asset .art__img {
+  position: absolute; left: 50%; top: var(--asset-y); width: auto; max-width: none;
+  height: calc(100% * var(--asset-h)); transform: none;
+  translate: calc(-1 * var(--asset-cx)) calc(-1 * var(--asset-cy));
+}
+
+/* ==== customer-path.css ==== */
+/* Customer decision journey. The site's data-pop observer runs once per stage; no scroll handler. */
+.customer-path { --pt: clamp(48px, 6vw, 96px); padding-block: var(--pt) 0; }
+.customer-path > .shell { max-width: calc(1280px + 2 * var(--gutter)); }
+/* Abstaende knapp und an je einer Stelle: Einleitung -> Stationen (gap), Stationen -> Trennlinie (padding-bottom). */
+.customer-path__in {
+  display: grid; gap: 28px; padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+.customer-path__head { display: grid; gap: 16px; color: var(--ink); }
+.customer-path__head .t-label { color: var(--brand-deep); }
+.customer-path__title { max-width: 25ch; line-height: 1.12; }
+.customer-path__highlight { color: var(--brand-deep); }
+.customer-path__support { font-size: var(--fs-lead); line-height: 1.5; color: var(--ink); }
+.customer-path__list { --path-circle: 64px; --path-gap: 28px; display: grid; gap: var(--path-gap); width: 100%; max-width: 24rem; margin-inline: auto; }
+.customer-path__stage {
+  position: relative; min-width: 0; min-height: 84px; display: grid;
+  grid-template-columns: var(--path-circle) minmax(0, 1fr);
+  grid-template-areas: "icon number" "icon title" "icon caption";
+  grid-template-rows: auto auto 1fr; gap: 4px 20px;
+}
+.customer-path__number { grid-area: number; font-size: 16px; line-height: 20px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.customer-path__icon {
+  grid-area: icon; align-self: start; margin-top: 20px; display: grid; place-items: center;
+  width: var(--path-circle); height: var(--path-circle); border-radius: 50%;
+  background: color-mix(in srgb, var(--aqua) 45%, var(--white)); color: var(--brand-deep);
+}
+.customer-path__stage:last-child .customer-path__icon { background: color-mix(in srgb, var(--aqua) 80%, var(--white)); }
+.customer-path__icon svg { width: 36px; height: 36px; }
+.customer-path__stage-title { grid-area: title; font-size: 20px; line-height: 1.25; font-weight: 600; letter-spacing: -0.012em; color: var(--brand-deep); text-wrap: balance; }
+.customer-path__caption { grid-area: caption; font-size: 16px; line-height: 1.5; color: var(--text-2); }
+.customer-path__connector {
+  position: absolute; left: calc(var(--path-circle) / 2); top: calc(20px + var(--path-circle) + 12px);
+  width: 1px; height: calc(100% + var(--path-gap) - var(--path-circle) - 24px);
+  background: var(--brand-deep); opacity: 0.55; transform-origin: top center;
+}
+.customer-path__connector::after {
+  content: ""; position: absolute; bottom: 0; left: -2.5px; width: 6px; height: 6px;
+  border-right: 1px solid var(--brand-deep); border-bottom: 1px solid var(--brand-deep); rotate: 45deg;
+}
+@media (min-width: 64em) {
+  .customer-path__in { gap: 44px; padding-bottom: 44px; }
+  .customer-path__list {
+    --path-circle: clamp(72px, 2.6vw + 45px, 84px); --path-gap: clamp(14px, 1.2vw + 2px, 20px); --path-row: 10px;   /* Nummer -> Symbol -> Station -> Beschreibung; ab 1024 px nebeneinander (Breite fuer fuenf lesbare Spalten) */
+    max-width: none;
+    grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: 24px var(--path-circle) auto auto;
+    gap: var(--path-row) var(--path-gap); text-align: center;
+  }
+  .customer-path__stage { grid-row: span 4; grid-template-columns: minmax(0, 1fr); grid-template-rows: subgrid; grid-template-areas: "number" "icon" "title" "caption"; gap: var(--path-row); }
+  .customer-path__stage-title { margin-top: 4px; }
+  .customer-path__number { line-height: 24px; }
+  .customer-path__icon { margin-top: 0; justify-self: center; }
+  .customer-path__icon svg { width: 32px; height: 32px; }
+  .customer-path__stage-title { font-size: clamp(19px, 0.65vw + 12.4px, 22px); }
+  .customer-path__caption { text-wrap: balance; }
+  .customer-path__connector {
+    left: calc(50% + var(--path-circle) / 2 + 12px); top: calc(24px + var(--path-row) + var(--path-circle) / 2);
+    width: calc(100% + var(--path-gap) - var(--path-circle) - 24px); height: 1px;
+    transform-origin: left center;
+  }
+  .customer-path__connector::after { left: auto; bottom: auto; right: 0; top: -2.5px; border-bottom: 0; border-top: 1px solid var(--brand-deep); }
+}
+/* Natural height at every size: the journey is never stretched to a viewport height. */
+
+/* Entrance: each stage is its own observer target (30-pop.js), the <li> box itself never moves.
+   Inside a stage: number + icon first, then title and caption together as one group, then the connector
+   draws toward the next stage. Stages that enter together follow in reading order (--pop-order x
+   --path-t); on narrow screens each stage starts as it enters. Desktop row: about one second in total. */
+.customer-path { --path-t: 80ms; --path-in: 480ms; }
+html.js.motion-ok .customer-path__stage[data-pop] { opacity: 1; transform: none; transition: none; }
+.customer-path__stage { --stage-t0: calc(var(--pop-order, 0) * var(--path-t)); }
+.customer-path__number, .customer-path__icon {
+  transition: opacity var(--path-in) var(--ease-out), transform var(--path-in) var(--ease-out); transition-delay: var(--stage-t0);
+}
+.customer-path__stage-title, .customer-path__caption {
+  transition: opacity var(--path-in) var(--ease-out), transform var(--path-in) var(--ease-out); transition-delay: calc(var(--stage-t0) + 60ms);
+}
+.customer-path__connector { transition: transform 300ms var(--ease-out); transition-delay: calc(var(--stage-t0) + 160ms); }
+html.js.motion-ok .customer-path__stage:not(.is-in) .customer-path__number,
+html.js.motion-ok .customer-path__stage:not(.is-in) .customer-path__icon,
+html.js.motion-ok .customer-path__stage:not(.is-in) .customer-path__stage-title,
+html.js.motion-ok .customer-path__stage:not(.is-in) .customer-path__caption { opacity: 0; transform: translate3d(0, var(--reveal-y), 0); }
+html.js.motion-ok .customer-path__stage:not(.is-in) .customer-path__connector { transform: scaleY(0); }
+@media (min-width: 64em) {
+  html.js.motion-ok .customer-path__stage:not(.is-in) .customer-path__connector { transform: scaleX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js .customer-path__stage > * { opacity: 1 !important; transform: none !important; }
+}
+@media print {
+  .customer-path { padding-top: 1.5rem; }
+}
+
+/* ==== mocks.css ==== */
+/* ==========================================================================
+   NAHLIO — Bildflaechen der Beispiele
+   Im Rahmen steht die selbst gebaute Szene (scenes.css).
+   ========================================================================== */
+
+.vis {
+  position: absolute; inset: 0; container-type: size; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(80% 62% at 50% 34%, color-mix(in srgb, var(--brand) 42%, var(--graphite)), var(--graphite) 82%);
+}
+
+.zoom__tag, .pic__tag {
+  position: absolute; z-index: 5; left: 0.9rem; bottom: 0.8rem; max-width: calc(100% - 1.8rem);
+  padding: 0.28rem 0.7rem; border-radius: 999px;
+  background: rgba(11, 17, 20, 0.62); color: rgba(255, 255, 255, 0.86);
+  font-size: 0.66rem; letter-spacing: 0.02em; line-height: 1.3;
+}
+
+/* ==== scenes.css ==== */
+/* ==========================================================================
+   NAHLIO — Darstellungen der fuenf Leistungen (scenes.py)
+   Eine Szene (.sz) ist 60 em hoch; 1 em = 1/60 ihrer Hoehe (Container-Einheiten),
+   ihre Breite folgt aus --arn. Geraete werden mit --pw (Breite in Szenen-em) in
+   die Szene gesetzt, ihr Inneres rechnet in eigenen em: Der Bildschirm eines
+   Telefons ist immer 22,2 em breit (= 393 pt eines iPhones). Positionen in %.
+   Farben der ausgedachten Betriebe stehen hier, nicht in tokens.css: Sie sollen
+   bewusst NICHT nach NAHLIO aussehen (Website- und Kartenbeispiel "Uferhaus").
+   ========================================================================== */
+
+.sz { position: relative; container-type: size; }
+.sz__in {
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --float-shadow: 0 1.6em 3em -1em rgba(6, 12, 15, 0.38), 0 0.3em 0.7em rgba(6, 12, 15, 0.12);
+  position: absolute; inset: 0;
+  font-size: calc(100cqh / 60);
+  font-family: var(--font-sans); line-height: 1.3; color: #0b1114; text-align: left;
+  letter-spacing: normal; text-shadow: none;
+  -webkit-font-smoothing: antialiased;
+}
+.sz--google .sz__in, .sz--kontakt .sz__in { font-family: var(--font-platform); }
+
+.sz__in *, .sz__in *::before, .sz__in *::after { box-sizing: border-box; }
+.sz__in img { display: block; max-width: none; }
+.sz__in p { margin: 0; }
+.sz__in button { font: inherit; }
+.sz .ic { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.ic-star { width: 0.95em; height: 0.95em; fill: #fbbc04; }
+
+/* --- Smartphone ---------------------------------------------------------------- */
+.dv-phone {
+  --pw: 24;
+  position: absolute; z-index: 2;
+  font-size: calc(var(--pw) / 24 * 1em);
+  width: 24em; aspect-ratio: 71.6 / 146.6;
+  border-radius: 3.7em;
+  background: linear-gradient(140deg, #6b767c 0%, #2b3337 9%, #151b1e 30%, #0f1416 62%, #2f383c 88%, #79858a 100%);
+  box-shadow:
+    inset 0 0 0 0.06em rgba(255, 255, 255, 0.28),
+    inset 0 0 0.25em 0.1em rgba(0, 0, 0, 0.55),
+    0 3em 5em -1.6em rgba(6, 12, 15, 0.5),
+    0 1.2em 2em -0.8em rgba(6, 12, 15, 0.32);
+}
+.dv-phone::before { content: ""; position: absolute; inset: 0.36em; border-radius: 3.36em; background: #020304; }
+.dv-phone::after {   /* Lautstaerke-Tasten links */
+  content: ""; position: absolute; left: -0.13em; top: 10.2em; width: 0.2em; height: 3.1em;
+  border-radius: 0.2em 0 0 0.2em; background: linear-gradient(90deg, #5f6a70, #1c2326);
+  box-shadow: 0 4.2em 0 #2a3236;
+}
+.dv-phone__btn { position: absolute; right: -0.13em; top: 13em; width: 0.2em; height: 5.4em; border-radius: 0 0.2em 0.2em 0;
+                 background: linear-gradient(90deg, #1c2326, #5f6a70); }
+.dv-phone__screen {
+  position: absolute; inset: 0.9em; z-index: 1;
+  border-radius: 2.86em; overflow: hidden; isolation: isolate;
+  display: flex; flex-direction: column; background: #fff;
+}
+.dv-phone__island { position: absolute; z-index: 6; top: 1.42em; left: 50%; width: 7.3em; height: 2.15em; margin-left: -3.65em;
+                    border-radius: 1.1em; background: #000; }
+.dv-phone__glare { position: absolute; inset: 0.9em; z-index: 7; border-radius: 2.86em; pointer-events: none;
+                   background: linear-gradient(118deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 24%, rgba(255, 255, 255, 0) 40%); }
+
+/* Statusleiste */
+.dv-sb { position: relative; z-index: 5; flex: none; display: flex; justify-content: space-between; align-items: center;
+         height: 3.3em; padding: 0.4em 1.75em 0 2.25em; font-weight: 600; color: #000; }
+.dv-sb__t { font-size: 0.98em; letter-spacing: -0.01em; }
+.dv-sb__i { display: flex; gap: 0.32em; align-items: center; }
+.dv-sb svg { fill: currentColor; height: 0.68em; width: auto; }
+.dv-sb .dv-sb__bat { height: 0.78em; }
+.dv-sb--light { position: absolute; left: 0; right: 0; top: 0; color: #fff; }
+
+/* --- Schwebende Karten ------------------------------------------------------------ */
+.sz__float { position: absolute; z-index: 3; background: #fff; color: #0b1114; border-radius: 1.1em; box-shadow: var(--float-shadow); }
+
+/* ==========================================================================
+   Kontakt & WhatsApp — Termin buchen (Live in den Beispielen, 45-wa.js)
+   ========================================================================== */
+.sz--kontakt .sz__phone { --pw: 28.6; left: 50%; top: 1.2%; translate: -50% 0; }   /* fuellt die Szenenhoehe fast ganz */
+.dv-phone--wa .dv-phone__screen { background: #f6f6f6; }
+
+.wa { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.wa__head { flex: none; display: flex; align-items: center; gap: 0.55em; padding: 0.1em 0.95em 0.6em 0.55em; border-bottom: 0.05em solid rgba(0, 0, 0, 0.1); }
+.wa__head > .ic { width: 1.4em; height: 1.4em; stroke-width: 2.3; color: #0b1114; }
+.wa__avatar { width: 2.65em; height: 2.65em; flex: none; border-radius: 50%; display: grid; place-items: center;
+              background: linear-gradient(140deg, #d9b8a4, #9b6a56); color: #fff; font-weight: 700; font-size: 0.86em; letter-spacing: 0.03em; }
+.wa__who { display: grid; flex: 1; min-width: 0; line-height: 1.18; }
+.wa__who b { font-size: 0.95em; font-weight: 600; }
+.wa__who i { font-style: normal; font-size: 0.68em; color: #667781; }
+.wa__tools { display: flex; gap: 1.05em; color: #0b1114; }
+.wa__tools .ic { width: 1.3em; height: 1.3em; }
+
+.wa__chat {
+  position: relative; flex: 1; min-height: 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0.5em 0.6em 0.6em;
+  background-color: #efeae2;
+  background-image: radial-gradient(rgba(84, 70, 44, 0.08) 0.07em, transparent 0.09em);
+  background-size: 1.05em 1.05em;
+}
+.wa__daypill { align-self: center; padding: 0.28em 0.75em; border-radius: 0.6em; background: #fff; color: #54656f; font-size: 0.64em; font-weight: 600;
+               box-shadow: 0 0.06em 0.1em rgba(0, 0, 0, 0.08); }
+.wa { --wa-ease: cubic-bezier(0.22, 1, 0.36, 1); }
+.wa__row { display: grid; grid-template-rows: 1fr; margin-top: 0.48em;
+           transition: grid-template-rows 320ms var(--wa-ease), margin-top 320ms var(--wa-ease), opacity 180ms ease; }
+/* Neustart: Verlauf kurz ausblenden (statt sichtbar zurueckzuspulen); Ruecksetzen ohne Uebergang. */
+.wa__chat { transition: opacity 220ms ease; }
+.wa.is-resetting .wa__chat { opacity: 0; }
+.wa.is-instant .wa__row, .wa.is-instant .wa__tap { transition: none; }
+.wa__rin { min-height: 0; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; padding: 0 0.1em 0.14em; }
+.wa__row--out .wa__rin { align-items: flex-end; }
+.wa.is-js .wa__row.is-off { grid-template-rows: 0fr; margin-top: 0; opacity: 0; }
+
+.wa__msg { position: relative; max-width: 86%; padding: 0.5em 0.7em 0.42em; border-radius: 0.76em; font-size: 0.86em; line-height: 1.4;
+           color: #111b21; background: #fff; box-shadow: 0 0.06em 0.09em rgba(11, 20, 26, 0.14); }
+.wa__msg::after { content: ""; display: table; clear: both; }
+.wa__msg--in { border-top-left-radius: 0.25em; }
+.wa__msg--out { background: #d9fdd3; border-top-right-radius: 0.25em; }
+.wa__msg--wide { width: 90%; max-width: none; }
+.wa__time-s { float: right; display: inline-flex; align-items: center; gap: 0.25em; margin: 0.5em 0 -0.12em 0.7em; font-size: 0.64em; line-height: 1; white-space: nowrap; color: #667781; }
+.sz .ic--ticks { width: 1.3em; height: 0.8em; stroke: #53bdeb; stroke-width: 1.7; }
+.wa__hint { margin-top: 0.12em !important; font-size: 0.8em; color: #667781; }
+
+.wa__btns { display: grid; gap: 0; width: 86%; margin-top: 0.24em; overflow: hidden; border-radius: 0.76em; box-shadow: 0 0.06em 0.09em rgba(11, 20, 26, 0.14); }
+.wa__btn { display: block; width: 100%; padding: 0.6em 0.4em; border: 0; border-bottom: 1px solid rgba(11, 20, 26, 0.07); border-radius: 0; background: #fff; color: #008069;
+           font-size: 0.8em; font-weight: 500; box-shadow: none; cursor: pointer;
+           transition: background-color 200ms ease; }
+.wa__btn:last-child { border-bottom: 0; }
+.wa__days { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.32em; margin: 0.5em 0 0.1em; }
+.wa__day { display: grid; justify-items: center; gap: 0.06em; padding: 0.42em 0.2em 0.38em; border: 0; border-radius: 0.62em;
+           background: #f0f2f5; color: #111b21; cursor: pointer;
+           transition: background-color 260ms ease, color 260ms ease; }
+.wa__day small { font-size: 0.62em; font-weight: 700; color: #667781; text-transform: uppercase; letter-spacing: 0.05em; transition: color 260ms ease; }
+.wa__day b { font-size: 1.12em; line-height: 1.1; font-weight: 700; font-variant-numeric: tabular-nums; }
+.wa__day em { font-style: normal; font-size: 0.58em; color: #667781; transition: color 260ms ease; }
+.wa__day.is-full { cursor: default; opacity: 0.55; }
+.wa__day.is-full b { text-decoration: line-through; text-decoration-thickness: 0.08em; }
+.wa__day.is-sel { background: #00a884; color: #fff; }
+.wa__day.is-sel small, .wa__day.is-sel em { color: rgba(255, 255, 255, 0.86); }
+.wa__times { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.32em; margin: 0.5em 0 0.1em; }
+.wa__time { padding: 0.5em 0.3em; border-radius: 2em; border: 0.07em solid #d1d7db; background: #fff; color: #008069; font-size: 0.86em; font-weight: 700;
+            font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color 260ms ease, color 260ms ease, border-color 260ms ease; }
+.wa__time.is-sel { background: #00a884; border-color: #00a884; color: #fff; }
+.wa__btn.is-press { background: #e7f6f1; }
+@media (hover: hover) {
+  .wa[data-wa-live] .wa__day:not(.is-full):not(.is-sel):hover, .wa[data-wa-live] .wa__time:not(.is-sel):hover, .wa[data-wa-live] .wa__btn:hover { background: #e7f6f1; }
+}
+
+.wa__conf { display: flex; gap: 0.6em; align-items: flex-start; padding: 0.2em 0 0.55em; }
+.wa__conf-ic { width: 2.1em; height: 2.1em; flex: none; border-radius: 50%; display: grid; place-items: center; background: #00a884; color: #fff; }
+.sz .wa__conf-ic .ic { width: 1.2em; height: 1.2em; stroke-width: 2.7; }
+.wa__conf > div { display: grid; gap: 0.1em; }
+.wa__conf b { font-size: 1.02em; }
+.wa__conf span { font-size: 0.82em; color: #3b4a54; }
+.wa__conf-btn { clear: both; display: flex; justify-content: center; align-items: center; gap: 0.4em; margin: 0 -0.62em; padding: 0.55em 0.6em 0.25em;
+                border-top: 0.06em solid #e3e7ea; color: #008069; font-weight: 600; font-size: 0.84em; }
+.sz .wa__conf-btn .ic { width: 1.15em; height: 1.15em; }
+
+.wa__typing { grid-template-rows: 0fr; margin-top: 0; opacity: 0; }
+.wa.is-typing .wa__typing { grid-template-rows: 1fr; margin-top: 0.42em; opacity: 1; }
+.wa__typing .wa__msg { display: flex; gap: 0.24em; padding: 0.66em 0.75em; }
+.wa__typing i { width: 0.42em; height: 0.42em; border-radius: 50%; background: #8696a0; }
+html.js.motion-ok .wa__typing i { animation: waDot 1.1s ease-in-out infinite; }
+html.js.motion-ok .wa__typing i:nth-child(2) { animation-delay: 0.16s; }
+html.js.motion-ok .wa__typing i:nth-child(3) { animation-delay: 0.32s; }
+@keyframes waDot { 0%, 60%, 100% { transform: none; opacity: 0.5; } 30% { transform: translateY(-0.22em); opacity: 1; } }
+
+.wa__input { flex: none; display: flex; align-items: center; gap: 0.75em; padding: 0.5em 0.85em 1.65em; background: #f6f6f6; color: #0b1114; }
+.wa__input .ic { width: 1.4em; height: 1.4em; }
+.wa__field { flex: 1; padding: 0.42em 0.8em; border-radius: 1.2em; background: #fff; border: 0.06em solid #e2e2e2; font-size: 0.8em; color: #8696a0; }
+
+/* A fixed-size fingertip. JS owns translation; only its inner contact surface pulses. */
+.wa__tap {
+  position: absolute; z-index: 9; left: 0; top: 0; width: 2.7em; height: 2.7em;
+  margin: -1.35em 0 0 -1.35em; pointer-events: none; opacity: 0;
+  transition: opacity 160ms ease;
+}
+.wa__tap.is-on { opacity: 1; }
+.wa__touch {
+  display: block; width: 100%; height: 100%; border-radius: 50%;
+  background: rgba(11, 17, 20, 0.18); border: 0.14em solid rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0.22em 0.65em rgba(0, 0, 0, 0.2); opacity: 0.85;
+  transition: transform 100ms ease, opacity 100ms ease;
+}
+.wa__tap.is-down .wa__touch { transform: scale(0.9); opacity: 0.64; }
+
+/* ==========================================================================
+   Google-Profil (Vorher / Nachher in den Beispielen)
+   ========================================================================== */
+.google-compare { position: absolute; inset: 0; }
+.google-compare .sz__shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+/* Vorher liegt unten, Nachher darueber. Wechsel als Fokuswechsel (Wunsch 27.10., statt Wisch; 40-journey.js
+   morph): Vorher wird unscharf und blass und tritt zurueck, Nachher kommt scharf nach vorn. */
+.google-compare__before { z-index: 1; }
+.google-compare__after { z-index: 2; }
+.is-before .google-compare__after { opacity: 0; }
+.google-compare.is-to-after .google-compare__after   { animation: gFocusIn 720ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.google-compare.is-to-after .google-compare__before  { animation: gFocusOut 720ms cubic-bezier(0.4, 0, 0.2, 1) both; }
+.google-compare.is-to-before .google-compare__before { animation: gFocusIn 720ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.google-compare.is-to-before .google-compare__after  { animation: gFocusOut 720ms cubic-bezier(0.4, 0, 0.2, 1) both; }
+@keyframes gFocusIn  { from { opacity: 0; transform: scale(1.07); filter: blur(10px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes gFocusOut { from { opacity: 1; transform: none; filter: none; } to { opacity: 0; transform: scale(0.95); filter: blur(6px) saturate(0.4); } }
+@media (prefers-reduced-motion: reduce) { .google-compare .sz__shot { animation: none !important; } }
+
+/* ==========================================================================
+   Fotos & Kurzvideos — Dreh vor Ort, fertiger Kurzclip
+   ========================================================================== */
+.ft-shot { position: absolute; z-index: 1; left: 1.5%; top: 2.5%; width: 91%; aspect-ratio: 900 / 574; overflow: hidden; border-radius: 1.6em;
+           box-shadow: 0 2em 4em -1.4em rgba(6, 12, 15, 0.45); background: #20282c; }
+.ft-shot__img { width: 100%; height: 100%; object-fit: cover; }
+.ft-rec { position: absolute; left: 1.1em; top: 1.1em; display: flex; align-items: center; gap: 0.5em; padding: 0.45em 0.9em; border-radius: 2em;
+          background: rgba(11, 17, 20, 0.62); color: #fff; font-size: 0.95em; font-weight: 700; letter-spacing: 0.08em; }
+.ft-rec i { width: 0.68em; height: 0.68em; border-radius: 50%; background: #ff3b30; }
+.ft-rec span { font-weight: 600; letter-spacing: 0.02em; opacity: 0.9; font-variant-numeric: tabular-nums; }
+html.js.motion-ok .ft-rec i { animation: ftBlink 1.6s steps(2, jump-none) infinite; }
+@keyframes ftBlink { 50% { opacity: 0.2; } }
+.ft-corners { position: absolute; inset: 16% 12% 14% 12%; pointer-events: none; opacity: 0.85;
+  --c: rgba(255, 255, 255, 0.9); --l: 2.2em; --t: 0.18em;
+  background:
+    linear-gradient(var(--c), var(--c)) top left / var(--l) var(--t) no-repeat, linear-gradient(var(--c), var(--c)) top left / var(--t) var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / var(--l) var(--t) no-repeat, linear-gradient(var(--c), var(--c)) top right / var(--t) var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / var(--l) var(--t) no-repeat, linear-gradient(var(--c), var(--c)) bottom left / var(--t) var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / var(--l) var(--t) no-repeat, linear-gradient(var(--c), var(--c)) bottom right / var(--t) var(--l) no-repeat; }
+.sz--fotos .sz__phone { --pw: 21.5; left: 47%; top: 23.5%; }
+.dv-phone--clip .dv-phone__screen { background: #000; }
+.cl { position: relative; flex: 1; min-height: 0; color: #fff; }
+.cl__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 38% 50%; }
+.cl__shade { position: absolute; inset: 0; background: linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 56%, rgba(0, 0, 0, 0.74)); }
+.cl__top { position: absolute; left: 0; right: 0; top: 4.2em; display: flex; justify-content: center; }
+.cl__badge { display: inline-flex; align-items: center; gap: 0.4em; padding: 0.32em 0.8em; border-radius: 2em; background: rgba(255, 255, 255, 0.2);
+             font-size: 0.75em; font-weight: 600; }
+.sz .cl__badge .ic { width: 1.2em; height: 1.2em; }
+.cl__side { position: absolute; right: 0.9em; bottom: 8.4em; display: grid; gap: 1.1em; }
+.sz .cl__side .ic { width: 1.65em; height: 1.65em; stroke-width: 1.8; filter: drop-shadow(0 0.1em 0.2em rgba(0, 0, 0, 0.45)); }
+.cl__bottom { position: absolute; left: 1.1em; right: 1.1em; bottom: 1.9em; display: grid; gap: 0.55em; }
+.cl__cap { max-width: 12em; font-size: 1.12em; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; text-shadow: 0 0.1em 0.4em rgba(0, 0, 0, 0.45); }
+.cl__bar { height: 0.24em; overflow: hidden; border-radius: 0.2em; background: rgba(255, 255, 255, 0.35); }
+.cl__bar i { display: block; width: 80%; height: 100%; border-radius: inherit; background: #fff; }
+.cl__time { font-size: 0.7em; opacity: 0.85; font-variant-numeric: tabular-nums; }
+.ft-chips { left: 1.5%; top: 63%; display: grid; gap: 0.75em; justify-items: start; background: none; box-shadow: none; }
+.ft-chip { display: inline-flex; align-items: center; gap: 0.6em; padding: 0.75em 1.2em 0.75em 0.9em; border-radius: 2em; background: #fff;
+           font-size: 1.05em; font-weight: 600; box-shadow: var(--float-shadow); white-space: nowrap; }
+.sz .ft-chip .ic { width: 1.35em; height: 1.35em; color: var(--brand-deep); }
+
+/* ==========================================================================
+   Digitale Karte (LINO CAFE) und One-Page-Website (MOTORWERK DORSTEN) — gelieferte Bilder
+   Freigestellte WebP-Bilder (Transparenz bleibt, keine Flaeche dahinter), im Szenenrahmen
+   eingepasst. Ein weicher Schatten wie bei den gebauten Geraeten.
+   ========================================================================== */
+.sz__shot {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 1.4em 1.8em rgba(6, 12, 15, 0.32));
+}
+
+/* ==========================================================================
+   Einbau: Hero-Bilderreihe und Rahmen der Beispiele
+   ========================================================================== */
+.art--sz .sz { position: absolute; inset: 0; rotate: var(--r, 0deg); }
+/* Im Hero nur die Geraete: schwebende Karten waeren in der Bilderreihe zu klein zum Lesen. */
+.sz--hero .sz__float { display: none; }
+.vis > .sz { position: relative; z-index: 1; width: min(90cqw, calc(86cqh * var(--arn))); aspect-ratio: var(--arn); }
+.vis--website > .sz { width: min(94cqw, calc(86cqh * var(--arn))); }
+
+/* Hero is a finished composition, not a continuously running demo. */
+html.js.motion-ok .hero .ft-rec i { animation: none; }
+html.js .zoom.is-demo-paused .sc__scene * { animation-play-state: paused !important; }
+
+
+/* ==== journey.css ==== */
+/* ==========================================================================
+   NAHLIO — Fragen, Uebergang und Beispiele
+   1. Fragen direkt nach dem Hero (fragen.docx): weisse Flaeche, zentrierte Breite bis 1280 px,
+      Ueberschrift, drei Dialoge (Frage, Antwort, Beispiel-Link); Desktop drei Spalten, darunter untereinander.
+      Inhaltsgesteuerte Hoehe, kein Zoom, kein Scrollweg.
+   2. "Unsere Antwort": ein Modul auf --mist in der weissen Flaeche (Eyebrow, Ueberschrift, ein Satz).
+   3. Beispiele (verbesserungen.docx): dunkle Flaeche, feste Einleitung ("Unsere Leistungen"), darunter
+      eine Karte mit den fuenf Leistungen;
+      Wechsel an Ort und Stelle (40-journey.js), nichts verschiebt sich. Desktop: Buehne links,
+      Text rechts. Kein Autoplay; die Flaeche steht ganz normal im Seitenfluss.
+   Alle Groessen in px, damit sie nicht mit der wachsenden Grundschrift
+   mitwandern (die Vorgaben der Word-Dateien sind in px).
+   ========================================================================== */
+
+/* --- Fragen: drei Dialoge ---------------------------------------------------------------------
+   Jeder Dialog (.qa) haelt Frage (Sprechblase), Antwort und Beispiel-Link zusammen. Ab 1024 px drei
+   gleich breite Spalten mit feinen senkrechten Trennlinien (mittig in der Spaltenluecke), darunter
+   untereinander mit waagerechten Trennlinien. Keine Karten, keine festen Hoehen. Fragen und
+   "Unsere Antwort" stehen in derselben zentrierten Breite (bis 1280 px, wie die Karte der Beispiele)
+   mit gleichen Raendern links und rechts; der Inhalt darin ist linksbuendig. */
+.blick > .shell, .uebergang > .shell { max-width: calc(1280px + 2 * var(--gutter)); }
+
+/* Sichtbare Abstaende (je nur an einer Stelle gesetzt): Abschnittsanfang -> Ueberschrift (.blick oben),
+   Ueberschrift -> Dialoge (margin), Dialoge -> Antwort (.uebergang oben), Antwort -> dunkle Leistungen
+   (.uebergang unten). Mobil 390 / Tablet 768 / Desktop ab 1024 px. */
+.blick {
+  --pt: clamp(36px, 3.1vw + 24.5px, 62px);                       /* 37 (Handy 390) / 48 (Tablet) / 56-62 (Desktop) */
+  padding-block: var(--pt) 0;
+}
+.blick__head { display: grid; gap: 28px; align-items: end; margin-bottom: clamp(24px, 2.1vw + 15.8px, 36px); }   /* 24 / 32 / 36 */
+.blick__title {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 1.6vw + 24px, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  font-weight: 700;
+  color: var(--ink);
+  max-width: 25ch;
+  text-wrap: balance;
+}
+
+.qa-list { display: grid; margin: 0; padding: 0; list-style: none; }
+.qa { position: relative; display: grid; align-content: start; gap: 14px; min-width: 0;
+      padding-block: clamp(12px, 0.53vw + 9.9px, 14px); }           /* Luecke zwischen gestapelten Dialogen: 24 / 28 */
+.qa:first-child { padding-top: 0; }
+.qa:last-child { padding-bottom: 0; }
+.qa + .qa { border-top: 1px solid var(--line); }
+/* Fragen ohne Sprechblasen (Wunsch 27.10.): Jede Frage ist eine kleine Szene (components.blick_question).
+   Die Frage steht in einer festen Zeile (72 px, Hoehe des grossen Ladens), darunter Antwort und Link an der
+   linken Kante der Spalte. */
+.qa__q { min-width: 0; min-height: 72px; display: flex; align-items: center; gap: 14px; }
+.qa__ic { flex: none; display: grid; place-items: center; width: 30px; height: 30px; color: var(--brand-deep); }
+.qa__ic svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.qa__title {
+  position: relative; min-width: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(20px, 0.4vw + 18.5px, 24px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+.qa__a { display: grid; row-gap: 2px; align-items: start; min-width: 0; font-size: clamp(16px, 0.2vw + 15.2px, 18px); }
+.qa__body { line-height: 1.5; font-weight: 500; color: var(--ink); text-wrap: pretty; max-width: 36ch; }
+.qa__link { justify-self: start; display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px;
+            font-size: 15px; font-weight: 600; color: var(--brand-deep); text-decoration: none; }
+.qa__link svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round;
+                transition: transform 220ms var(--ease-out); }
+.qa__link:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+.qa__link:hover svg { transform: translateX(3px); }
+
+/* 1) Laden: 96 x 72 gross, Tuer 22 x 44. Fertig steht er klein (44 px) vor der Frage. */
+.qa__shop { position: relative; flex: none; width: 44px; aspect-ratio: 96 / 72; perspective: 240px; }
+.qa__shop-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.sh-wall { fill: var(--white); stroke: var(--brand-deep); stroke-width: 2; }
+.sh-win { fill: var(--mist); stroke: var(--brand-deep); stroke-width: 2; }
+.sh-mull { fill: none; stroke: var(--brand-deep); stroke-width: 1.4; }
+.sh-in { fill: color-mix(in srgb, var(--brand-deep) 30%, var(--ink)); }
+.sh-awn { fill: var(--brand-deep); }
+.sh-stripe { fill: var(--white); opacity: 0.9; }
+.sh-scal { fill: var(--brand); }
+.sh-ground { fill: none; stroke: var(--brand-deep); stroke-width: 2; stroke-linecap: round; }
+.qa__door {
+  position: absolute; left: 38.54%; top: 36.11%; width: 22.92%; height: 61.11%;
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brand-deep) 100%);
+  border: 1px solid color-mix(in srgb, var(--brand-deep) 70%, var(--ink));
+  border-radius: 2px 2px 0 0;
+  transform-origin: 0 50%; backface-visibility: hidden;
+}
+.qa__door::before {                       /* Glaseinsatz */
+  content: ""; position: absolute; left: 18%; right: 18%; top: 10%; height: 34%; border-radius: 1px;
+  background: color-mix(in srgb, var(--white) 75%, var(--brand));
+}
+.qa__door i { position: absolute; right: 14%; top: 56%; width: 3px; height: 3px; border-radius: 50%; background: var(--white); }
+
+/* 2) Preisschild: waagerecht, nur so lang wie die Frage; vorn drei Euro-Zeichen, hinten die Frage. Fertig zeigt es die Rueckseite. */
+.qa__tag { display: inline-block; max-width: 100%; perspective: 900px; transform-origin: 14px 50%; }
+.qa__tag-in { position: relative; display: grid; transform-style: preserve-3d; transform: rotateY(180deg); }
+.qa__tag-face {
+  grid-area: 1 / 1; position: relative; min-width: 0;
+  padding: 0.3em 0.6em 0.36em 30px;
+  clip-path: polygon(18px 0, 100% 0, 100% 100%, 18px 100%, 0 50%);
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+}
+.qa__tag-face::before {                   /* Loch */
+  content: ""; position: absolute; left: 12px; top: 50%; width: 9px; height: 9px; margin-top: -4.5px; border-radius: 50%;
+  background: var(--white); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--brand-deep) 35%, transparent);
+}
+.qa__tag-back { transform: rotateY(180deg); background: color-mix(in srgb, var(--brand) 20%, var(--white)); }
+.qa__tag-front {
+  position: absolute; inset: 0;            /* bestimmt die Breite nicht mit: so lang wie die Frage auf der Rueckseite */
+  display: flex; align-items: center; justify-content: space-evenly; padding-left: 26px;
+  background: var(--brand-deep); color: var(--white);
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(20px, 0.4vw + 18.5px, 24px);
+}
+.qa__euro { display: inline-block; }
+
+/* 3) Nachrichtenblase: Die Frage wird darin getippt. Die Buchstaben stehen von Anfang an an ihrem Platz und
+   werden nur sichtbar (kein Umbrechen oder Springen nach dem Tippen). */
+.qa__msg {
+  display: inline-block; max-width: 100%;
+  padding: 0.42em 0.85em 0.48em;
+  border-radius: 1.05em 1.05em 1.05em 0.28em;
+  background: color-mix(in srgb, var(--brand) 18%, var(--white));
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--brand-deep) 18%, transparent);
+}
+
+/* Buchstaben (35-qa.js zerlegt die Frage; Woerter bleiben zusammen, damit nichts anders umbricht). */
+.qa-w { white-space: nowrap; }
+.qa-ch { display: inline-block; position: relative; }
+
+/* --- Bewegung (35-qa.js setzt .qa-anim an die Liste und .is-play an die Frage, sobald sie sichtbar ist) ---- */
+.qa-anim .qa__a { opacity: 0; }
+
+/* 1) Laden (Wunsch 27.10.): Die Tuer geht auf, die Frage geht aus der dunklen Tuer hinaus wie jemand, der den
+   Laden verlaesst: .qa__exit reicht nach links bis an die Tuerkante und schneidet ab, was noch drinnen ist; so
+   kommt zuerst das Ende der Frage ins Licht, zuletzt der Anfang. Danach Tuer zu, Laden klein, Antwort.
+   --qa-exit (Abstand Tuerkante bis Fragenanfang) und --qa-walk (Weg) misst 35-qa.js. Ablauf ca. 2 s (Wunsch 28.10.: schneller). */
+.qa__exit { position: relative; z-index: 1; min-width: 0; }
+.qa-anim .qa--angebot .qa__shop { width: 96px; }
+.qa-anim .qa--angebot .qa__exit {
+  margin-left: calc(-1 * var(--qa-exit, 73px)); padding-left: var(--qa-exit, 73px);
+  overflow-x: clip; overflow-y: visible;
+}
+.qa-anim .qa--angebot.is-out .qa__exit { margin-left: 0; padding-left: 0; overflow: visible; }
+.qa-anim .qa--angebot .qa__title { transform: translate(calc(-1 * var(--qa-walk, 340px)), 9px); }
+.qa-anim .qa--angebot.is-play .qa__door {
+  animation: qaDoorOpen 280ms cubic-bezier(0.4, 0, 0.2, 1) 100ms both,
+             qaDoorClose 260ms cubic-bezier(0.4, 0, 0.2, 1) 1220ms forwards;
+}
+.qa-anim .qa--angebot.is-play .qa__title { animation: qaWalk 900ms cubic-bezier(0.3, 0.22, 0.42, 1) 300ms both; }
+.qa-anim .qa--angebot.is-play .qa__shop { animation: qaShrink 380ms cubic-bezier(0.4, 0, 0.2, 1) 1380ms both; }
+.qa-anim .qa--angebot.is-play .qa__a { animation: qaUp 380ms var(--ease-out) 1650ms both; }
+@keyframes qaDoorOpen { from { transform: none; } to { transform: rotateY(-82deg); } }
+@keyframes qaDoorClose { from { transform: rotateY(-82deg); } to { transform: none; } }
+@keyframes qaWalk {
+  0%   { transform: translate(calc(-1 * var(--qa-walk, 340px)), 9px); }
+  72%  { transform: translate(-6px, 2px); }
+  100% { transform: none; }
+}
+@keyframes qaShrink { from { width: 96px; } to { width: 44px; } }
+@keyframes qaUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* 2) Preisschild: schwingt herein, drei Euro-Zeichen werden einzeln gestempelt, dann dreht es sich um. */
+.qa-anim .qa--preise .qa__tag-in { transform: none; }
+.qa-anim .qa--preise .qa__euro { opacity: 0; }
+.qa-anim .qa--preise.is-play .qa__tag { animation: qaSwing 480ms cubic-bezier(0.3, 0, 0.3, 1) calc(var(--qa-d, 0ms) + 40ms) both; }
+.qa-anim .qa--preise.is-play .qa__euro { animation: qaStamp 220ms cubic-bezier(0.3, 0, 0.2, 1.3) calc(var(--qa-d, 0ms) + 240ms + var(--e, 0) * 180ms) both; }
+.qa-anim .qa--preise.is-play .qa__tag-in { animation: qaFlip 600ms cubic-bezier(0.5, 0, 0.2, 1) calc(var(--qa-d, 0ms) + 900ms) both; }
+.qa-anim .qa--preise.is-play .qa__a { animation: qaDown 380ms var(--ease-out) calc(var(--qa-d, 0ms) + 1460ms) both; }
+@keyframes qaSwing { 0% { transform: rotate(-7deg); } 45% { transform: rotate(4deg); } 75% { transform: rotate(-1.5deg); } 100% { transform: none; } }
+@keyframes qaStamp { 0% { opacity: 0; transform: scale(1.9) rotate(-8deg); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+@keyframes qaFlip { 0% { transform: none; } 50% { transform: rotateY(90deg) scale(1.06); } 100% { transform: rotateY(180deg); } }
+@keyframes qaDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: none; } }
+
+/* 3) Tippen in der Blase: Buchstaben werden nacheinander sichtbar, Schreibmarke hinter dem letzten. */
+.qa-anim .qa--kontakt .qa-ch { visibility: hidden; }
+.qa-anim .qa--kontakt .qa-ch.is-on { visibility: visible; }
+.qa-anim .qa--kontakt .qa-ch.is-caret::after {
+  content: ""; position: absolute; right: -2px; top: 0.12em; bottom: 0.1em; width: 2px;
+  visibility: visible; background: var(--brand-deep); animation: qaCaret 1s steps(1) infinite;
+}
+.qa-anim .qa--kontakt .qa__msg.is-caret-start::before {
+  content: ""; position: absolute; left: 0.85em; top: 0.55em; height: 1em; width: 2px;
+  background: var(--brand-deep); animation: qaCaret 1s steps(1) infinite;
+}
+.qa-anim .qa--kontakt .qa__msg { position: relative; }
+.qa-anim .qa--kontakt.is-typed .qa__a { animation: qaUp 380ms var(--ease-out) 80ms both; }
+@keyframes qaCaret { 50% { opacity: 0; } }
+
+/* Ab 1024 px: drei gleich breite Dialoge nebeneinander. Gemeinsame Zeilen (subgrid): Frage, Antwort und
+   Beispiel-Link stehen in allen drei Spalten auf derselben Hoehe, auch wenn eine Frage umbricht. Die
+   Abstaende kommen hier aus Polster/Rand der Teile, nicht aus dem Zeilenabstand. */
+@media (min-width: 64em) {
+  .qa-list { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto auto auto; column-gap: 32px; }
+  .qa, .qa:first-child, .qa:last-child { padding-block: 0; }
+  .qa { grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; }
+  .qa__q { padding-bottom: 10px; }
+  .qa__a { grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; }
+  .qa__link { margin-top: 4px; }
+  .qa + .qa { border-top: 0; }
+  .qa + .qa::before { content: ""; position: absolute; top: 0; bottom: 0; left: -16px; width: 1px; background: var(--line); }   /* Trennlinie mittig in der Luecke */
+}
+
+/* Optionales Bild (freigegebenes Kunden-PNG) rechts neben der Ueberschrift. */
+.blick__fig { margin: 0; display: flex; justify-content: flex-start; }
+.blick__fig img { display: block; width: auto; height: 180px; max-width: 100%; object-fit: contain; }
+@media (min-width: 52em) {
+  .blick__head--img { grid-template-columns: minmax(0, 1fr) auto; }
+  .blick__fig img { height: 300px; }
+}
+
+/* --- "Unsere Antwort": ein Modul auf hellem Markengrund ------------------------------------------
+   Gleiche Breite und Achse wie die Dialoge; eine Textfolge (Eyebrow, Ueberschrift, Satz), linksbuendig.
+   Die Flaeche (--mist) liegt auf einer nicht bedienbaren Ebene (::before) mit einer kleinen schraegen
+   Ecke oben rechts; Text und Fokusrahmen werden nie beschnitten. Die weisse Flaeche ist eine eigene
+   Ebene (z-index 0): Die Hintergrundlinie laeuft hinter dem Abschnitt.
+   Kontrast auf --mist: Eyebrow in --teal-deep (5,4:1), Ueberschrift --ink, Satz --graphite; die zwei
+   Hervorhebungen sind eine flache, durchscheinende Hinterlegung, die Schrift bleibt dunkel. */
+.uebergang {
+  position: relative; z-index: 0;
+  --bg: var(--white);
+  background: var(--white);
+  color: var(--ink);
+  padding-block: clamp(24px, 1.2vw + 20px, 36px) clamp(48px, 2.52vw + 38.2px, 64px);   /* Linie 24/29/36 unter den Dialogen, Text ebenso darunter; unten 48/56/64 */
+}
+.uebergang .nw { white-space: nowrap; }
+/* Uebergang von den Fragen: eine feine graue Linie im selben Raster (wie unter dem Kundenweg), kein Band, keine Karte. */
+.uebergang__card {
+  display: grid; gap: 14px 48px; align-items: center;
+  border-top: 1px solid var(--line); padding-top: clamp(24px, 1.2vw + 20px, 36px);
+}
+.uebergang__eyebrow { font-size: 12px; font-weight: 600; line-height: 1.4; letter-spacing: 0.16em; color: var(--teal-deep); }
+.uebergang__title {
+  font-family: var(--font-display); font-size: clamp(28px, 1.35vw + 23px, 44px);
+  line-height: 1.12; letter-spacing: -0.022em; font-weight: 650; color: var(--ink); text-wrap: balance;
+}
+.uebergang__hl {
+  background: linear-gradient(transparent 52%, color-mix(in srgb, var(--brand) 20%, transparent) 52%);
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+.uebergang__statement { font-size: clamp(16px, 0.3vw + 15px, 18px); line-height: 1.56; color: var(--graphite); max-width: 48ch; }
+@media (min-width: 64em) {
+  .uebergang__card { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  .uebergang__eyebrow { grid-column: 1 / -1; }
+}
+
+/* --- Beispiele: Leistungen im festen Rahmen ------------------------------------------------------
+   Eine graphitfarbene Karte: Reiter oben, darunter Buehne (Darstellung) mit Pfeilen und Punkten,
+   Ueberschrift, Absatz, drei Punkte, Aktion. Beim Wechsel (40-journey.js) bleibt alles stehen; nur
+   Darstellung und Text tauschen an Ort und Stelle. Dafuer liegen in jedem Platz (.sc__stack) alle fuenf
+   Varianten in derselben Rasterzelle (grid-area 1/1): Die laengste Variante bei der aktuellen Breite
+   bestimmt die Hoehe, inaktive sind nur unsichtbar (visibility), nie aus dem Layout genommen. Die Buehne
+   hat ein festes Seitenverhaeltnis; die Szenen liegen darin uebereinander. Keine Hoehenanimation,
+   kein Skalieren. Ohne JavaScript stehen die fuenf Leistungen untereinander (unten). */
+.zoom {
+  position: relative;
+  z-index: 0;                 /* eigene Ebene ueber der durchgehenden Linie: auf der dunklen Flaeche keine Linie */
+  background: var(--ink);
+  color: var(--text);
+  /* html hat scroll-padding-top = Navigationshoehe + 1,5 rem; mit -1,5 rem setzt der Anker
+     #beispiele die Flaeche genau unter die feste Navigation (aus dem Layout abgeleitet). */
+  scroll-margin-top: -1.5rem;
+  padding-block: clamp(32px, 2.52vw + 22.2px, 48px) clamp(32px, 3.5vw, 56px);   /* oben 32 / 40 / 48 bis zur Einleitung */
+  --sc-card: color-mix(in srgb, var(--graphite) 55%, var(--ink));      /* ~#111A1E */
+  --sc-stage: var(--graphite);                                          /* #1B252A */
+  --sc-border: rgba(255, 255, 255, 0.08);
+  --sc-arrow: 44px;
+}
+.sc { width: 100%; max-width: calc(1280px + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* Einleitung der Leistungen: steht fest ueber der Karte (gleiche linke Kante), bleibt beim Wechsel der
+   Leistung unveraendert und blendet nur einmal ein (eigener Einblender, 260 ms, 6 px). */
+.sc__intro {
+  display: grid; justify-items: start;
+  width: 100%; max-width: calc(1280px + 2 * var(--gutter));
+  margin: 0 auto clamp(24px, 1.26vw + 19.1px, 32px);           /* bis zur Karte 24 / 32 */
+  padding-inline: var(--gutter);
+}
+.sc__intro-label { font-size: 12px; font-weight: 600; line-height: 1.4; letter-spacing: 0.16em; text-transform: uppercase; color: var(--brand); }
+.sc__intro-title {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 1.35vw + 22.7px, 42px);
+  line-height: 1.15; letter-spacing: -0.024em; font-weight: 600;
+  color: var(--soft); max-width: 100%; text-wrap: balance;      /* breit genug fuer eine Zeile am Desktop; schmal bricht es natuerlich um */
+}
+
+/* Einmaliges, ruhiges Einblenden (30-pop.js); ohne Skript sichtbar, beim Wechsel nie erneut. */
+
+
+
+.sc__card {
+  display: grid; gap: clamp(14px, 1.8vw, 28px); min-width: 0;
+  padding: clamp(12px, 2.6vw, 40px);
+  background: var(--sc-card);
+  border: 1px solid var(--sc-border);
+  border-radius: 20px;
+}
+
+/* --- Reiter: eine Zeile; am Handy waagerecht scrollbar mit weichem Rand ------------------------- */
+.sc__tabs {
+  position: relative; display: flex; flex-wrap: nowrap; gap: 2px; min-width: 0;
+  overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding: 2px;                                  /* Platz fuer den Fokusrahmen */
+  --fl: 0px; --fr: 0px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fl), #000 calc(100% - var(--fr)), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 var(--fl), #000 calc(100% - var(--fr)), transparent 100%);
+}
+.sc__tabs::-webkit-scrollbar { display: none; }
+.sc__tabs.is-fade-l { --fl: 28px; }
+.sc__tabs.is-fade-r { --fr: 36px; }
+.sc__tab {
+  position: relative; flex: none; min-height: 44px; padding: 8px 14px; border-radius: 12px;
+  font-size: clamp(15px, 14px + 0.25vw, 17px); font-weight: 600; line-height: 1.2; white-space: nowrap;
+  color: var(--mist-70);
+  transition: color 140ms var(--ease-out), background-color 140ms var(--ease-out);
+}
+.sc__tab::after {
+  content: ""; position: absolute; left: 14px; right: 14px; bottom: 5px; height: 2px; border-radius: 2px;
+  background: var(--brand); transform: scaleX(0); transition: transform 160ms var(--ease-out);
+}
+.sc__tab.is-pending { color: var(--soft); }                 /* sofortige Rueckmeldung, falls Bilder noch laden */
+.sc__tab:hover { color: var(--soft); }
+.sc__tab[aria-selected="true"] { color: var(--brand); background: color-mix(in srgb, var(--brand) 9%, transparent); }
+.sc__tab[aria-selected="true"]::after { transform: scaleX(1); }
+html:not(.js) .sc__tabs { display: none; }
+
+/* --- Inhalt: drei Plaetze untereinander (Handy, schmales Tablet) ---------------------------------
+   Text (Ueberschrift + Absatz), Buehne, Details (drei Punkte, Schlusssatz, Aktion). Jeder Platz haelt
+   die Gruppe aller fuenf Leistungen; die hoechste Gruppe bestimmt die Hoehe des Platzes. */
+.sc__panel {
+  display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0;
+  grid-template-areas: "text" "media" "details";
+  row-gap: 16px;
+  border-radius: 14px;
+}
+.sc__text { grid-area: text; }
+.sc__media { grid-area: media; }
+.sc__details { grid-area: details; }
+.sc__stack { display: grid; min-width: 0; }
+.sc__copy, .sc__more { align-self: start; }
+html.js .sc__stack > .sc__item {
+  grid-area: 1 / 1; min-width: 0;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--t-copy) var(--ease-out), visibility 0s linear var(--t-copy);        /* Shared opacity crossfade. */
+}
+html.js .sc__stack > .sc__item.is-active {
+  opacity: 1; visibility: visible;
+  transition: opacity var(--t-copy) var(--ease-out), visibility 0s linear 0s;   /* No empty interval. */
+}
+
+.sc__h {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 1.2vw + 23px, 34px);
+  line-height: 1.08; letter-spacing: -0.026em; font-weight: 700;
+  color: var(--soft); text-wrap: balance;
+}
+.sc__p { margin-top: 12px; font-size: clamp(16px, 15px + 0.2vw, 18px); line-height: 1.55; color: var(--mist-70); max-width: 46ch; }
+
+/* --- Buehne: festes Seitenverhaeltnis, Szenen uebereinander, Kennzeichnung oben links ------------ */
+.sc__media { display: grid; gap: 8px; min-width: 0; align-content: start; }
+.sc__stage {
+  position: relative; isolation: isolate; overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    radial-gradient(64% 52% at 50% 46%, color-mix(in srgb, var(--brand) 24%, transparent), transparent 74%),
+    var(--sc-stage);
+  touch-action: pan-y pinch-zoom;              /* waagerecht wischt 40-journey.js, senkrecht scrollt die Seite */
+}
+.sc__concept-trigger {
+  position: absolute; z-index: 3; top: 12px; left: 12px;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 28px; padding: 3px 8px 3px 11px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.10);
+  font-size: 11px; font-weight: 600; line-height: 1.4; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--mist-70); cursor: pointer;
+  transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out);
+}
+.sc__concept-trigger::before { content: ""; position: absolute; inset: -8px -4px; }      /* Trefferflaeche ~44 px hoch */
+.sc__concept-trigger svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; }
+.sc__concept-trigger:hover, .sc__concept-trigger[aria-expanded="true"] {
+  color: var(--soft); border-color: color-mix(in srgb, var(--brand) 55%, transparent); background: color-mix(in srgb, var(--brand) 12%, transparent);
+}
+/* Hinweis zum Konzeptbeispiel: ein natives popover (Light Dismiss, Escape), liegt in der obersten Ebene und wird
+   daher von der Buehne nicht abgeschnitten. Grundform: Tafel am unteren Rand (Handy, ohne Skript); am Desktop
+   setzt 40-journey.js es neben die Kennzeichnung (.is-anchored). */
+.sc__concept {
+  position: fixed; inset: auto 12px 12px 12px; margin: 0 auto; width: auto; max-width: 440px; height: auto;
+  padding: 16px 16px 18px; border-radius: 16px;
+  background: var(--graphite); color: var(--soft);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  font-size: 15px; line-height: 1.5; text-align: left;
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out), overlay 160ms allow-discrete, display 160ms allow-discrete;
+}
+.sc__concept:not(:popover-open) { opacity: 0; transform: translateY(6px); }
+@starting-style { .sc__concept:popover-open { opacity: 0; transform: translateY(6px); } }
+.sc__concept.is-anchored { inset: auto; margin: 0; width: min(340px, calc(100vw - 24px)); max-width: none; }
+.sc__concept-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.sc__concept-title { font-weight: 700; color: var(--soft); padding-top: 2px; }
+.sc__concept-close { flex: none; display: grid; place-items: center; width: 44px; height: 44px; margin: -12px -12px -8px 0; border-radius: 50%; color: var(--mist-70);
+                     transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out); }
+.sc__concept-close:hover { color: var(--soft); background: rgba(255, 255, 255, 0.08); }
+.sc__concept-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.sc__concept p + p { margin-top: 8px; color: var(--mist-70); }
+/* Szenenflaeche unter der Kennzeichnung: Geraete und Kennzeichnung ueberschneiden sich nie. */
+.sc__scenes { position: absolute; inset: 44px 12px 12px; }
+html.js .sc__scene {
+  position: absolute; inset: 0;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--t-scene) var(--ease-out), visibility 0s linear var(--t-scene);
+}
+html.js .sc__scene.is-active { opacity: 1; visibility: visible; transition: opacity var(--t-scene) var(--ease-out), visibility 0s linear 0s; }
+.sc__scene img.is-broken { visibility: hidden; }        /* Bild fehlt: ruhige Flaeche statt Bruch-Symbol */
+.sc__scene .vis { background: none; overflow: visible; }
+/* Szene fuellt die Flaeche (statt 90/86 %); Hero-Szenen bleiben unberuehrt. */
+.sc__scene .vis > .sz { width: min(100cqw, calc(100cqh * var(--arn))); }
+.sc__scene:not(.is-active) * { animation-play-state: paused !important; }   /* inaktive Vorfuehrungen ruhen */
+/* Reduced Motion: Wechsel sofort (motion.css kuerzt nur die Dauer, hier gibt es auch Verzoegerungen). */
+@media (prefers-reduced-motion: reduce) {
+  html.js .sc__stack > .sc__item, html.js .sc__scene, .sc__tab, .sc__tab::after, .sc__dot span, .sc__concept, .sc__concept-trigger { transition: none !important; }
+}
+
+/* Handy und Tablet mit schmaler Buehnenspalte (48-60em, nebeneinander): die Website zeigt nur ihr
+   Smartphone (eigene Bildfassung per picture/source in scenes.py) - so fuellt das Geraet die schmale Buehne
+   statt als kleine Komposition darin zu stehen. Das Seitenverhaeltnis folgt diesem Bild. */
+@media (max-width: 35.99em), (min-width: 48em) and (max-width: 59.99em) {
+  .sc__scene .vis--website > .sz { --arn: 0.431 !important; }
+}
+/* Handy: hochkante Buehne (2:3) und schmale Raender, damit Telefone gut lesbar gross sind
+   (WhatsApp bei 390 px etwa 210 px breit statt ~150 px). */
+@media (max-width: 35.99em) {
+  .sc__stage { aspect-ratio: 2 / 3; }
+  .sc__scenes { inset: 40px 10px 8px; }
+}
+@media (min-width: 36em) {
+  .sc__stage { aspect-ratio: 4 / 3; }
+}
+
+/* --- Steuerung: Pfeil · fuenf Punkte · Pfeil, direkt unter der Buehne ------------------------- */
+.sc__controls { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.sc__arrow {
+  display: grid; place-items: center; flex: none;
+  width: var(--sc-arrow); height: var(--sc-arrow); border-radius: 50%;
+  color: var(--soft); background: transparent;
+  border: 1.5px solid color-mix(in srgb, var(--mist) 34%, transparent);
+  transition: background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), opacity 160ms var(--ease-out), transform 120ms var(--ease-out);
+}
+.sc__arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sc__arrow:hover { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 14%, transparent); }
+.sc__arrow:active { transform: scale(0.97); }
+.sc__dots { display: flex; }
+.sc__dot { display: grid; place-items: center; width: 28px; height: 44px; flex: none; }   /* feste Breite: nichts verrutscht */
+.sc__dot span {
+  display: block; width: 8px; height: 8px; border-radius: 999px;
+  background: color-mix(in srgb, var(--mist) 32%, transparent);
+  transition: width 160ms var(--ease-out), background-color 160ms var(--ease-out);
+}
+.sc__dot:hover span { background: color-mix(in srgb, var(--mist) 60%, transparent); }
+.sc__dot[aria-current="true"] span { width: 22px; background: var(--brand); }
+.sc__dot.is-pending span { background: color-mix(in srgb, var(--brand) 60%, transparent); }
+html:not(.js) .sc__controls { display: none; }
+
+/* --- Drei Punkte, Schlusssatz und Aktion (eine Gruppe) ------------------------------------------- */
+.sc__list li {
+  display: grid; grid-template-columns: 19px minmax(0, 1fr); gap: 14px; align-items: start;
+  padding-block: 10px;
+  font-size: clamp(16px, 15px + 0.2vw, 18px); line-height: 1.45; font-weight: 500; color: var(--soft);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.sc__list li:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.sc__list svg { width: 19px; height: 19px; margin-top: calc((1.45em - 19px) / 2);
+                fill: none; stroke: var(--brand); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.sc__closing { margin-top: 12px; font-size: 16px; line-height: 1.5; color: var(--mist-70); max-width: 46ch; }
+.sc__links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+/* Handy: Punkte, Aktion und Hinweise ruecken zusammen (gleiche Schrift, weniger Leerraum), damit die Gruppe mit dem
+   Vorher/Nachher-Schalter nicht hoeher wird als noetig. Buehne und Geraete bleiben unveraendert. */
+@media (max-width: 47.99em) {
+  .sc__list li { padding-block: 7px; }
+  .sc__links { margin-top: 12px; }
+  .sc__gnotes { margin-top: 8px; font-size: 13px; }
+}
+.sc__link { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0.5rem 1.2rem; border-radius: 999px; font-weight: 600; font-size: 15px;
+            border: 1.5px solid color-mix(in srgb, var(--mist) 34%, transparent); color: var(--soft); background: transparent;
+            transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out), border-color 160ms var(--ease-out); }
+.sc__link svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 160ms var(--ease-out); }
+.sc__link:hover { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 14%, transparent); }
+.sc__link:hover svg { transform: translateX(3px); }
+.sc__link[aria-pressed="true"] { border-color: var(--brand); color: var(--brand); }
+
+/* Vorher / Nachher: zwei Haelften eines Schalters; der gewaehlte Zustand ist gefuellt (nicht nur farbig). */
+/* Vorher/Nachher als Schalter wie am Handy (Wunsch 28.10.): Der Knopf gleitet weich von rechts nach links und
+   zurueck, die Beschriftungen bleiben stehen. 40-journey.js setzt .is-before an die Gruppe. */
+.sc__compare {
+  position: relative; isolation: isolate; display: inline-grid; grid-template-columns: 1fr 1fr; padding: 4px;
+  border-radius: 999px; background: color-mix(in srgb, var(--mist) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mist) 26%, transparent);
+}
+.sc__compare::before {
+  content: ""; position: absolute; z-index: -1; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+  border-radius: 999px; background: var(--brand);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transform: translateX(100%); transition: transform 440ms cubic-bezier(0.35, 1.3, 0.5, 1);
+}
+.sc__compare.is-before::before { transform: none; }
+.sc__seg { position: relative; min-height: 40px; min-width: 104px; padding: 0 18px; border-radius: 999px; background: none;
+           font-size: 15px; font-weight: 600; color: var(--mist-70); transition: color 300ms var(--ease-out); }
+.sc__seg:hover { color: var(--soft); }
+.sc__seg[aria-pressed="true"] { background: none; color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { .sc__compare::before { transition: none; } }
+.sc__seg:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+
+/* Hinweise zum Nachher-Bild als Text unter dem Bild (Handy, Hilfstechnik, ohne Skript). Im Vorher-Zustand
+   unsichtbar, der Platz bleibt (keine Verschiebung). Mit Hinweisen am Bild (breit) nur fuer Hilfstechnik. */
+.sc__gnotes { margin-top: 14px; font-size: 14px; line-height: 1.5; color: var(--mist-70); transition: opacity 200ms var(--ease-out); }
+.sc__gnotes-k { color: var(--soft); font-weight: 600; }
+.sc__gnote { color: var(--brand); white-space: nowrap; }
+.sc__gnotes.is-before { opacity: 0; visibility: hidden; transition: opacity 200ms var(--ease-out), visibility 0s linear 200ms; }
+.sc__gnotes.is-overlay { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
+
+/* Hinweise am Bild (nur breit, nur Nachher): feine Linie mit Punkt und einem Knick, Beschriftung neben dem Telefon. */
+.g-notes { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; visibility: hidden;
+           transition: opacity 220ms var(--ease-out), visibility 0s linear 220ms; }
+.g-notes.is-on { opacity: 1; visibility: visible; transition: opacity 220ms var(--ease-out), visibility 0s; }
+.vis.is-before .g-notes { opacity: 0; visibility: hidden; transition: opacity 160ms var(--ease-out), visibility 0s linear 160ms; }
+.g-notes__lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+/* Wunsch 28.10.: Linien geschwungen und leuchtend in der Farbe der Seitenlinie, Ansatzpunkte als Ring mit
+   Puls; Beschriftungen hell hervorgehoben und eckig, mit Spitze zur Linie hin. */
+.g-notes__line { fill: none; stroke: #47D3EB; stroke-width: 2; stroke-linecap: round; filter: drop-shadow(0 0 4px rgba(71, 211, 235, 0.55)); }
+.g-notes__dot { fill: var(--ink); stroke: #47D3EB; stroke-width: 2.5; }
+.g-notes__pulse { fill: none; stroke: #47D3EB; stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.g-note { position: absolute; left: 0; top: 0; padding: 5px 11px 5px 16px; border-radius: 0; white-space: normal;
+          font-size: 13px; font-weight: 700; line-height: 1.3; color: var(--ink); background: #47D3EB;
+          clip-path: polygon(9px 0, 100% 0, 100% 100%, 9px 100%, 0 50%); }
+/* Die Hinweise zeichnen sich, sobald das Nachher-Bild steht: Punkt, Linie, dann Beschriftung (je Hinweis versetzt). */
+.vis:not(.is-before) .g-notes.is-on .g-notes__line { stroke-dasharray: 1; animation: gLine 520ms var(--ease-out) calc(420ms + var(--g-i, 0) * 120ms) both; }
+.vis:not(.is-before) .g-notes.is-on .g-notes__dot { transform-box: fill-box; transform-origin: center; animation: gDot 260ms var(--ease-out) calc(360ms + var(--g-i, 0) * 120ms) both; }
+.vis:not(.is-before) .g-notes.is-on .g-note { animation: gNoteIn 280ms var(--ease-out) calc(800ms + var(--g-i, 0) * 120ms) both; }
+@keyframes gLine { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes gDot { from { transform: scale(0); } to { transform: none; } }
+@keyframes gNoteIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+.vis:not(.is-before) .g-notes.is-on .g-notes__pulse { animation: gPulse 2.2s ease-out calc(1000ms + var(--g-i, 0) * 160ms) infinite; }
+@keyframes gPulse { 0% { opacity: 0.75; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
+@media (prefers-reduced-motion: reduce) { .g-notes, .sc__gnotes { transition: none !important; } .g-notes__line, .g-notes__dot, .g-notes__pulse, .g-note { animation: none !important; } }
+@media (max-width: 22.49em) {     /* 320 px: Beschriftung bleibt einzeilig */
+  .sc__link { padding-inline: 0.85rem; font-size: 14px; gap: 0.4rem; }
+}
+
+/* --- Tablet (48-60em): Buehne links (48 %), Text rechts, wenn beide Spalten >= ~280 px breit sind ----
+   Eigene Tablet-Schriftgroessen; die Buehne ist hochkant, damit Telefone nicht kleiner werden als
+   untereinander. Darunter bleibt alles untereinander. */
+@media (min-width: 48em) and (max-width: 59.99em) {
+  .sc__panel {
+    grid-template-columns: minmax(0, 48fr) minmax(0, 52fr);
+    grid-template-rows: 1fr auto auto 1fr;                  /* die 1fr-Zeilen mitteln den Text zur Buehne */
+    grid-template-areas: "media ." "media text" "media details" "media .";
+    column-gap: 28px; row-gap: 0;
+  }
+  .sc__media { align-self: center; }
+  .sc__stage { width: 100%; aspect-ratio: 3 / 5; max-height: max(22rem, calc(100svh - var(--nav-h) - 13rem)); }
+  .sc__h { font-size: 26px; line-height: 1.12; }
+  .sc__p { margin-top: 10px; font-size: 16px; }
+  .sc__details { margin-top: 18px; }
+  .sc__list li { font-size: 16px; padding-block: 9px; }
+}
+
+/* --- Desktop: Buehne links (48 %), Text rechts mittig dazu; Reiter mittig ---------------------- */
+@media (min-width: 60em) {
+  .zoom { --sc-arrow: 48px; }
+  .sc__card { border-radius: 24px; }
+  .sc__tabs { justify-content: center; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+  .sc__panel {
+    grid-template-columns: minmax(0, 48fr) minmax(0, 52fr);
+    grid-template-rows: 1fr auto auto 1fr;                  /* die 1fr-Zeilen mitteln den Text zur Buehne */
+    grid-template-areas: "media ." "media text" "media details" "media .";
+    column-gap: clamp(40px, 4vw, 56px); row-gap: 0;
+  }
+  .sc__media { align-self: center; gap: 12px; }
+  /* Niedrige Fenster (z. B. 1280 x 720): Buehne nicht hoeher als der freie Platz (nur als Verbesserung). */
+  .sc__stage { width: 100%; aspect-ratio: 11 / 12; max-height: max(22rem, calc(100svh - var(--nav-h) - 13rem)); border-radius: 18px; }   /* volle Spaltenbreite; nur die Hoehe wird begrenzt */
+  .sc__concept-trigger { top: 16px; left: 16px; }
+  .sc__h { font-size: clamp(34px, 1.2vw + 22px, 40px); }
+  .sc__scenes { inset: 52px 16px 16px; }
+  .sc__details { margin-top: 20px; }
+  .sc__list li { padding-block: 13px; }
+}
+
+/* --- Ohne JavaScript: jede Leistung fuer sich, untereinander ------------------------------------- */
+html:not(.js) .sc__panel { display: flex; flex-direction: column; gap: 16px; }
+html:not(.js) .sc__stack, html:not(.js) .sc__media, html:not(.js) .sc__stage, html:not(.js) .sc__scenes { display: contents; }
+html:not(.js) .sc__concept-trigger { position: relative; top: auto; left: auto; order: 0; align-self: flex-start; }
+html:not(.js) .sc__copy { order: calc(var(--k) * 10 + 1); }
+html:not(.js) .sc__scene { order: calc(var(--k) * 10 + 3); }
+html:not(.js) .sc__more { order: calc(var(--k) * 10 + 4); }
+html:not(.js) .sc__copy:not(:first-child) { margin-top: 40px; }
+html:not(.js) .sc__scene {
+  position: relative; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden;
+  background: radial-gradient(64% 52% at 50% 46%, color-mix(in srgb, var(--brand) 24%, transparent), transparent 74%), var(--sc-stage);
+}
+html:not(.js) .sc__links { display: none; }      /* Aktionen brauchen das Skript */
+@media (min-width: 36em) { html:not(.js) .sc__scene { aspect-ratio: 4 / 3; } }
+
+/* --- Wechsel der Leistungen: Gleiten wie in nahlio-site-neu, 620 ms (40-journey.js setzt die Klassen) -- */
+html.js .sc__scene.sc-out-next, html.js .sc__scene.sc-out-prev { opacity: 1; visibility: visible; transition: none; }
+html.js .sc__scene.sc-in-next, html.js .sc__scene.sc-in-prev { transition: none; }
+html.js .sc__scene.sc-in-next  { animation: scInNext 620ms cubic-bezier(0.6, 0, 0.2, 1) both; }
+html.js .sc__scene.sc-in-prev  { animation: scInPrev 620ms cubic-bezier(0.6, 0, 0.2, 1) both; }
+html.js .sc__scene.sc-out-next { animation: scOutNext 620ms cubic-bezier(0.6, 0, 0.2, 1) both; }
+html.js .sc__scene.sc-out-prev { animation: scOutPrev 620ms cubic-bezier(0.6, 0, 0.2, 1) both; }
+@keyframes scInNext  { from { transform: translate3d(112%, 0, 0); } to { transform: none; } }
+@keyframes scInPrev  { from { transform: translate3d(-112%, 0, 0); } to { transform: none; } }
+@keyframes scOutNext { from { transform: none; } to { transform: translate3d(-112%, 0, 0); } }
+@keyframes scOutPrev { from { transform: none; } to { transform: translate3d(112%, 0, 0); } }
+/* Text gleitet mit dem Bild herein (gleiche Dauer und Kurve, kuerzerer Weg), statt vorher schon dazustehen. */
+html.js .sc__stack > .sc__item.sc-txt-next { animation: scTxtNext 620ms cubic-bezier(0.6, 0, 0.2, 1) both; }
+html.js .sc__stack > .sc__item.sc-txt-prev { animation: scTxtPrev 620ms cubic-bezier(0.6, 0, 0.2, 1) both; }
+@keyframes scTxtNext { from { opacity: 0; transform: translate3d(56px, 0, 0); } 35% { opacity: 0; } to { opacity: 1; transform: none; } }
+@keyframes scTxtPrev { from { opacity: 0; transform: translate3d(-56px, 0, 0); } 35% { opacity: 0; } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { html.js .sc__scene, html.js .sc__stack > .sc__item { animation: none !important; } }
+
+/* ==== sections.css ==== */
+/* --------------------------------------------------------------------------
+   FAQ — eine Ueberschrift, Aufklapper als ruhige Karten; die geoeffnete hebt
+   sich durch Flaeche, Rand und Markierung ab (kein Anheben, kein Skalieren).
+   Normaler Seitenfluss: keine Bildschirmhoehe, kein CSS-zoom.
+   -------------------------------------------------------------------------- */
+
+.faq-sec { --bg: var(--mist); }
+
+.faq-sec__grid { display: grid; gap: var(--head-gap, 28px); max-width: 920px; margin-inline: auto; }
+
+.faq-sec .sec-head { margin-bottom: 0; }
+
+.faq-sec__title {
+  font-family: var(--font-display); font-size: clamp(30px, 18px + 2vw, 46px);
+  line-height: 1.1; letter-spacing: -0.026em; font-weight: 700; color: var(--ink);
+}
+
+
+.faq { display: grid; gap: var(--s-2); }
+
+/* Zustand "offen": der ganze Rand wird Deep Turquoise (Staerke bleibt 1 px), die Flaeche bekommt einen
+   sehr leichten Markenton, das Plus wird zum Minus. Aufklappen 360 ms ueber grid-template-rows (Hoehe aus
+   dem Inhalt, kein max-height), der Antworttext blendet kuerzer ein (200 ms, leicht versetzt) und beim
+   Schliessen schneller aus (140 ms). Alles haengt nur an .is-open: schnelle Wiederholungen kehren die
+   laufenden Uebergaenge einfach um, es bleibt kein Zwischenzustand stehen. */
+.faq__item {
+  position: relative; border-radius: var(--r-md); background: transparent; border: 1px solid var(--line-soft);
+  transition: background-color 280ms var(--ease-out), border-color 280ms var(--ease-out);
+}
+
+.faq__h { margin: 0; }
+
+.faq__q { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: var(--s-4); text-align: left; min-height: 60px; padding: 0.75rem 1.3rem;
+          font-family: var(--font-display); font-size: clamp(1.06rem, 1rem + 0.35vw, 1.3rem); font-weight: 600; letter-spacing: -0.012em; color: var(--ink); border-radius: var(--r-md);
+          transition: color 280ms var(--ease-out); }
+
+.faq__q:hover { color: var(--brand-deep); }
+
+.faq__icon { position: relative; flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--ink) 24%, transparent);
+             transition: background-color 280ms var(--ease-out), border-color 280ms var(--ease-out), color 280ms var(--ease-out); }
+
+.faq__icon::before, .faq__icon::after { content: ""; position: absolute; inset: 0; margin: auto; width: 13px; height: 2px; border-radius: 2px; background: currentColor; transition: transform var(--t-faq) var(--ease-expand); }
+
+.faq__icon::after { transform: rotate(90deg); }                       /* senkrechter Strich: Plus */
+
+.faq__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--t-faq) var(--ease-expand); }
+
+.faq__a { overflow: hidden; min-height: 0; }
+
+.faq__a p { padding: 0 1.4rem 1.3rem; font-size: 1.12rem; line-height: 1.55; max-width: 70ch; color: var(--text-2); opacity: 0; transition: opacity 140ms var(--ease-out); text-wrap: pretty; }
+
+.faq__item.is-open { background: color-mix(in srgb, var(--brand-deep) 5%, var(--white)); border-color: var(--brand-deep); }
+
+.faq__item.is-open .faq__q { color: var(--brand-deep); }
+
+.faq__item.is-open .faq__icon { background: var(--brand-deep); border-color: var(--brand-deep); color: var(--white); }
+
+.faq__item.is-open .faq__icon::before { transform: rotate(180deg); }
+
+.faq__item.is-open .faq__icon::after { transform: rotate(180deg); }   /* deckt sich mit dem waagerechten Strich: Minus */
+
+.faq__item.is-open .faq__panel { grid-template-rows: 1fr; }
+
+.faq__item.is-open .faq__a p { opacity: 1; transition: opacity var(--t-answer) var(--ease-out) 80ms; }
+
+html:not(.js) .faq__panel { grid-template-rows: 1fr; }
+
+html:not(.js) .faq__a p { opacity: 1; }
+
+/* Geschlossene Antworten bleiben auch fuer Screenreader zu (zusaetzlich inert/aria-hidden aus 50-faq.js). */
+html.js .faq__panel { visibility: hidden; transition: grid-template-rows var(--t-faq) var(--ease-expand), visibility 0s linear var(--t-faq); }
+
+html.js .faq__item.is-open .faq__panel { visibility: visible; transition-delay: 0s; }
+
+/* --------------------------------------------------------------------------
+   KOSTENLOSER KURZ-CHECK
+   -------------------------------------------------------------------------- */
+
+.field { display: grid; gap: var(--s-2); border: 0; padding: 0; margin: 0; min-width: 0; }
+
+.field__label { font-size: var(--fs-sm); font-weight: 600; color: var(--text); }
+
+.field__req { color: var(--brand); }
+
+.field input[type="text"], .field input[type="url"], .field input[type="email"], .field textarea {
+  width: 100%; min-height: 48px; padding: 0.7rem 0.95rem; border-radius: var(--r-sm); border: 1.5px solid color-mix(in srgb, var(--mist) 28%, transparent);
+  background: color-mix(in srgb, var(--ink) 60%, var(--graphite)); color: var(--soft); transition: border-color 200ms, box-shadow 200ms; }
+
+.field textarea { resize: vertical; min-height: 96px; }
+
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 22%, transparent); }
+
+.field input[aria-invalid="true"], .field textarea[aria-invalid="true"] { border-color: #ff8a80; }
+
+.field__error { min-height: 0; font-size: var(--fs-xs); color: #ffb4ab; }
+
+.field__error:empty { display: none; }
+
+.radios { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+
+.radio { position: relative; cursor: pointer; }
+
+.radio input { position: absolute; opacity: 0; inset: 0; }
+
+.radio span { display: inline-flex; align-items: center; min-height: 46px; padding: 0.5rem 1.2rem; border-radius: 999px; border: 1.5px solid color-mix(in srgb, var(--mist) 30%, transparent); font-size: var(--fs-sm); font-weight: 600; transition: background-color 220ms, color 220ms, border-color 220ms; }
+
+.radio:hover span { border-color: var(--brand); }
+
+.radio input:checked + span { background: var(--brand); border-color: var(--brand); color: var(--ink); }
+
+.radio input:focus-visible + span { outline: 3px solid var(--brand); outline-offset: 3px; }
+
+.form__more { border-top: 1px solid var(--line); padding-top: var(--s-3); }
+
+.form__more summary { cursor: pointer; font-weight: 600; font-size: var(--fs-sm); color: var(--brand); min-height: 44px; display: flex; align-items: center; gap: 0.6rem; list-style: none; }
+
+.form__more summary::-webkit-details-marker { display: none; }
+
+.form__more summary::before { content: "+"; display: grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; border: 1.5px solid currentColor; line-height: 1; }
+
+.form__more[open] summary::before { content: "–"; }
+
+.form__more-in { display: grid; gap: var(--s-4); padding-top: var(--s-3); }
+
+.consent { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3); align-items: start; font-size: var(--fs-xs); color: var(--text-2); }
+
+.consent input { width: 20px; height: 20px; margin-top: 0.1rem; accent-color: var(--brand); }
+
+.form__submit { justify-self: stretch; }
+
+.form__status { min-height: 1.2em; font-size: var(--fs-sm); color: var(--brand); }
+
+.form__note { font-size: var(--fs-xs); color: var(--text-3); }
+
+/* --------------------------------------------------------------------------
+   FOOTER
+   -------------------------------------------------------------------------- */
+
+.footer { background: var(--graphite); color: var(--soft); padding-block: var(--s-8) var(--s-6); position: relative; z-index: 1; }
+
+.footer__grid { display: grid; gap: var(--s-6); }
+
+/* Breit: links Marke, Kontakt, Netzwerke; rechts die Seitennavigation waagerecht mit kurzen Texten (Wunsch 28.10.:
+   fuellt die frueher leere Mitte). */
+@media (min-width: 64em) { .footer__grid { grid-template-columns: minmax(240px, 0.85fr) minmax(0, 2.15fr); column-gap: clamp(40px, 5vw, 96px); align-items: start; } }
+
+/* Schriftzug mit engem Ausschnitt (components.py): optisch etwa 180 px (Handy) bis 230 px (breit). */
+.footer__logo svg { display: block; width: clamp(176px, 9vw + 120px, 232px); height: auto; color: var(--soft); }
+
+.footer__claim { font-size: var(--fs-sm); color: var(--mist-70); max-width: 40ch; margin-top: var(--s-4); }
+
+.footer__claim--2 { margin-top: var(--s-2); }
+
+/* Kontakt: E-Mail und Telefon als lesbarer Text (je 44 px hoch), darunter die Netzwerke als ruhige Symbolreihe.
+   Symbole in Mist, beim Zeigen hell; Fokus aus [data-theme="graphite"] (Tuerkis mit dunklem Hof). */
+.footer__contact { display: grid; justify-items: start; margin-top: var(--s-5); font-style: normal; }
+.footer__contact-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; max-width: 100%;
+                        color: var(--soft); font-size: var(--fs-sm); text-decoration: none; overflow-wrap: anywhere; }
+.footer__contact-link svg { flex: none; width: 16px; height: 16px; color: var(--brand); }
+.footer__contact-link:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+.footer__social { display: flex; flex-wrap: wrap; gap: 4px; margin: var(--s-2) 0 0 -10px; padding: 0; list-style: none; }
+.footer__social-link { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--mist-70);
+                       transition: color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out); }
+.footer__social-link svg { width: 20px; height: 20px; }
+.footer__social-link:hover { color: var(--soft); background: color-mix(in srgb, var(--mist) 10%, transparent); }
+
+/* Seitennavigation: waagerechte Spalten (breit 5, Tablet 3, Handy untereinander), je Nummer, Name und ein kurzer
+   Text; Nummern als ruhige Markierung (fuer Hilfstechnik verborgen). */
+.footer__navlist { display: grid; gap: 22px 28px; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 36em) { .footer__navlist { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 64em) { .footer__navlist { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.footer__navlist li { display: grid; align-content: start; gap: 6px; padding-top: 14px;
+                      border-top: 1px solid color-mix(in srgb, var(--mist) 16%, transparent); }
+.footer__navlist a { display: flex; align-items: baseline; gap: 10px; min-height: 44px; color: var(--soft);
+                     font-size: clamp(17px, 0.3vw + 16px, 19px); font-weight: 600; text-decoration: none; }
+.footer__num { flex: none; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--brand); font-variant-numeric: tabular-nums; }
+.footer__navlist a:hover .footer__label { text-decoration: underline; text-underline-offset: 0.22em; }
+.footer__note { font-size: 14px; line-height: 1.5; color: var(--mist-70); max-width: 26ch; }
+
+/* Untere Zeile: Rechtliches, Copyright, Region - zurueckhaltend, durch eine feine Linie getrennt. */
+.footer__links--legal { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); }
+.footer__links--legal a { display: inline-flex; align-items: center; min-height: 44px; color: var(--mist-70); font-size: var(--fs-xs); }
+.footer__links--legal a:hover { color: var(--soft); }
+
+.footer__bottom { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); justify-content: space-between; align-items: center; margin-top: var(--s-7); padding-top: var(--s-4);
+                  border-top: 1px solid color-mix(in srgb, var(--mist) 16%, transparent); font-size: var(--fs-xs); color: var(--mist-70); }
+.footer__bottom p { min-height: 44px; display: flex; align-items: center; }
+@media (max-width: 47.99em) { .footer__bottom { flex-direction: column; align-items: flex-start; } .footer__bottom p { min-height: 0; padding-block: 4px; } }
+
+/* --------------------------------------------------------------------------
+   Rechtstexte (Impressum / Datenschutz) — unveraendert im Auftrag
+   -------------------------------------------------------------------------- */
+
+.legal { max-width: 46rem; display: grid; gap: var(--s-5); }
+
+.legal h2 { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 700; letter-spacing: var(--tr-head); margin-top: var(--s-5); }
+
+.legal p, .legal li { color: var(--text-2); max-width: var(--measure); }
+
+.legal ul { display: grid; gap: var(--s-2); padding-left: 1.2rem; list-style: disc; }
+
+.legal__warning { border: 1px solid color-mix(in srgb, var(--brand) 50%, transparent); background: color-mix(in srgb, var(--brand) 8%, transparent);
+                  border-radius: var(--r-md); padding: var(--s-5); display: grid; gap: var(--s-2); }
+
+/* Kurz-Check */
+
+.form__more summary { min-height: 44px; }
+
+/* ==========================================================================
+   KONTAKT — dunkle Flaeche. Breit: links (etwa ein Drittel) Ueberschrift, Satz und
+   der zweite Weg per WhatsApp, rechts (etwa zwei Drittel) das Formular. Darunter
+   untereinander. Innerhalb des Formulars entscheidet seine eigene Breite
+   (Container-Abfrage), ob Felder nebeneinander stehen - nie enge Spalten in einer
+   schmalen Formularspalte. Die Oberkante ist gerade (ohne Woelbung).
+   ========================================================================== */
+
+.cta {
+  position: relative;
+  overflow: clip;
+  --bg: var(--ink);
+}
+
+.cta__grid { display: grid; gap: clamp(32px, 2vw + 24px, 48px); }
+
+@media (min-width: 64em) {
+  .cta__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(40px, 4vw, 72px); align-items: start; }
+}
+
+.cta .stack { align-content: start; gap: var(--s-4); }
+
+.cta__title { font-family: var(--font-display); font-size: clamp(30px, 18px + 2vw, 46px); line-height: 1.08; letter-spacing: -0.028em; font-weight: 700; max-width: 18ch; text-wrap: balance; }
+
+.cta__body { color: var(--text-2); max-width: 44ch; font-size: clamp(16px, 15px + 0.3vw, 19px); line-height: 1.6; }
+
+.cta__direct { display: grid; justify-items: start; gap: 8px; margin-top: 8px; }
+
+.cta__wa-note { font-size: var(--fs-sm); line-height: 1.5; color: var(--text-2); }
+
+.form { container-type: inline-size; display: grid; gap: var(--s-5); padding: 0; border: 0; background: none; border-radius: 0; }
+
+.field input[type="text"], .field input[type="url"], .field input[type="email"], .field textarea {
+  min-height: 48px; padding: 0.7rem 0.9rem; background: color-mix(in srgb, var(--soft) 8%, transparent);
+  border: 1px solid var(--line); border-radius: var(--r-md); color: var(--text); font-size: var(--fs-body);
+}
+
+.field input[type="text"]:hover, .field input[type="url"]:hover, .field input[type="email"]:hover, .field textarea:hover { border-color: color-mix(in srgb, var(--mist) 34%, transparent); }
+
+.field input:focus, .field textarea:focus { border-color: var(--brand); box-shadow: none; }
+
+.field textarea::placeholder { color: var(--text-3); opacity: 1; }
+
+/* Links Name, Betrieb und E-Mail-Adresse untereinander, daneben die Nachricht (gleich hoch) - nur, wenn
+   das Formular selbst breit genug ist; sonst eine Spalte in derselben Reihenfolge. */
+.form__top, .form__who { display: grid; gap: var(--s-4); }
+
+.field--msg textarea { min-height: 132px; line-height: 1.5; }
+
+@container (min-width: 560px) {
+  .form__top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; }
+  .field--msg { grid-template-rows: auto minmax(0, 1fr); }
+  .field--msg textarea { height: 100%; }
+}
+
+/* Formular derzeit nicht verfuegbar: dauerhafter Hinweis ueber den Feldern (getrennt von Feldfehlern), mit
+   funktionierenden Alternativen; der Senden-Knopf ist dann gesperrt. */
+.form__notice { display: grid; gap: 10px; padding: 14px 16px; border-radius: var(--r-md); border: 1px solid color-mix(in srgb, var(--brand) 45%, transparent);
+                background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--soft); font-size: var(--fs-sm); line-height: 1.5; }
+.form__notice-links { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.form__notice-link { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; color: var(--brand); text-decoration: underline; text-underline-offset: 0.18em; }
+.form__notice-link:hover { text-decoration-thickness: 2px; }
+.form__submit:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Gewaehltes Paket: eine ruhige Zeile ueber der Auswahl ("Ihre Anfrage zu DIGITAL"); bei "Noch nicht sicher" leer. */
+.form__context { justify-self: start; padding: 6px 14px; border-radius: 999px; font-size: var(--fs-sm); line-height: 1.4; font-weight: 600;
+                 color: var(--soft); background: color-mix(in srgb, var(--brand) 12%, transparent); border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent); }
+
+.form__context:empty { display: none; }
+
+/* Paketwahl im Stil der Formularfelder: drei Pillen (Radios, Pfeiltasten wechseln), darunter CARE als eigenes,
+   freiwilliges Kaestchen mit Hinweis auf die laufende Pflege und den Monatspreis. Keine Kasse, kein Zwang. */
+.form__pkg { display: grid; gap: var(--s-3); min-width: 0; margin: 0; padding: 0; border: 0; }
+
+.form__pkg legend { padding: 0; margin-bottom: var(--s-3); }
+
+.form__pkg-opts { gap: var(--s-2); }
+
+.form__pkg .radio span { min-height: 44px; padding: 0.45rem 1.1rem; }
+
+.form__care { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3); align-items: start; min-height: 44px; padding-top: 10px; cursor: pointer;
+              font-size: var(--fs-sm); line-height: 1.45; color: var(--soft); }
+
+.form__care input { width: 20px; height: 20px; margin-top: 0.1rem; accent-color: var(--brand); }
+
+.form__care small { display: block; font-size: var(--fs-xs); color: var(--text-2); }
+
+/* Honeypot (Feld "website"): fuer Menschen weder sichtbar noch per Tab erreichbar, fuer Screenreader verborgen
+   (aria-hidden); kein display:none, damit einfache Bots es weiter ausfuellen. Ausgewertet wird es am Empfaenger. */
+.form__hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+.form .consent { max-width: 72ch; }
+
+.form__submit { justify-self: start; }
+
+@media (max-width: 47.99em) { .form__submit { width: 100%; } }
+
+.form__note { max-width: 52ch; }
+
+/* --------------------------------------------------------------------------
+   FAQ wie in nahlio-site-neu (Wunsch 27.10.2026): deckende Karten (die Linie laeuft darunter),
+   die Fragen stehen kraeftiger da, die geoeffnete Karte hebt sich leicht an, ein Akzentbalken
+   waechst links, das Plus dreht sich zum Minus, die Antwort gleitet herein. Beim Erscheinen
+   kommen die Fragen nacheinander.
+   -------------------------------------------------------------------------- */
+.faq { gap: 10px; }
+.faq__item {
+  background: var(--white);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 4%, transparent);
+  transition: background-color 320ms var(--ease-out), border-color 320ms var(--ease-out),
+              transform 450ms var(--ease-out), box-shadow 450ms var(--ease-out);
+}
+.faq__item::before {
+  content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; border-radius: 4px;
+  background: var(--brand-deep); transform: scaleY(0); transition: transform 450ms var(--ease-out);
+}
+.faq__q {
+  min-height: 66px; padding: 0.95rem 1.4rem;
+  font-size: clamp(1.12rem, 1rem + 0.45vw, 1.4rem); font-weight: 700; letter-spacing: -0.016em;
+}
+.faq__q:hover { color: var(--brand-deep); }
+.faq__item:hover { border-color: color-mix(in srgb, var(--brand-deep) 40%, transparent); }
+.faq__icon {
+  width: 38px; height: 38px; color: var(--brand-deep);
+  border-color: color-mix(in srgb, var(--brand-deep) 45%, transparent);
+  transition: background-color 350ms var(--ease-out), border-color 350ms var(--ease-out), color 350ms var(--ease-out), transform 450ms var(--ease-out);
+}
+.faq__a p { transform: translateY(-6px); transition: opacity 140ms var(--ease-out), transform 140ms var(--ease-out); }
+
+.faq__item.is-open {
+  background: var(--white); border-color: color-mix(in srgb, var(--brand-deep) 55%, transparent);
+  transform: translateY(-2px) scale(1.012);
+  box-shadow: 0 1.2rem 2.4rem color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.faq__item.is-open::before { transform: scaleY(1); }
+.faq__item.is-open .faq__icon { transform: rotate(180deg); }
+.faq__item.is-open .faq__a p { opacity: 1; transform: none; transition: opacity 450ms var(--ease-out) 80ms, transform 450ms var(--ease-out) 80ms; }
+
+/* Fragen nacheinander, sobald die Liste ins Bild kommt (30-pop.js setzt .is-in auf .faq). Als einmalige
+   Animation (fill: backwards), damit spaeteres Auf- und Zuklappen nicht verzoegert wird. */
+html.js.motion-ok .faq[data-pop] { opacity: 1; transform: none; transition: none; }
+html.js.motion-ok .faq[data-pop]:not(.is-in) > .faq__item { opacity: 0; }
+html.js.motion-ok .faq[data-pop].is-in > .faq__item { animation: faqIn 560ms var(--ease-out) backwards; }
+@keyframes faqIn { from { opacity: 0; transform: translateY(16px); } }
+.faq > .faq__item:nth-child(2) { animation-delay: 60ms; }
+.faq > .faq__item:nth-child(3) { animation-delay: 120ms; }
+.faq > .faq__item:nth-child(4) { animation-delay: 180ms; }
+.faq > .faq__item:nth-child(5) { animation-delay: 240ms; }
+.faq > .faq__item:nth-child(6) { animation-delay: 300ms; }
+.faq > .faq__item:nth-child(7) { animation-delay: 360ms; }
+.faq > .faq__item:nth-child(8) { animation-delay: 420ms; }
+.faq > .faq__item:nth-child(n+9) { animation-delay: 480ms; }
+@media (prefers-reduced-motion: reduce) {
+  .faq__item, .faq__item::before, .faq__icon, .faq__a p { transition: none !important; animation: none !important; }
+  .faq__item.is-open { transform: none; }
+}
+
+/* ==== pages.css ==== */
+/* ==========================================================================
+   NAHLIO — Pakete, Ablauf, FAQ-Breite und Kontakt (preise.docx, ablauf.docx, contact.docx)
+   Alle Groessen in px bzw. nach den Vorgaben der Word-Dateien. Die Anker landen so, dass die
+   Ueberschrift etwas unter der festen Navigation steht: scroll-margin-top = Abstand (28 px)
+   minus Innenabstand oben des Abschnitts (--pt) minus 1,5 rem (html hat scroll-padding-top =
+   Navigationshoehe + 1,5 rem); nichts ist als feste Seitenposition hinterlegt.
+   ========================================================================== */
+
+/* --- gemeinsame Breite und Abstaende: zentriert bis 1280 px Inhalt, gleiche Raender links und rechts
+   (wie Fragen, "Unsere Antwort" und Leistungen). Senkrecht 40-48 / 48-56 / 56-72 px; Ueberschrift
+   -> Inhalt 24 / 28 / 32 px. Nur diese Abschnitte, nicht die ganze Seite. */
+.plans > .shell, .process > .shell, .faq-sec > .shell, .cta > .shell { max-width: calc(1280px + 2 * var(--gutter)); }
+.plans, .process, .faq-sec, .cta { --pt: clamp(40px, 2.6vw + 32px, 72px); padding-block: var(--pt); }
+.plans, .process, .faq-sec, .cta { --head-gap: clamp(24px, 0.9vw + 20.5px, 32px); }
+
+/* ===== Pakete ===================================================================== */
+.plans { --bg: var(--mist); }
+.plans__title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 20px + 1.5vw, 44px);
+  line-height: 1.12; letter-spacing: -0.024em; font-weight: 700; color: var(--ink);
+  max-width: 24ch; text-wrap: balance;
+}
+.plans__head { display: grid; gap: 16px; align-items: center; }
+.plans__head .plans__tax { margin: 0; max-width: 56ch; font-size: 16px; line-height: 1.55; font-weight: 400; color: var(--text-2); }
+@media (min-width: 64em) {
+  .plans__head { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 40px; }
+}
+.plans__grid { display: grid; gap: 16px; margin-top: var(--head-gap); }
+
+/* REFRESH hell und ruhig umrandet; DIGITAL eine zurueckhaltende Graphit-Karte mit heller Schrift, feinem
+   tuerkisen Rand und einem Band oben, das sagt, was sie zusaetzlich enthaelt. Kein Schatten, kein Anheben,
+   keine Beliebtheits-Hinweise. */
+.plan {
+  --pad: clamp(20px, 1.6vw + 14px, 32px);
+  display: grid; align-content: start; row-gap: 14px; min-width: 0;
+  padding: var(--pad);
+  border-radius: var(--r-lg); background: var(--white); color: var(--ink);
+  border: 1px solid var(--line);
+}
+.plan--digital {
+  background: var(--graphite); color: var(--soft);
+  border: 1.5px solid color-mix(in srgb, var(--brand) 45%, transparent);
+  --focus: var(--brand); --focus-halo: var(--ink);                /* Fokusrahmen wie auf dunklen Flaechen */
+}
+.plan__band {
+  margin: calc(-1 * var(--pad)) calc(-1 * var(--pad)) 4px;
+  padding: 11px var(--pad);
+  border-radius: calc(var(--r-lg) - 2px) calc(var(--r-lg) - 2px) 0 0;
+  background: var(--aqua); color: var(--ink);
+  border-bottom: 1px solid color-mix(in srgb, var(--brand-deep) 30%, transparent);
+  font-size: clamp(15px, 14px + 0.2vw, 16px); font-weight: 600; line-height: 1.4;
+}
+.plan__label { color: var(--teal-deep); }
+.plan--digital .plan__band { background: color-mix(in srgb, var(--brand) 16%, var(--graphite)); color: var(--soft);
+                             border-bottom-color: color-mix(in srgb, var(--brand) 35%, transparent); }
+.plan--digital .plan__label { color: var(--brand); }
+.plan__h {
+  font-family: var(--font-display); font-size: clamp(22px, 14px + 1.1vw, 30px);
+  line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; max-width: 20ch; text-wrap: balance;
+}
+/* Preise: grosse Zahl, davor "ab", danach "einmalig" bzw. "/ Monat" */
+.price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.price b { font-family: var(--font-display); font-weight: 700; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.price__from, .price__per { font-size: 15px; font-weight: 500; color: var(--text-2); }
+.price__from { font-weight: 600; }
+.plan__price b { font-size: clamp(34px, 20px + 1.5vw, 48px); }
+.plan__list { display: grid; align-content: start; gap: 10px; }
+.plan__list li, .care__list li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; align-items: start; color: var(--text-2); }
+.plan__list li { font-size: clamp(16px, 15px + 0.3vw, 18px); line-height: 1.45; }
+.plan__list svg, .care__list svg { width: 20px; height: 20px; margin-top: 2px; fill: none; stroke: var(--brand-deep); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.plan__cta { justify-self: start; margin-top: 6px; --btn-bg: var(--brand-deep); --btn-bd: var(--brand-deep); --btn-fg: var(--white); }
+.plan--digital .plan__price b { color: var(--white); }
+.plan--digital .price__from, .plan--digital .price__per { color: var(--mist-70); }
+.plan--digital .plan__list li { color: color-mix(in srgb, var(--soft) 92%, transparent); }
+.plan--digital .plan__list svg { stroke: var(--brand); }
+.plan--digital .plan__cta { --btn-bg: var(--brand); --btn-bd: var(--brand); --btn-fg: var(--ink); }   /* Ink auf Tuerkis 8,3 : 1 */
+.plan--digital .plan__cta:hover { background: var(--soft); border-color: var(--soft); color: var(--ink); }
+
+/* Nebeneinander: gemeinsame Zeilen (subgrid) fuer Band, Etikett, Ueberschrift, Preis, Liste und Knopf -
+   Preise und Knoepfe stehen auf einer Linie, ohne feste Hoehen. */
+@media (min-width: 52em) {
+  .plans__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: 24px; row-gap: 0; }
+  .plan { grid-row: span 6; grid-template-rows: subgrid; }
+  .plan__band { grid-row: 1; }
+  .plan__label { grid-row: 2; }
+  .plan__h { grid-row: 3; }
+  .plan__price { grid-row: 4; }
+  .plan__list { grid-row: 5; }
+  .plan__cta { grid-row: 6; }
+}
+
+/* CARE: kompakte, optionale Pflege unter den Paketen (keine dritte Paketkarte). Desktop: Erklaerung
+   links, Preis und Knopf rechts; Handy: ein Block. */
+.care {
+  margin-top: 16px; display: grid; gap: 16px 40px; align-items: center;
+  padding: clamp(20px, 1vw + 16px, 28px) clamp(20px, 1.6vw + 14px, 32px);
+  border-radius: var(--r-lg); border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--white) 55%, var(--mist));
+}
+@media (min-width: 52em) { .care { grid-template-columns: minmax(0, 1fr) auto; } }
+.care__opt { font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--teal-deep); }
+.care__h { margin-top: 4px; font-family: var(--font-display); font-size: clamp(20px, 14px + 1vw, 26px); line-height: 1.2; letter-spacing: -0.018em; font-weight: 700; }
+.care__p { margin-top: 8px; font-size: clamp(16px, 15px + 0.25vw, 17.5px); line-height: 1.5; color: var(--text-2); max-width: 62ch; }
+.care__list { margin-top: 12px; display: grid; gap: 6px; }
+.care__list li { font-size: 16px; line-height: 1.45; }
+.care__side { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+@media (min-width: 52em) { .care__side { flex-direction: column; align-items: flex-end; text-align: right; } }
+.care__price b { font-size: clamp(28px, 18px + 1.1vw, 38px); }
+.care__cta { --btn-bg: transparent; --btn-fg: var(--ink); --btn-bd: var(--ink); }
+.care__cta:hover { background: var(--ink); color: var(--white); }
+
+/* "Klare Preise. Volle Transparenz." (Wunsch 28.10., Text vom Inhaber): breit Ueberschrift links, Text rechts. */
+.transp { margin-top: var(--head-gap); padding-top: 20px; border-top: 1px solid var(--line); display: grid; gap: 10px 48px; }
+@media (min-width: 52em) { .transp { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: start; } }
+.transp__h { font-family: var(--font-display); font-size: clamp(22px, 14px + 1vw, 30px); line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; color: var(--ink); }
+.transp__p { font-size: clamp(16px, 15px + 0.2vw, 17.5px); line-height: 1.55; color: var(--text-2); max-width: 62ch; }
+.transp__tax { margin-top: 8px; font-size: 14px; line-height: 1.45; color: var(--ink-65); }
+
+/* Ruhige Abschlusszeile mit feiner Linie. Der Pakethinweis steht oben neben dem Titel. */
+.enquiry {
+  margin-top: var(--head-gap); padding-top: 20px; border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;
+}
+.enquiry__p { font-size: clamp(16px, 15px + 0.2vw, 17.5px); line-height: 1.5; color: var(--text-2); max-width: 62ch; }
+
+/* ===== Ablauf: offene Folge in vier Schritten ========================================= */
+.process__title {
+  font-family: var(--font-display); font-size: clamp(30px, 18px + 2vw, 46px);
+  line-height: 1.1; letter-spacing: -0.026em; font-weight: 700; color: var(--ink);
+}
+.process__l { display: inline; }
+@media (min-width: 40em) { .process__l { display: block; } }
+
+/* Handy: Zeilen mit Symbol und Nummer links neben dem Text; feine Linien trennen die Schritte. */
+.steps { display: grid; margin-top: var(--head-gap); }
+.step { display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 16px; align-items: start; align-content: start; padding-block: 18px; border-top: 1px solid var(--line); }
+.step:last-child { padding-bottom: 0; }
+.step__rail { display: grid; justify-items: center; gap: 6px; }
+.step__ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--mist); color: var(--brand-deep); }
+.step__ic svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.step__num { font-size: 13px; font-weight: 700; line-height: 1; letter-spacing: 0.06em; color: var(--brand-deep); font-variant-numeric: tabular-nums; }
+.step__title { font-family: var(--font-display); font-size: clamp(19px, 15px + 0.7vw, 23px); line-height: 1.2; letter-spacing: -0.016em; font-weight: 700; }
+.step__p { margin-top: 6px; font-size: clamp(16px, 15px + 0.25vw, 17.5px); line-height: 1.5; color: var(--text-2); max-width: 46ch; }
+
+/* Tablet zwei mal zwei, breit vier Spalten: Symbol und Nummer in einer Zeile ueber dem Titel. */
+@media (min-width: 40em) {
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+  .step, .step:last-child { grid-template-columns: minmax(0, 1fr); row-gap: 14px; padding-block: 20px 4px; }
+  .step:nth-child(n+3) { margin-top: 20px; }
+  .step__rail { grid-auto-flow: column; justify-content: start; align-items: center; gap: 12px; }
+}
+@media (min-width: 70em) {
+  .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .step:nth-child(n+3) { margin-top: 0; }
+}
+
+/* ===== Kontakt ====================================================================== */
+.form__privacy a { color: var(--brand); text-decoration: underline; text-underline-offset: 0.18em; }
+.form__privacy a:hover { text-decoration-thickness: 2px; }
+.form__status { min-height: 1.4em; }
+.form__status.is-ok { color: var(--brand); }
+.form__status.is-error { color: #ffb4ab; }
+
+/* ==== motion.css ==== */
+/* ==========================================================================
+   NAHLIO — Bewegung, Reduced Motion und Fallbacks
+   Diese Datei wird zuletzt eingebunden und gewinnt daher in der Kaskade.
+   ========================================================================== */
+
+/* Eine kurze Gruppeneinblendung fuer alle data-pop-Elemente (30-pop.js): Deckkraft und eine kleine
+   Verschiebung nach oben, keine Unschaerfe, keine Groessenaenderung. Was gemeinsam sichtbar wird,
+   ueberlappt in Lesereihenfolge (--pop-order x --pop-step). Layout und Fokus warten nie darauf.
+   Elemente mit eigener Choreografie (Kundenweg) setzen das hier lokal ausser Kraft. */
+html.js.motion-ok [data-pop] {
+  opacity: 0; transform: translate3d(0, var(--reveal-y), 0);
+  transition: opacity var(--t-reveal) var(--ease-out), transform var(--t-reveal) var(--ease-out);
+  transition-delay: calc(var(--pop-order, 0) * var(--pop-step));
+}
+html.js.motion-ok [data-pop].is-in,
+html.js.motion-ok [data-pop]:focus-within { opacity: 1; transform: none; }
+html.js.motion-ok [data-pop]:focus-within { transition: none; }
+/* Ohne Skript, bei Reduced Motion oder nach dem Sicherheits-Zeitlimit (motion-ok fehlt) gilt keine dieser Regeln. */
+
+/* --------------------------------------------------------------------------
+   PREFERS-REDUCED-MOTION
+   Keine Zoom-Buehne, keine Linienanimation, kein automatisches Wechseln der
+   Beispiele. Alle Inhalte bleiben vollstaendig vorhanden und in logischer
+   Reihenfolge.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html.js [data-pop] { opacity: 1 !important; transform: none !important; }
+  html.js [data-wa-chat] > * { opacity: 1 !important; transform: none !important; }
+}
+
+/* --------------------------------------------------------------------------
+   OHNE JAVASCRIPT
+   -------------------------------------------------------------------------- */
+html:not(.js) .nav__toggle { display: none !important; }
+html:not(.js) [data-pop-in] { opacity: 1; transform: none; }
+
+/* --------------------------------------------------------------------------
+   DRUCK
+   -------------------------------------------------------------------------- */
+@media print {
+  .nav, .skip, .sc__tabs, .sc__controls, .nline { display: none !important; }
+  .section, .hero, .blick { padding-block: 1.5rem; }
+  body { background: #fff; color: #000; }
+}
