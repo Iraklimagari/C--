@@ -1,0 +1,3 @@
+Geist (Vercel), ueber Google Fonts: https://fonts.googleapis.com/css2?family=Geist:wght@100..900
+Variable 100-900, Subsets latin und latin-ext (fonts.gstatic.com/s/geist/v5).
+Lizenz: SIL Open Font License 1.1, siehe Geist-OFL.txt

@@ -1,0 +1,4 @@
+Manrope, Google Fonts. Variable normal 400-700, Latin subset.
+CSS: https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap
+WOFF2: https://fonts.gstatic.com/s/manrope/v20/xn7gYHE41ni1AdIRggexSg.woff2
+License: https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/OFL.txt
