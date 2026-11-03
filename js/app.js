@@ -631,8 +631,12 @@ var NAHLIO = (function () {
          verlaesst den Hero an seiner Unterkante. Genau dort setzt die Seitenlinie an und laeuft nach unten. */
       var eb = boxInMain(exitEl);
       x = eb.x; y = eb.y; h = 90;
-      piece();                                    /* leeres Hero-Stueck: Stueck 0 ist immer der Hero */
-      heroEndY = y;
+      piece();                                    /* Stueck 0: der Hero */
+      heroEndY = y;                               /* nichts vorgezeichnet: die Linie kommt erst beim Scrollen (folgt) */
+      /* Wunsch 03.11.: kein Schweif, keine Kruemmung nach unten: zuerst ein gerader, senkrechter Zug aus der Marke
+         heraus bis unter den Hero; erst danach beginnen die grossen Boegen. */
+      var drop = Math.max(heroBottom - y + vh * 0.32, vh * 0.42);
+      cub(x, y + drop / 3, x, y + drop * 2 / 3, x, y + drop);
     } else {
       x = W * 0.8; y = -vh * 0.15; h = 112;
       piece();                                    /* leeres Hero-Stueck: Stueck 0 ist immer der Hero */

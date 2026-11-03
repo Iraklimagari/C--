@@ -1,6 +1,7 @@
 /* ==========================================================================
    NAHLIO — Premium-Auftritt (wird nach styles.css geladen)
-   1. Schrift: Fraunces (Serife nach Vorlage des Inhabers, 03.11.) fuer alle Texte.
+   1. Schrift: Fraunces (Serife nach Vorlage des Inhabers, 03.11.) nur fuer die Ueberschriften;
+      alle anderen Texte bleiben in Geist (Wunsch 03.11.).
       Farben bleiben unveraendert (Wunsch: "dont play with colours").
    2. Hero: ein ruhiger Bildschirm ohne Bilder und ohne Wechsel. Text links,
       Bildmarke rechts: Die Linie schreibt die Marke in 2D, sie wird 3D, atmet
@@ -46,22 +47,21 @@
 }
 
 :root {
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --font-sans: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;   /* nur Ueberschriften */
   /* Eintritt / Bewegung (Emil Kowalski): starke Kurven, nur fuer neue Bewegung im Hero */
   --ease-enter: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
 }
 html { font-optical-sizing: auto; }
 
-/* Grosse Ueberschriften: leichter Schnitt wie in der Vorlage (Fraunces bei Display-Groesse), statt halbfett */
+/* Ueberschriften (h1, h2): Fraunces im leichten Schnitt wie in der Vorlage. Alles andere bleibt Geist. */
 h1, h2,
-.t-h1, .t-h2, .sec-head__title, .customer-path__title, .blick__title, .uebergang__title, .sc__intro-title,
-.plans__title, .process__title, .faq-sec__title, .cta__title {
+.t-display, .t-h1, .t-h2, .hero__title, .sec-head__title, .customer-path__title, .blick__title, .uebergang__title,
+.sc__intro-title, .plans__title, .process__title, .faq-sec__title, .cta__title, .legal h2 {
+  font-family: var(--font-serif);
   font-weight: 380;
   letter-spacing: -0.018em;
 }
-h3, .t-h3, .sc__h, .plan__h, .care__h { font-weight: 450; letter-spacing: -0.01em; }
 
 /* --- 2. Hero ---------------------------------------------------------------- */
 /* Hintergrund: die gedimmten Blau-Toene (Glow und Radialverlaeufe) entfallen; Soft White -> Weiss bleibt. */
@@ -91,7 +91,7 @@ h3, .t-h3, .sc__h, .plan__h, .care__h { font-weight: 450; letter-spacing: -0.01e
 .hero--mark .hero__eyebrow { margin-bottom: clamp(16px, 2.6svh, 28px); }
 .hero--mark .hero__title {
   max-width: min(38vw, 11.2em);
-  font-family: var(--font-display);
+  font-family: var(--font-serif);
   font-weight: 360;
   font-size: var(--t);
   line-height: 1.02;
