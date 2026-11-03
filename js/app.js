@@ -478,7 +478,8 @@ var NAHLIO = (function () {
   }
 
   /* --- Hero: Stationen in den Geraeten ------------------------------------------------------- */
-  var heroEl = document.querySelector(".hx, .hero");
+  var heroEl = document.querySelector(".hero");
+  var exitEl = document.querySelector("[data-line-exit]");
   var arts = [], artLens = [];
   function heroPoints() {
     arts = Array.prototype.slice.call(document.querySelectorAll(".hero .art"))
@@ -625,13 +626,17 @@ var NAHLIO = (function () {
       var pe = P[P.length - 1], pp = P[P.length - 2];
       h = Math.atan2(pe.y - pp.y, pe.x - pp.x) / rad;
       heroEndY = Math.max(lv.y, heroBottom - vh * 0.02);
-    } else {
-      /* Vollbild-Hero (hero.js): Dort zeichnet sich die Schleifenlinie am unteren Rand und verlaesst das Bild
-         rechts. Die Seitenlinie nimmt sie genau dort auf (rechts, knapp ueber der Hero-Unterkante) und schwingt
-         beim Scrollen nach links unten in den naechsten Abschnitt. */
-      x = W * 1.02; y = heroBottom - vh * 0.1; h = 150;
+    } else if (exitEl) {
+      /* Hero mit Bildmarke (hero-mark.js): Die Linie kommt dort als 3D-Rohr aus der Marke, wird flach und
+         verlaesst den Hero an seiner Unterkante. Genau dort setzt die Seitenlinie an und laeuft nach unten. */
+      var eb = boxInMain(exitEl);
+      x = eb.x; y = eb.y; h = 90;
       piece();                                    /* leeres Hero-Stueck: Stueck 0 ist immer der Hero */
-      heroEndY = heroBottom;
+      heroEndY = y;
+    } else {
+      x = W * 0.8; y = -vh * 0.15; h = 112;
+      piece();                                    /* leeres Hero-Stueck: Stueck 0 ist immer der Hero */
+      heroEndY = 0;
     }
 
     /* Danach (Wunsch 27.10., Vorbild: riesige, weiche Linie): wenige, sehr grosse Boegen von Seite zu Seite; die
@@ -769,7 +774,8 @@ var NAHLIO = (function () {
      Auf- und Zuklappen der FAQ wird nichts skaliert oder verschoben. */
   var lastSig = "", lastH = 0, faqSec = document.querySelector(".faq-sec");
   function layoutSig(W, vh) {
-    return [W, vh, faqSec ? Math.round(boxInMain(faqSec).y) : 0].join("|");
+    var ex = exitEl ? boxInMain(exitEl) : null;     /* Uebergabe aus dem Hero (hero-mark.js) verschoben: neu bauen */
+    return [W, vh, faqSec ? Math.round(boxInMain(faqSec).y) : 0, ex ? Math.round(ex.x) + "," + Math.round(ex.y) : ""].join("|");
   }
   /* Handy: Blendet sich beim Scrollen die Adressleiste ein oder aus, aendert sich nur die Fensterhoehe. Darauf
      baut die Linie nicht neu (sie sprang dabei); erst eine andere Breite oder ein grosser Sprung (Drehen) zaehlt. */

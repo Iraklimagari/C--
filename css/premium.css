@@ -1,0 +1,147 @@
+/* ==========================================================================
+   NAHLIO — Premium-Auftritt (wird nach styles.css geladen)
+   1. Schrift: Fraunces (Serife nach Vorlage des Inhabers, 03.11.) fuer alle Texte.
+      Farben bleiben unveraendert (Wunsch: "dont play with colours").
+   2. Hero: ein ruhiger Bildschirm ohne Bilder und ohne Wechsel. Text links,
+      Bildmarke rechts: Die Linie schreibt die Marke in 2D, sie wird 3D, atmet
+      und laesst die Linie nach unten in die Seite laufen (js/hero-mark.js).
+   ========================================================================== */
+
+/* --- 1. Schrift ----------------------------------------------------------- */
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/fraunces-latin-standard-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+                 U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/fraunces-latin-ext-standard-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+                 U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Fraunces";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/fraunces-latin-standard-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+                 U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Fraunces";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/fraunces-latin-ext-standard-italic.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+                 U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Fraunces", Georgia, "Times New Roman", serif;
+  /* Eintritt / Bewegung (Emil Kowalski): starke Kurven, nur fuer neue Bewegung im Hero */
+  --ease-enter: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
+}
+html { font-optical-sizing: auto; }
+
+/* Grosse Ueberschriften: leichter Schnitt wie in der Vorlage (Fraunces bei Display-Groesse), statt halbfett */
+h1, h2,
+.t-h1, .t-h2, .sec-head__title, .customer-path__title, .blick__title, .uebergang__title, .sc__intro-title,
+.plans__title, .process__title, .faq-sec__title, .cta__title {
+  font-weight: 380;
+  letter-spacing: -0.018em;
+}
+h3, .t-h3, .sc__h, .plan__h, .care__h { font-weight: 450; letter-spacing: -0.01em; }
+
+/* --- 2. Hero ---------------------------------------------------------------- */
+/* Hintergrund: die gedimmten Blau-Toene (Glow und Radialverlaeufe) entfallen; Soft White -> Weiss bleibt. */
+.hero--mark .hero__glow { display: none; }
+.opening__surface {
+  background:
+    linear-gradient(to bottom, transparent calc(100% - var(--opening-blend) * .35), var(--white)),
+    linear-gradient(to bottom, var(--soft) calc(100% - var(--opening-blend)), var(--white));
+}
+
+.hero--mark .hero__stage {
+  --t: clamp(40px, min(4.6vw, 8.6svh), 82px);
+  display: block;
+  position: relative;
+  height: max(640px, calc(100svh - var(--nav-h)));
+  padding: 0;
+  overflow: visible;
+}
+.hero--mark .hero__copy {
+  position: relative; z-index: 2;
+  height: 100%;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  text-align: left;
+  padding-bottom: clamp(24px, 6svh, 72px);
+}
+.hero--mark .hero__copy > * { max-width: min(38vw, 36rem); }
+.hero--mark .hero__eyebrow { margin-bottom: clamp(16px, 2.6svh, 28px); }
+.hero--mark .hero__title {
+  max-width: min(38vw, 11.2em);
+  font-family: var(--font-display);
+  font-weight: 360;
+  font-size: var(--t);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.hero--mark .hero__hl { font-style: italic; }           /* Farbe unveraendert (styles.css: --brand-deep) */
+.hero--mark .hero__sub { margin-top: clamp(18px, 2.8svh, 30px); max-width: 30em; }
+.hero--mark .hero__actions { justify-content: flex-start; margin-top: clamp(22px, 3.6svh, 40px); }
+.hero--mark .hero__cta { transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 160ms var(--ease-enter); }
+.hero--mark .hero__cta:active { transform: scale(0.97); }
+@media (hover: none) { .hero--mark .hero__more:hover svg { transform: none; } }
+
+/* Buehne der Bildmarke: rechte Haelfte, volle Hoehe bis zur Unterkante des Hero (dort setzt die Seitenlinie an) */
+.hero__mark {
+  position: absolute; z-index: 1;
+  top: 0; bottom: 0; right: 0; width: 60%;
+  pointer-events: none;
+}
+.hero__gl, .hero__ink, .hero__static { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero__static { inset: 8% 10% 22%; width: auto; height: auto; margin: auto; }
+.hero__static path { fill: var(--brand); }
+.hero__gl { opacity: 0; transition: opacity 240ms ease; }
+.hero__gl.is-on { opacity: 1; }
+.hero__ink { overflow: visible; }
+.hero__strokes { fill: none; stroke: var(--brand); stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 8; }
+.hero__fill, .hero__dot { fill: var(--brand); }
+/* Kleines Logo oben links: im Hero nicht noetig (die grosse Marke ist das Logo); nach dem Hero blendet es ein */
+.nav__logo { transition: opacity 240ms ease, transform 240ms var(--ease-enter), visibility 0s linear 0s; }
+html.hero-in-view .nav__logo { opacity: 0; transform: translateY(-6px); visibility: hidden; pointer-events: none;
+  transition: opacity 200ms ease, transform 200ms ease, visibility 0s linear 200ms; }
+@media (prefers-reduced-motion: reduce) { .nav__logo, html.hero-in-view .nav__logo { transform: none; } }
+
+/* Uebergabepunkt an die Seitenlinie (25-line.js): unten in der Buehne */
+.hero__exit { position: absolute; left: 88%; bottom: 0; width: 0; height: 0; }
+
+/* Ohne Skript: die fertige Marke, ruhig. Mit Skript zeigt hero-mark.js erst die Linie. */
+html.js .hero__static { visibility: hidden; }
+html:not(.js) .hero__ink, html:not(.js) .hero__gl { display: none; }
+.hero__mark.is-static .hero__static { visibility: visible; }
+.hero__mark.is-static .hero__ink, .hero__mark.is-static .hero__gl { display: none; }
+
+/* Tablet und Handy: die Marke liegt gross hinter dem Text (rechts angeschnitten), die Linie laeuft von ihr nach unten */
+@media (max-width: 63.99em) {
+  .hero--mark .hero__stage { --t: clamp(36px, 8.6vw, 60px); height: auto; min-height: max(600px, calc(100svh - var(--nav-h))); display: flex; flex-direction: column; }
+  .hero--mark .hero__copy { height: auto; padding-top: clamp(28px, 6vw, 48px); padding-bottom: clamp(150px, 42vw, 300px); }
+  .hero--mark .hero__copy > *, .hero--mark .hero__title { max-width: 100%; }
+  .hero--mark .hero__title { max-width: 12em; }
+  .hero__mark { position: absolute; inset: 0; width: auto; height: auto; z-index: 0; }
+  .hero__static { inset: auto -12% 4% 18%; height: 70%; }
+}
+
+/* Weniger Bewegung: hero-mark.js zeigt die fertige 3D-Marke ohne Auftakt und ohne Atmen */
