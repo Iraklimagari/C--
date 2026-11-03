@@ -74,7 +74,7 @@ h1, h2,
 }
 
 .hero--mark .hero__stage {
-  --t: clamp(40px, min(4.6vw, 8.6svh), 82px);
+  --t: clamp(44px, min(5.6vw, 10svh), 108px);
   display: block;
   position: relative;
   height: max(640px, calc(100svh - var(--nav-h)));
@@ -84,14 +84,17 @@ h1, h2,
 .hero--mark .hero__copy {
   position: relative; z-index: 2;
   height: 100%;
-  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;
   text-align: left;
-  padding-bottom: clamp(24px, 6svh, 72px);
+  padding-top: clamp(22px, 4.5svh, 52px);            /* Oberzeile ganz oben links (Wunsch 03.11.) */
+  padding-bottom: clamp(28px, 6svh, 72px);
 }
-.hero--mark .hero__copy > * { max-width: min(38vw, 36rem); }
-.hero--mark .hero__eyebrow { margin-bottom: clamp(16px, 2.6svh, 28px); }
+.hero--mark .hero__copy > * { max-width: min(44vw, 44rem); }
+.hero--mark .hero__eyebrow { margin-bottom: 0; }
+/* Ueberschrift und Unterzeile fuellen die linke Seite: gross, im Raum unter der Oberzeile mittig */
 .hero--mark .hero__title {
-  max-width: min(38vw, 11.2em);
+  max-width: min(44vw, 12em);
+  margin-top: auto;
   font-family: var(--font-serif);
   font-weight: 440;
   font-size: var(--t);
@@ -100,7 +103,7 @@ h1, h2,
   text-wrap: balance;
 }
 .hero--mark .hero__hl { font-style: italic; }           /* Farbe unveraendert (styles.css: --brand-deep): die Betonung */
-.hero--mark .hero__sub { margin-top: clamp(18px, 2.8svh, 30px); max-width: 30em; }
+.hero--mark .hero__sub { margin-top: clamp(20px, 3.2svh, 36px); margin-bottom: auto; max-width: min(40vw, 31em); font-size: clamp(18px, 1.1vw + 6px, 24px); line-height: 1.5; }   /* endet vor der Marke */
 .hero--mark .hero__actions { justify-content: flex-start; margin-top: clamp(22px, 3.6svh, 40px); }
 .hero--mark .hero__cta { transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 160ms var(--ease-enter); }
 .hero--mark .hero__cta:active { transform: scale(0.97); }
@@ -109,7 +112,7 @@ h1, h2,
 /* Buehne der Bildmarke: rechte Haelfte, volle Hoehe bis zur Unterkante des Hero (dort setzt die Seitenlinie an) */
 .hero__mark {
   position: absolute; z-index: 1;
-  top: 0; bottom: 0; right: 0; width: 60%;
+  top: 0; bottom: 0; right: 0; width: 56%;
   pointer-events: none;
 }
 .hero__gl, .hero__ink, .hero__static { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -165,8 +168,10 @@ html:not(.js) .hero__ink, html:not(.js) .hero__gl { display: none; }
 
 /* Tablet und Handy: die Marke liegt gross hinter dem Text (rechts angeschnitten), die Linie laeuft von ihr nach unten */
 @media (max-width: 63.99em) {
-  .hero--mark .hero__stage { --t: clamp(36px, 8.6vw, 60px); height: auto; min-height: max(600px, calc(100svh - var(--nav-h))); display: flex; flex-direction: column; }
-  .hero--mark .hero__copy { height: auto; padding-top: clamp(28px, 6vw, 48px); padding-bottom: clamp(150px, 42vw, 300px); }
+  .hero--mark .hero__stage { --t: clamp(38px, 9.6vw, 66px); height: auto; min-height: max(600px, calc(100svh - var(--nav-h))); display: flex; flex-direction: column; }
+  .hero--mark .hero__copy { height: auto; padding-top: clamp(18px, 4vw, 36px); padding-bottom: clamp(150px, 42vw, 300px); }
+  .hero--mark .hero__title { margin-top: clamp(18px, 5vw, 32px); }
+  .hero--mark .hero__sub { margin-bottom: 0; font-size: clamp(17px, 2.2vw + 9px, 21px); }
   .hero--mark .hero__copy > *, .hero--mark .hero__title { max-width: 100%; }
   .hero--mark .hero__title { max-width: 12em; }
   .hero__mark { position: absolute; inset: 0; width: auto; height: auto; z-index: 0; }
