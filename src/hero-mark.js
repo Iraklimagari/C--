@@ -25,6 +25,9 @@ const root = document.querySelector("[data-mark]");
 if (root) init(root);
 
 function init(root) {
+  /* Text-Auftakt: Woerter der Ueberschrift einzeln fassen; die Bewegung selbst ist CSS (premium.css) */
+  splitWords(document.querySelector(".hero--mark .hero__title"));
+
   const canvas = root.querySelector("[data-mark-gl]");
   const ink = root.querySelector("[data-mark-ink]");
   const inkG = root.querySelector("[data-mark-g]");
@@ -257,6 +260,28 @@ function init(root) {
 }
 
 /* --- Hilfen ----------------------------------------------------------------------------------- */
+function splitWords(h) {
+  /* Jedes Wort in <span class="hw" style="--i:n">; Leerzeichen bleiben Text (Zeilenumbruch wie vorher),
+     umgebende Spannen (z. B. die Betonung "wie vor Ort.") bleiben erhalten. */
+  if (!h || h.classList.contains("is-split")) return;
+  let i = 0;
+  (function walk(node) {
+    for (const child of Array.from(node.childNodes)) {
+      if (child.nodeType === 1) { walk(child); continue; }
+      if (child.nodeType !== 3) continue;
+      const frag = document.createDocumentFragment();
+      for (const part of child.textContent.split(/(\s+)/)) {
+        if (!part) continue;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); continue; }
+        const w = document.createElement("span");
+        w.className = "hw"; w.style.setProperty("--i", String(i++)); w.textContent = part;
+        frag.appendChild(w);
+      }
+      node.replaceChild(frag, child);
+    }
+  })(h);
+  h.classList.add("is-split");
+}
 function studioEnv(renderer) {
   /* Fotostudio fuer gebuerstetes Metall: dunkle Umgebung (Tiefe in den Flanken), vorn eine grosse Flaeche
      mit weichem Verlauf (oben links heller, unten rechts dunkler), seitlich breite weiche Lichtbaender wie
