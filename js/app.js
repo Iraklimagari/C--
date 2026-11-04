@@ -627,27 +627,16 @@ var NAHLIO = (function () {
       h = Math.atan2(pe.y - pp.y, pe.x - pp.x) / rad;
       heroEndY = Math.max(lv.y, heroBottom - vh * 0.02);
     } else if (exitEl) {
-      /* Hero mit Weg nach oben (hero-route.js, Wunsch 04.11.): Oben, beim Gewinner, beginnt die Linie und kommt als
-         ruhiger, weiter Bogen herunter, rechts neben dem Weg bis unter den Hero; danach die grossen Boegen und
-         Schleifen. Sie zeichnet sich erst, wenn der Betrieb oben angekommen ist (data-line-start). */
+      /* Hero mit Bildmarke (hero-mark.js): Die Linie kommt dort als 3D-Rohr aus der Marke, wird flach und
+         verlaesst den Hero an seiner Unterkante. Genau dort setzt die Seitenlinie an und laeuft nach unten. */
       var eb = boxInMain(exitEl);
-      var R = Math.max(26, Math.min(W * 0.045, vh * 0.075));
-      var sx = eb.x, sy = eb.y, dh = heroBottom - sy;
-      var lx = Math.min(sx + R * 0.4, W - R * 0.8);
-      var P = [
-        { x: sx, y: sy },
-        { x: lx, y: sy + dh * 0.45 },
-        { x: lx - R * 1.8, y: heroBottom + vh * 0.1 }
-      ];
-      x = P[0].x; y = P[0].y;
+      x = eb.x; y = eb.y; h = 90;
       piece();                                    /* Stueck 0: der Hero */
-      for (var j = 0; j < P.length - 1; j++) {
-        var p0 = P[Math.max(0, j - 1)], p1 = P[j], p2 = P[j + 1], p3 = P[Math.min(P.length - 1, j + 2)];
-        cub(p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6, p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6, p2.x, p2.y);
-      }
-      var pe = P[P.length - 1], pq = P[P.length - 2];
-      h = Math.atan2(pe.y - pq.y, pe.x - pq.x) / rad;
-      heroEndY = heroBottom;                      /* nach dem Auftakt ist der Hero-Teil immer ganz gezeichnet */
+      heroEndY = y;                               /* nichts vorgezeichnet: die Linie kommt erst beim Scrollen (folgt) */
+      /* Wunsch 03.11.: kein Schweif, keine Kruemmung nach unten: zuerst ein gerader, senkrechter Zug aus der Marke
+         heraus bis unter den Hero; erst danach beginnen die grossen Boegen. */
+      var drop = Math.max(heroBottom - y + vh * 0.32, vh * 0.42);
+      cub(x, y + drop / 3, x, y + drop * 2 / 3, x, y + drop);
     } else {
       x = W * 0.8; y = -vh * 0.15; h = 112;
       piece();                                    /* leeres Hero-Stueck: Stueck 0 ist immer der Hero */
@@ -656,12 +645,9 @@ var NAHLIO = (function () {
 
     /* Danach (Wunsch 27.10., Vorbild: riesige, weiche Linie): wenige, sehr grosse Boegen von Seite zu Seite; die
        Scheitel liegen knapp innerhalb des Seitenrands, dort wendet die Linie weich (kein Haken), bleibt aber sichtbar.
-       Wunsch 04.11.: wenige, riesige Schleifen wie in den Handschrift-Vorlagen, etwa 70 % der Seitenbreite, sonst
-       keine kleinen Kurven (Figma-Tafel "Linie — Schleifen wie die Vorlagen"). Jeder zweite Bogen bekommt eine
-       Schleife (nicht in dunklen Abschnitten, dort waere sie verdeckt): Die Linie kommt vom Rand, kreuzt unten links,
-       zieht rechts hinauf, oben herum, links herunter, kreuzt sich selbst und geht unter der Schleife weiter.
-       Alle Punkte werden als eine glatte Kurve verbunden (through), je Abschnitt ein Stueck.
-       Der "Zufall" ist fest (rnd mit festem Startwert): gleiche Linie bei jedem Aufruf. */
+       Jede zweite Bewegung ist eine riesige Schleife, die sich selbst kreuzt (nicht in dunklen Abschnitten, dort
+       waere sie verdeckt). Keine kleinen Kringel: alle Punkte werden als eine glatte Kurve verbunden (through),
+       je Bogen ein Stueck. Der "Zufall" ist fest (rnd mit festem Startwert): gleiche Linie bei jedem Aufruf. */
     var seed = 7;
     function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
     /* Glatte Kurve durch Punkte: Richtung je Punkt aus den Nachbarn, Henkel = 0,42 x Abstand; am Anfang in
@@ -679,24 +665,18 @@ var NAHLIO = (function () {
         cub(p.x + T[i][0] * d, p.y + T[i][1] * d, q.x - T[i + 1][0] * d, q.y - T[i + 1][1] * d, q.x, q.y);
       }
     }
-    /* Schleife (fuer einen Bogen nach rechts; nach links gespiegelt): Punkte um die Mitte, x in Breiten-Radien,
-       y in Hoehen-Radien. Breite 70 % der Seite, Hoehe hoechstens gut 80 % der Fensterhoehe. */
-    var LOOP = [[-0.62, 0.62], [0.0, 1.0], [0.85, 0.5], [0.9, -0.45], [0.1, -1.0], [-0.75, -0.6], [-0.95, 0.2], [-0.35, 1.35]];
-    var LR = W * 0.35, LV = Math.min(LR * 0.78, vh * 0.42);
-    var D = vh * (W < 768 ? 0.85 : 1.1);
-    var side = x > W / 2 ? -1 : 1, wp = [{ x: x, y: y }], cy = y, k = 0, want = false;
+    var D = vh * (W < 768 ? 0.85 : 1.1), LR = Math.min(W * 0.27, vh * 0.42);
+    var side = x > W / 2 ? -1 : 1, wp = [{ x: x, y: y }], cy = y, k = 0;
     while (cy < H + vh * 1.5 && k < 60) {
-      /* nach einem einfachen Bogen ist eine Schleife dran; liegt sie im Dunkeln, kommt sie beim naechsten */
-      var c = { x: W * 0.5, y: cy - LV * 0.1 };                /* Mitte etwa auf Hoehe des Scheitels davor */
-      if (want && darkness(c.x, c.y, LR * 1.1) < 0.12) {
-        LOOP.forEach(function (o) { wp.push({ x: c.x + side * LR * o[0], y: c.y + LV * o[1] }); });
-        cy = c.y + LV + D * 0.55;
-        wp.push({ x: W * (0.5 + side * 0.45), y: cy });                                /* unter ihr hinaus */
-        want = false;
+      var c = { x: W * (0.5 + side * 0.06), y: cy + D * 0.95 };
+      if (k % 2 === 1 && darkness(c.x, c.y, LR) < 0.2) {
+        [[1.25, -0.55], [0.35, 0.95], [-0.95, 0.2], [-0.25, -0.85], [0.75, -0.2]]      /* riesige Schleife */
+          .forEach(function (o) { wp.push({ x: c.x + side * LR * o[0], y: c.y + LR * o[1] }); });
+        cy = c.y + LR * 0.6 + D * 0.35;
+        wp.push({ x: W * (0.5 + side * 0.46), y: cy });                                 /* hinaus zum Rand */
       } else {
-        cy += D * (1.0 + rnd() * 0.2);
+        cy += D * (0.9 + rnd() * 0.25);
         wp.push({ x: W * (0.5 + side * (0.43 + rnd() * 0.05)), y: cy });              /* grosser Bogen hinueber */
-        want = true;
       }
       side = -side;
       k++;
@@ -711,24 +691,21 @@ var NAHLIO = (function () {
      bis dahin tiefste y (maxY), auf die Laenge des Browsers (getTotalLength) geeicht. */
   var total = 0, cumL = null, maxY = null, H = 1, topInDoc = 0;
   function sampleLine() {
-    var c = [], m = [], len = 0, low = -Infinity, px = 0, py = 0, ends = [];
+    var c = [], m = [], len = 0, low = -Infinity, px = 0, py = 0;
     segs.forEach(function (s, k) {
-      /* kurze Stuecke (Schleifen: viele kleine) brauchen weniger Stuetzpunkte: etwa alle 4 px, hoechstens STEPS */
-      var n = Math.max(2, Math.min(STEPS, Math.ceil((Math.abs(s[6] - s[0]) + Math.abs(s[7] - s[1])) / 4)));
-      for (var j = k ? 1 : 0; j <= n; j++) {
-        var t = j / n, u = 1 - t, a = u * u * u, b = 3 * u * u * t, e = 3 * u * t * t, g = t * t * t;
+      for (var j = k ? 1 : 0; j <= STEPS; j++) {
+        var t = j / STEPS, u = 1 - t, a = u * u * u, b = 3 * u * u * t, e = 3 * u * t * t, g = t * t * t;
         var qx = a * s[0] + b * s[2] + e * s[4] + g * s[6], qy = a * s[1] + b * s[3] + e * s[5] + g * s[7];
         if (c.length) len += Math.sqrt((qx - px) * (qx - px) + (qy - py) * (qy - py));
         if (qy > low) low = qy;
         c.push(len); m.push(low); px = qx; py = qy;
       }
-      ends.push(c.length - 1);
     });
     var k = len ? total / len : 1;
     for (var i = 0; i < c.length; i++) c[i] *= k;
     cumL = c; maxY = m;
     /* Wo die Linie jedes Bild erreicht: Das i-te Hero-Kurvenstueck endet im i-ten Bild. */
-    artLens = arts.map(function (a, i) { return c[ends[Math.min(ends.length - 1, i)]] || 0; });
+    artLens = arts.map(function (a, i) { return c[Math.min(c.length - 1, (i + 1) * STEPS)]; });
   }
   function lenAtY(y) {
     if (!maxY || !maxY.length || y <= maxY[0]) return 0;
@@ -755,15 +732,9 @@ var NAHLIO = (function () {
   var intro = true, introT0 = 0, introGoal = 0;
   /* Halb gleichmaessig, halb weich: Die Linie erreicht das erste Bild rasch und wird am Ende ruhiger. */
   function ease(t) { return 0.5 * t + 0.25 * (1 - Math.cos(Math.PI * t)); }
-  /* Start des Auftakts: im Hero mit Weg nach oben erst, wenn der Betrieb oben ist (hero-route.js setzt die Zeit) */
-  function introStart() {
-    var st = exitEl && Number(exitEl.getAttribute("data-line-start"));
-    return st || introT0;
-  }
   function introCur(now) {
-    var st = introStart();
-    if (!st) return 0;
-    var t = (now - st) / (INTRO_DUR * 1000);
+    if (!introT0) return 0;
+    var t = (now - introT0) / (INTRO_DUR * 1000);
     return t <= 0 ? 0 : ease(t >= 1 ? 1 : t) * introGoal;
   }
   /* Wunsch 30.10.: Von links nach rechts, nie alle zugleich: Ein Bild springt erst auf, wenn die Linie es erreicht
@@ -877,7 +848,7 @@ var NAHLIO = (function () {
     if (intro) {
       cur = Math.max(cur, introCur(now));
       devicesTick(now);
-      if (now >= introStart() + INTRO_DUR * 1000) introDone();
+      if (now >= introT0 + INTRO_DUR * 1000) introDone();
     } else {
       cur += (target - cur) * (1 - Math.exp(-dt / TAU));
       if (Math.abs(target - cur) < 0.8) { cur = target; running = false; }
@@ -1046,8 +1017,7 @@ var NAHLIO = (function () {
     var a = m ? m.index + m[0].length - 2 : -1, b = a + 1;
     var orig = a >= 0 ? [cs[a].textContent, cs[b].textContent] : null;
     var last = null, i = 0;
-    /* eigener Name: "next" ist die Warteschlange unten (vorher rief sich diese Funktion am Ende endlos selbst auf) */
-    function step() {
+    function next() {
       if (i >= steps.length) {
         if (last) last.classList.remove("is-caret");
         item.classList.add("is-typed");
@@ -1061,10 +1031,10 @@ var NAHLIO = (function () {
       last = st.n ? cs[st.n - 1] : null;
       if (last) last.classList.add("is-caret");
       if (msg) msg.classList.toggle("is-caret-start", !st.n);
-      window.setTimeout(step, st.wait + (i < steps.length ? Math.random() * 16 : 500));
+      window.setTimeout(next, st.wait + (i < steps.length ? Math.random() * 16 : 500));
     }
     if (msg) msg.classList.add("is-caret-start");
-    window.setTimeout(step, delay);
+    window.setTimeout(next, delay);
   }
 
   /* Nacheinander (Wunsch 27.10.): erst der Laden; erst wenn er fertig ist das Preisschild, danach die Nachricht.

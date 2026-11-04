@@ -3,8 +3,9 @@
    1. Schrift: Newsreader 440 (Serife, Wahl des Inhabers 03.11.) nur fuer die Ueberschriften;
       alle anderen Texte bleiben in Geist (Wunsch 03.11.).
       Farben bleiben unveraendert (Wunsch: "dont play with colours").
-   2. Hero: ein ruhiger Bildschirm ohne Bilder und ohne Wechsel. Text links, rechts
-      zeichnet die Linie den Weg nach oben mit den Leistungen als Wegmarken (js/hero-route.js).
+   2. Hero: ein ruhiger Bildschirm ohne Bilder und ohne Wechsel. Text links,
+      Bildmarke rechts: Die Linie schreibt die Marke in 2D, sie wird 3D, atmet
+      und laesst die Linie nach unten in die Seite laufen (js/hero-mark.js).
    ========================================================================== */
 
 /* --- 1. Schrift ----------------------------------------------------------- */
@@ -108,57 +109,23 @@ h1, h2,
 .hero--mark .hero__cta:active { transform: scale(0.97); }
 @media (hover: none) { .hero--mark .hero__more:hover svg { transform: none; } }
 
-/* --- Weg nach oben (js/hero-route.js) --------------------------------------------------------------
-   Rechts: Die Linie (Farben der Seitenlinie) zeichnet einen Zickzack-Weg hinauf und schiebt den Betrieb
-   (Ladensymbol) vor sich her; die Leistungen sind Wegmarken. Der fertige Weg bleibt als Bild stehen. */
-:root { --route-w: 22px; }
-.hero__route {
+/* Buehne der Bildmarke: rechte Haelfte, volle Hoehe bis zur Unterkante des Hero (dort setzt die Seitenlinie an) */
+.hero__mark {
   position: absolute; z-index: 1;
   top: 0; bottom: 0; right: 0; width: 56%;
   pointer-events: none;
 }
-.hero__route-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
-.route__track { fill: none; stroke: color-mix(in srgb, var(--ink) 8%, transparent); stroke-width: var(--route-w); stroke-linecap: round; stroke-linejoin: round; }
-.route__line { fill: none; stroke: url(#route-grad) #47D3EB; stroke-width: var(--route-w); stroke-linecap: round; stroke-linejoin: round; }
-.route__dot { transform-box: fill-box; transform-origin: center; transition: transform 380ms var(--ease-enter); transform: scale(0.9); }
-.route__dot circle { fill: var(--white); stroke: var(--brand); stroke-width: 4; transition: fill 240ms ease; }
-.route__check { fill: none; stroke: var(--white); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity 200ms ease 80ms; }
-.route__label {
-  font-family: var(--font-sans); font-size: 16px; font-weight: 600; letter-spacing: -0.005em; fill: var(--ink);
-  opacity: 0; transform: translate(0, 8px); transform-box: fill-box;
-  transition: opacity 320ms ease, transform 420ms var(--ease-enter);
-}
-.route__stop.is-reached .route__dot { transform: scale(1); }
-.route__stop.is-reached .route__dot circle { fill: var(--brand); }
-.route__stop.is-reached .route__check { opacity: 1; }
-.route__stop.is-reached .route__label { opacity: 1; transform: none; }
-.route__badge-in { transform-box: fill-box; transform-origin: center; opacity: 0; transform: scale(0.9);
-  transition: opacity 240ms ease, transform 320ms var(--ease-enter); }
-.route__badge.is-on .route__badge-in { opacity: 1; transform: scale(1); }
-.route__badge circle { fill: var(--white); stroke: var(--brand); stroke-width: 4; }
-.route__shop { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-/* Gewinner oben: Medaille springt an den Betrieb (ease-out, ab 0.9, nicht aus dem Nichts), Strahlen einmal */
-.route__medal-in { transform-box: fill-box; transform-origin: 50% 30%; opacity: 0; transform: scale(0.9) rotate(-8deg); }
-.route__badge .route__medal-disc { fill: var(--brand); stroke: var(--white); stroke-width: 3; }
-.route__star { fill: var(--white); }
-.route__ribbon { fill: var(--brand-deep); }
-.hero__route.is-winner .route__medal-in { animation: route-medal 620ms var(--ease-enter) 120ms both; }
-@keyframes route-medal { 0% { opacity: 0; transform: scale(0.9) rotate(-8deg); } 60% { opacity: 1; transform: scale(1.06) rotate(2deg); } 100% { opacity: 1; transform: none; } }
-.route__rays line { stroke: var(--brand); stroke-width: 3; stroke-linecap: round; }
-.route__rays { transform-box: fill-box; transform-origin: center; opacity: 0; }
-.hero__route.is-winner .route__rays { animation: route-rays 760ms var(--ease-enter) 60ms both; }
-@keyframes route-rays { 0% { opacity: 0; transform: scale(0.92); } 35% { opacity: 1; } 100% { opacity: 0; transform: scale(1.12); } }
-/* die Seitenlinie: gleich breit wie der Weg, damit beide ineinander uebergehen */
-.pageline__main { stroke-width: var(--route-w); }
-@media (prefers-reduced-motion: reduce) {
-  .route__dot, .route__dot circle, .route__check, .route__label, .route__badge-in { transition: none; }
-  .hero__route.is-winner .route__medal-in { animation: none; opacity: 1; transform: none; }
-  .hero__route.is-winner .route__rays { animation: none; }
-}
-
+.hero__gl, .hero__ink, .hero__static { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero__static { inset: 8% 10% 22%; width: auto; height: auto; margin: auto; }
+.hero__static path { fill: var(--brand); }
+.hero__gl { opacity: 0; transition: opacity 240ms ease; }
+.hero__gl.is-on { opacity: 1; }
+.hero__ink { overflow: visible; }
+.hero__strokes { fill: none; stroke: var(--brand); stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 8; }
+.hero__fill, .hero__dot { fill: var(--brand); }
 /* --- Text-Auftakt im Hero (selten gesehen: Freude erlaubt) ----------------------------------------
    Oberzeile steigt auf, dann die Ueberschrift Wort fuer Wort (aus leichter Unschaerfe, 55 ms versetzt),
-   zuletzt die Unterzeile. Nur transform, opacity und filter; starke ease-out-Kurve. hero-route.js teilt die
+   zuletzt die Unterzeile. Nur transform, opacity und filter; starke ease-out-Kurve. hero-mark.js teilt die
    Woerter auf (.is-split); ohne Skript bleibt der Text einfach stehen. */
 @keyframes hero-word { from { opacity: 0; transform: translate3d(0, 0.38em, 0); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
 @keyframes hero-up   { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
@@ -184,24 +151,31 @@ html.js.motion-ok .hero.hero--mark .hero__copy .hero__sub { animation: hero-up 9
   html.js .hero.hero--mark .hero__copy .hero__sub { animation: hero-fade 400ms ease both; animation-delay: 0ms; }
 }
 
-/* Kleines Logo oben links: im Hero nicht noetig; nach dem Hero blendet es ein */
+/* Kleines Logo oben links: im Hero nicht noetig (die grosse Marke ist das Logo); nach dem Hero blendet es ein */
 .nav__logo { transition: opacity 240ms ease, transform 240ms var(--ease-enter), visibility 0s linear 0s; }
 html.hero-in-view .nav__logo { opacity: 0; transform: translateY(-6px); visibility: hidden; pointer-events: none;
   transition: opacity 200ms ease, transform 200ms ease, visibility 0s linear 200ms; }
 @media (prefers-reduced-motion: reduce) { .nav__logo, html.hero-in-view .nav__logo { transform: none; } }
 
-/* Uebergabepunkt an die Seitenlinie (25-line.js): oben beim Gewinner (hero-route.js setzt ihn genau) */
-.hero__exit { position: absolute; left: 90%; top: 6%; width: 0; height: 0; }
+/* Uebergabepunkt an die Seitenlinie (25-line.js): unten in der Buehne */
+.hero__exit { position: absolute; left: 88%; bottom: 0; width: 0; height: 0; }
 
-/* Tablet und Handy: Text oben, darunter der Weg ueber die ganze Breite */
+/* Ohne Skript: die fertige Marke, ruhig. Mit Skript zeigt hero-mark.js erst die Linie. */
+html.js .hero__static { visibility: hidden; }
+html:not(.js) .hero__ink, html:not(.js) .hero__gl { display: none; }
+.hero__mark.is-static .hero__static { visibility: visible; }
+.hero__mark.is-static .hero__ink, .hero__mark.is-static .hero__gl { display: none; }
+
+/* Tablet und Handy: die Marke liegt gross hinter dem Text (rechts angeschnitten), die Linie laeuft von ihr nach unten */
 @media (max-width: 63.99em) {
-  :root { --route-w: 14px; }
-  .hero--mark .hero__stage { --t: clamp(38px, 9.6vw, 66px); height: auto; display: flex; flex-direction: column; }
-  .hero--mark .hero__copy { height: auto; padding-top: clamp(18px, 4vw, 36px); padding-bottom: 0; }
+  .hero--mark .hero__stage { --t: clamp(38px, 9.6vw, 66px); height: auto; min-height: max(600px, calc(100svh - var(--nav-h))); display: flex; flex-direction: column; }
+  .hero--mark .hero__copy { height: auto; padding-top: clamp(18px, 4vw, 36px); padding-bottom: clamp(150px, 42vw, 300px); }
   .hero--mark .hero__title { margin-top: clamp(18px, 5vw, 32px); }
   .hero--mark .hero__sub { margin-bottom: 0; font-size: clamp(17px, 2.2vw + 9px, 21px); }
   .hero--mark .hero__copy > *, .hero--mark .hero__title { max-width: 100%; }
   .hero--mark .hero__title { max-width: 12em; }
-  .hero__route { position: relative; width: 100%; height: clamp(340px, 100vw, 620px); margin-top: clamp(8px, 3vw, 24px); }
-  .route__label { font-size: 13px; }
+  .hero__mark { position: absolute; inset: 0; width: auto; height: auto; z-index: 0; }
+  .hero__static { inset: auto -12% 4% 18%; height: 70%; }
 }
+
+/* Weniger Bewegung: hero-mark.js zeigt die fertige 3D-Marke ohne Auftakt und ohne Atmen */
