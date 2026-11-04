@@ -596,7 +596,7 @@ var NAHLIO = (function () {
   var heroEndY = 0, heroBottom = 0, segs = [];
   function buildPath(W, H, vh) {
     var rad = Math.PI / 180;
-    var x = 0, y = 0, h = 0, list = [];
+    var x = 0, y = 0, h = 0, list = [], segPiece = [];
     segs = [];
     function dir(a) { return [Math.cos(a * rad), Math.sin(a * rad)]; }
     function f(n) { return n.toFixed(1); }
@@ -605,8 +605,14 @@ var NAHLIO = (function () {
     function cub(ax, ay, bx, by, qx, qy) {
       list[list.length - 1] += " C" + f(ax) + " " + f(ay) + " " + f(bx) + " " + f(by) + " " + f(qx) + " " + f(qy);
       segs.push([x, y, ax, ay, bx, by, qx, qy]);
+      segPiece.push(list.length - 1);
       x = qx; y = qy;
     }
+    /* Groesse der Schleifen nach der Linienbreite (innen muss sichtbar Luft bleiben); auf dem Handy im Hero
+       kleiner, dort ist neben dem Weg wenig Platz. loopFrom: erst ab hier Schleifen (im Hero unterhalb des Wegs). */
+    var sw = parseFloat(getComputedStyle(path).strokeWidth) || 14;
+    var uP = Math.max(1.75 * sw, Math.min(W * 0.024, 40)), uH = Math.min(uP, Math.max(1.5 * sw, W * 0.0222));
+    var loopFrom = 0;
     /* Hero: links ausserhalb -> durch die Geraete -> nach unten in den naechsten Abschnitt */
     var hb = heroEl ? boxInMain(heroEl) : { y: 0, h: 0 };
     heroBottom = hb.y + hb.h;
@@ -628,23 +634,19 @@ var NAHLIO = (function () {
       heroEndY = Math.max(lv.y, heroBottom - vh * 0.02);
     } else if (exitEl) {
       /* Hero mit Weg nach oben (hero-route.js, Wunsch 04.11.): Oben, beim Gewinner, beginnt die Linie und kommt als
-         Ornament herunter: rechts neben dem Weg eine Schleife, dann ein weiter Bogen bis unter den Hero; danach die
-         grossen Boegen. Sie zeichnet sich erst, wenn der Betrieb oben angekommen ist (data-line-start). */
+         Ornament herunter, rechts neben dem Weg bis unter den Hero; danach die grossen Boegen. Die Schleifen kommen
+         spaeter dazu (cursive, unten). Sie zeichnet sich erst, wenn der Betrieb oben angekommen ist (data-line-start). */
       var eb = boxInMain(exitEl);
       var R = Math.max(26, Math.min(W * 0.045, vh * 0.075));
-      var sx = eb.x, sy = eb.y;
-      var lx = Math.min(W - R * 1.5, sx + R * 1.1);          /* Schleife nahe am rechten Rand, neben dem Weg */
+      var sx = eb.x, sy = eb.y, dh = heroBottom - sy;
+      var lx = Math.min(sx + R * 0.3, W - (3.45 * uH + sw / 2));   /* Platz fuer die Schleifen bis zum Rand */
       var P = [
         { x: sx, y: sy },
-        { x: sx + R * 0.9, y: sy + R * 1.4 },
-        { x: lx + R * 0.9, y: sy + R * 3.6 },
-        { x: lx + R * 0.1, y: sy + R * 4.9 },
-        { x: lx - R * 0.9, y: sy + R * 4.3 },
-        { x: lx - R * 0.4, y: sy + R * 3.3 },
-        { x: lx + R * 0.7, y: sy + R * 4.2 },
-        { x: lx + R * 0.2, y: sy + (heroBottom - sy) * 0.62 },
-        { x: lx - R * 1.2, y: heroBottom + vh * 0.1 }
+        { x: lx, y: sy + dh * 0.34 },
+        { x: lx - R * 0.6, y: sy + dh * 0.7 },
+        { x: lx - R * 1.6, y: heroBottom + vh * 0.1 }
       ];
+      loopFrom = dh * (W < 768 ? 0.4 : 0.3);                  /* oben neben dem Weg noch keine Schleife */
       x = P[0].x; y = P[0].y;
       piece();                                    /* Stueck 0: der Hero */
       for (var j = 0; j < P.length - 1; j++) {
@@ -662,9 +664,9 @@ var NAHLIO = (function () {
 
     /* Danach (Wunsch 27.10., Vorbild: riesige, weiche Linie): wenige, sehr grosse Boegen von Seite zu Seite; die
        Scheitel liegen knapp innerhalb des Seitenrands, dort wendet die Linie weich (kein Haken), bleibt aber sichtbar.
-       Jede zweite Bewegung ist eine riesige Schleife, die sich selbst kreuzt (nicht in dunklen Abschnitten, dort
-       waere sie verdeckt). Keine kleinen Kringel: alle Punkte werden als eine glatte Kurve verbunden (through),
-       je Bogen ein Stueck. Der "Zufall" ist fest (rnd mit festem Startwert): gleiche Linie bei jedem Aufruf. */
+       Alle Punkte werden als eine glatte Kurve verbunden (through), je Bogen ein Stueck. Die frueheren runden
+       Riesenschleifen sind weg (Wunsch 04.11.: nicht nur rund); die Schleifen kommen jetzt aus cursive().
+       Der "Zufall" ist fest (rnd mit festem Startwert): gleiche Linie bei jedem Aufruf. */
     var seed = 7;
     function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
     /* Glatte Kurve durch Punkte: Richtung je Punkt aus den Nachbarn, Henkel = 0,42 x Abstand; am Anfang in
@@ -685,21 +687,89 @@ var NAHLIO = (function () {
     var D = vh * (W < 768 ? 0.85 : 1.1), LR = Math.min(W * 0.27, vh * 0.42);
     var side = x > W / 2 ? -1 : 1, wp = [{ x: x, y: y }], cy = y, k = 0;
     while (cy < H + vh * 1.5 && k < 60) {
-      var c = { x: W * (0.5 + side * 0.06), y: cy + D * 0.95 };
-      if (k % 2 === 1 && darkness(c.x, c.y, LR) < 0.2) {
-        [[1.25, -0.55], [0.35, 0.95], [-0.95, 0.2], [-0.25, -0.85], [0.75, -0.2]]      /* riesige Schleife */
-          .forEach(function (o) { wp.push({ x: c.x + side * LR * o[0], y: c.y + LR * o[1] }); });
-        cy = c.y + LR * 0.6 + D * 0.35;
-        wp.push({ x: W * (0.5 + side * 0.46), y: cy });                                 /* hinaus zum Rand */
-      } else {
-        cy += D * (0.9 + rnd() * 0.25);
-        wp.push({ x: W * (0.5 + side * (0.43 + rnd() * 0.05)), y: cy });              /* grosser Bogen hinueber */
-      }
+      cy += D * (0.9 + rnd() * 0.25);
+      wp.push({ x: W * (0.5 + side * (0.43 + rnd() * 0.05)), y: cy });                /* grosser Bogen hinueber */
       side = -side;
       k++;
     }
     through(wp);
-    return list;
+    return cursive(list.length);
+
+    /* Schleifen wie in der Handschrift (Vorlagen des Inhabers; Figma-Tafel "Linie — Schleifen wie die Vorlagen"):
+       Der Weg oben bleibt (gleiche Strecke und Laenge). Entlang des Wegs bekommt die Linie Schleifen verschiedener
+       Groesse auf beiden Seiten, dazwischen weiche Wellen: eine verlaengerte Rollkurve (Zykloide) entlang der
+       Bogenlaenge s, je Takt eine Staerke (STR, ueber 1 wird es eine Schleife) und eine Seite (SIDE), leicht schraeg
+       wie Schrift (SLANT). Am Anfang wachsen die Schleifen weich heraus, nahe am Seitenrand werden sie kleiner
+       (sie blieben sonst nicht im Bild). Ergebnis: dichte Stuetzpunkte, als glatte Kurve (Catmull-Rom) wieder in
+       die Stuecke verteilt, damit Zeichnen beim Scrollen und Hero-Auftakt gleich bleiben. */
+    function cursive(nPieces) {
+      var STR = [2.6, 0.5, 2.3, 0.45, 3.1, 0.55, 2.3, 0.5, 2.7, 0.5, 2.9, 0.55];
+      var SIDE = [1, 1, 1, 0, -1, 0, 1, 1, 1, 0, -1, 0];
+      var SLANT = 0.32, SIZE = 0.95, TWO_PI = Math.PI * 2;
+      function smooth(t) { t = t <= 0 ? 0 : t >= 1 ? 1 : t; return t * t * (3 - 2 * t); }
+      function cyc(arr, c) {
+        var n = arr.length, i = Math.floor(c), fr = 0.5 - 0.5 * Math.cos(Math.PI * (c - i));
+        return arr[((i % n) + n) % n] * (1 - fr) + arr[(((i + 1) % n) + n) % n] * fr;
+      }
+      /* bis zum Rand: seitlich hoechstens etwa 3,45 x Groesse (Schleife plus Welle) und die halbe Linienbreite */
+      function edge(px, A) { var d = Math.min(px, W - px), lo = sw / 2 + 4; return smooth((d - lo) / (3.45 * A + sw / 2 - lo)); }
+
+      /* 1. Grundweg fein abtasten: Punkt, Richtung, Bogenlaenge, Stueck */
+      var base = segs, FX = [], FY = [], TX = [], TY = [], FS = [], FP = [], L = 0, heroL = 0;
+      base.forEach(function (sg, k) {
+        var cl = Math.sqrt((sg[2] - sg[0]) * (sg[2] - sg[0]) + (sg[3] - sg[1]) * (sg[3] - sg[1])) +
+                 Math.sqrt((sg[4] - sg[2]) * (sg[4] - sg[2]) + (sg[5] - sg[3]) * (sg[5] - sg[3])) +
+                 Math.sqrt((sg[6] - sg[4]) * (sg[6] - sg[4]) + (sg[7] - sg[5]) * (sg[7] - sg[5]));
+        var n = Math.max(2, Math.ceil(cl / 3));
+        for (var j = k ? 1 : 0; j <= n; j++) {
+          var t = j / n, u = 1 - t;
+          var px = u * u * u * sg[0] + 3 * u * u * t * sg[2] + 3 * u * t * t * sg[4] + t * t * t * sg[6];
+          var py = u * u * u * sg[1] + 3 * u * u * t * sg[3] + 3 * u * t * t * sg[5] + t * t * t * sg[7];
+          var dx = 3 * u * u * (sg[2] - sg[0]) + 6 * u * t * (sg[4] - sg[2]) + 3 * t * t * (sg[6] - sg[4]);
+          var dy = 3 * u * u * (sg[3] - sg[1]) + 6 * u * t * (sg[5] - sg[3]) + 3 * t * t * (sg[7] - sg[5]);
+          var dl = Math.sqrt(dx * dx + dy * dy);
+          if (dl < 1e-6) { dx = sg[6] - sg[0]; dy = sg[7] - sg[1]; dl = Math.sqrt(dx * dx + dy * dy) || 1; }
+          if (FX.length) L += Math.sqrt((px - FX[FX.length - 1]) * (px - FX[FX.length - 1]) + (py - FY[FY.length - 1]) * (py - FY[FY.length - 1]));
+          FX.push(px); FY.push(py); TX.push(dx / dl); TY.push(dy / dl); FS.push(L); FP.push(segPiece[k]);
+          if (segPiece[k] === 0) heroL = L;
+        }
+      });
+      if (FX.length < 2) return list;
+      function uAt(s) { return s <= heroL ? uH : uH + (uP - uH) * smooth((s - heroL) / (6 * uP)); }
+
+      /* 2. Schleifen dazurechnen: vorwaerts/rueckwaerts (along) und seitlich (across, links der Fahrtrichtung) */
+      /* Takt ab loopFrom; so gelegt, dass die erste volle Schleife die grosse ist (STR[4]) */
+      var out = [], i = 0, th = 8 * Math.PI - 4.2, prevS = 0, step = Math.max(3, uP / 8);
+      for (var s = 0; ; s += step) {
+        if (s > L) s = L;
+        while (i < FS.length - 2 && FS[i + 1] < s) i++;
+        var w = (s - FS[i]) / ((FS[i + 1] - FS[i]) || 1);
+        var bx = FX[i] + (FX[i + 1] - FX[i]) * w, by = FY[i] + (FY[i + 1] - FY[i]) * w;
+        var tx = TX[i] + (TX[i + 1] - TX[i]) * w, ty = TY[i] + (TY[i + 1] - TY[i]) * w, tl = Math.sqrt(tx * tx + ty * ty) || 1;
+        tx /= tl; ty /= tl;
+        var A = uAt(s);
+        if (s > loopFrom) th += (s - Math.max(prevS, loopFrom)) / A;
+        prevS = s;
+        var c = th / TWO_PI, env = smooth((s - loopFrom) / (4 * A)) * edge(bx, A);
+        var st = cyc(STR, c) * env, ly = -st * Math.cos(th) * SIZE * A * cyc(SIDE, c);
+        var along = -st * A * Math.sin(th) - SLANT * ly;
+        var across = ly + 0.5 * A * Math.sin(th / 2.7) * env;
+        out.push({ x: bx + along * tx + across * ty, y: by + along * ty - across * tx, p: FP[w < 0.5 ? i : i + 1] });
+        if (s >= L) break;
+      }
+
+      /* 3. Neu in die Stuecke verteilen: glatte Kurve durch die Punkte */
+      list = []; segs = [];
+      var n = out.length, cp = -1;
+      x = out[0].x; y = out[0].y;
+      for (var q = 0; q < n - 1; q++) {
+        var a0 = out[Math.max(0, q - 1)], a1 = out[q], a2 = out[q + 1], a3 = out[Math.min(n - 1, q + 2)];
+        while (cp < a2.p) { cp++; piece(); }
+        cub(a1.x + (a2.x - a0.x) / 6, a1.y + (a2.y - a0.y) / 6, a2.x - (a3.x - a1.x) / 6, a2.y - (a3.y - a1.y) / 6, a2.x, a2.y);
+      }
+      while (cp < nPieces - 1) { cp++; piece(); }
+      return list;
+    }
   }
 
   /* --- Laenge zu Hoehe ----------------------------------------------------------------------- */
@@ -708,21 +778,24 @@ var NAHLIO = (function () {
      bis dahin tiefste y (maxY), auf die Laenge des Browsers (getTotalLength) geeicht. */
   var total = 0, cumL = null, maxY = null, H = 1, topInDoc = 0;
   function sampleLine() {
-    var c = [], m = [], len = 0, low = -Infinity, px = 0, py = 0;
+    var c = [], m = [], len = 0, low = -Infinity, px = 0, py = 0, ends = [];
     segs.forEach(function (s, k) {
-      for (var j = k ? 1 : 0; j <= STEPS; j++) {
-        var t = j / STEPS, u = 1 - t, a = u * u * u, b = 3 * u * u * t, e = 3 * u * t * t, g = t * t * t;
+      /* kurze Stuecke (Schleifen: viele kleine) brauchen weniger Stuetzpunkte: etwa alle 4 px, hoechstens STEPS */
+      var n = Math.max(2, Math.min(STEPS, Math.ceil((Math.abs(s[6] - s[0]) + Math.abs(s[7] - s[1])) / 4)));
+      for (var j = k ? 1 : 0; j <= n; j++) {
+        var t = j / n, u = 1 - t, a = u * u * u, b = 3 * u * u * t, e = 3 * u * t * t, g = t * t * t;
         var qx = a * s[0] + b * s[2] + e * s[4] + g * s[6], qy = a * s[1] + b * s[3] + e * s[5] + g * s[7];
         if (c.length) len += Math.sqrt((qx - px) * (qx - px) + (qy - py) * (qy - py));
         if (qy > low) low = qy;
         c.push(len); m.push(low); px = qx; py = qy;
       }
+      ends.push(c.length - 1);
     });
     var k = len ? total / len : 1;
     for (var i = 0; i < c.length; i++) c[i] *= k;
     cumL = c; maxY = m;
     /* Wo die Linie jedes Bild erreicht: Das i-te Hero-Kurvenstueck endet im i-ten Bild. */
-    artLens = arts.map(function (a, i) { return c[Math.min(c.length - 1, (i + 1) * STEPS)]; });
+    artLens = arts.map(function (a, i) { return c[ends[Math.min(ends.length - 1, i)]] || 0; });
   }
   function lenAtY(y) {
     if (!maxY || !maxY.length || y <= maxY[0]) return 0;
@@ -1040,7 +1113,8 @@ var NAHLIO = (function () {
     var a = m ? m.index + m[0].length - 2 : -1, b = a + 1;
     var orig = a >= 0 ? [cs[a].textContent, cs[b].textContent] : null;
     var last = null, i = 0;
-    function next() {
+    /* eigener Name: "next" ist die Warteschlange unten (vorher rief sich diese Funktion am Ende endlos selbst auf) */
+    function step() {
       if (i >= steps.length) {
         if (last) last.classList.remove("is-caret");
         item.classList.add("is-typed");
@@ -1054,10 +1128,10 @@ var NAHLIO = (function () {
       last = st.n ? cs[st.n - 1] : null;
       if (last) last.classList.add("is-caret");
       if (msg) msg.classList.toggle("is-caret-start", !st.n);
-      window.setTimeout(next, st.wait + (i < steps.length ? Math.random() * 16 : 500));
+      window.setTimeout(step, st.wait + (i < steps.length ? Math.random() * 16 : 500));
     }
     if (msg) msg.classList.add("is-caret-start");
-    window.setTimeout(next, delay);
+    window.setTimeout(step, delay);
   }
 
   /* Nacheinander (Wunsch 27.10.): erst der Laden; erst wenn er fertig ist das Preisschild, danach die Nachricht.
