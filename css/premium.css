@@ -137,10 +137,23 @@ h1, h2,
 .route__badge.is-on .route__badge-in { opacity: 1; transform: scale(1); }
 .route__badge circle { fill: var(--white); stroke: var(--brand); stroke-width: 4; }
 .route__shop { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* Gewinner oben: Medaille springt an den Betrieb (ease-out, ab 0.9, nicht aus dem Nichts), Strahlen einmal */
+.route__medal-in { transform-box: fill-box; transform-origin: 50% 30%; opacity: 0; transform: scale(0.9) rotate(-8deg); }
+.route__badge .route__medal-disc { fill: var(--brand); stroke: var(--white); stroke-width: 3; }
+.route__star { fill: var(--white); }
+.route__ribbon { fill: var(--brand-deep); }
+.hero__route.is-winner .route__medal-in { animation: route-medal 620ms var(--ease-enter) 120ms both; }
+@keyframes route-medal { 0% { opacity: 0; transform: scale(0.9) rotate(-8deg); } 60% { opacity: 1; transform: scale(1.06) rotate(2deg); } 100% { opacity: 1; transform: none; } }
+.route__rays line { stroke: var(--brand); stroke-width: 3; stroke-linecap: round; }
+.route__rays { transform-box: fill-box; transform-origin: center; opacity: 0; }
+.hero__route.is-winner .route__rays { animation: route-rays 760ms var(--ease-enter) 60ms both; }
+@keyframes route-rays { 0% { opacity: 0; transform: scale(0.92); } 35% { opacity: 1; } 100% { opacity: 0; transform: scale(1.12); } }
 /* die Seitenlinie: gleich breit wie der Weg, damit beide ineinander uebergehen */
 .pageline__main { stroke-width: var(--route-w); }
 @media (prefers-reduced-motion: reduce) {
   .route__dot, .route__dot circle, .route__check, .route__label, .route__badge-in { transition: none; }
+  .hero__route.is-winner .route__medal-in { animation: none; opacity: 1; transform: none; }
+  .hero__route.is-winner .route__rays { animation: none; }
 }
 
 /* --- Text-Auftakt im Hero (selten gesehen: Freude erlaubt) ----------------------------------------
@@ -177,8 +190,8 @@ html.hero-in-view .nav__logo { opacity: 0; transform: translateY(-6px); visibili
   transition: opacity 200ms ease, transform 200ms ease, visibility 0s linear 200ms; }
 @media (prefers-reduced-motion: reduce) { .nav__logo, html.hero-in-view .nav__logo { transform: none; } }
 
-/* Uebergabepunkt an die Seitenlinie (25-line.js): wo der Weg unten beginnt (hero-route.js setzt ihn) */
-.hero__exit { position: absolute; left: 5%; bottom: 0; width: 0; height: 0; }
+/* Uebergabepunkt an die Seitenlinie (25-line.js): oben beim Gewinner (hero-route.js setzt ihn genau) */
+.hero__exit { position: absolute; left: 90%; top: 6%; width: 0; height: 0; }
 
 /* Tablet und Handy: Text oben, darunter der Weg ueber die ganze Breite */
 @media (max-width: 63.99em) {

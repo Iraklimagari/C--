@@ -627,16 +627,33 @@ var NAHLIO = (function () {
       h = Math.atan2(pe.y - pp.y, pe.x - pp.x) / rad;
       heroEndY = Math.max(lv.y, heroBottom - vh * 0.02);
     } else if (exitEl) {
-      /* Hero mit Bildmarke (hero-mark.js): Die Linie kommt dort als 3D-Rohr aus der Marke, wird flach und
-         verlaesst den Hero an seiner Unterkante. Genau dort setzt die Seitenlinie an und laeuft nach unten. */
+      /* Hero mit Weg nach oben (hero-route.js, Wunsch 04.11.): Oben, beim Gewinner, beginnt die Linie und kommt als
+         Ornament herunter: rechts neben dem Weg eine Schleife, dann ein weiter Bogen bis unter den Hero; danach die
+         grossen Boegen. Sie zeichnet sich erst, wenn der Betrieb oben angekommen ist (data-line-start). */
       var eb = boxInMain(exitEl);
-      x = eb.x; y = eb.y; h = 90;
+      var R = Math.max(26, Math.min(W * 0.045, vh * 0.075));
+      var sx = eb.x, sy = eb.y;
+      var lx = Math.min(W - R * 1.5, sx + R * 1.1);          /* Schleife nahe am rechten Rand, neben dem Weg */
+      var P = [
+        { x: sx, y: sy },
+        { x: sx + R * 0.9, y: sy + R * 1.4 },
+        { x: lx + R * 0.9, y: sy + R * 3.6 },
+        { x: lx + R * 0.1, y: sy + R * 4.9 },
+        { x: lx - R * 0.9, y: sy + R * 4.3 },
+        { x: lx - R * 0.4, y: sy + R * 3.3 },
+        { x: lx + R * 0.7, y: sy + R * 4.2 },
+        { x: lx + R * 0.2, y: sy + (heroBottom - sy) * 0.62 },
+        { x: lx - R * 1.2, y: heroBottom + vh * 0.1 }
+      ];
+      x = P[0].x; y = P[0].y;
       piece();                                    /* Stueck 0: der Hero */
-      heroEndY = y;                               /* nichts vorgezeichnet: die Linie kommt erst beim Scrollen (folgt) */
-      /* Wunsch 03.11.: kein Schweif, keine Kruemmung nach unten: zuerst ein gerader, senkrechter Zug aus der Marke
-         heraus bis unter den Hero; erst danach beginnen die grossen Boegen. */
-      var drop = Math.max(heroBottom - y + vh * 0.32, vh * 0.42);
-      cub(x, y + drop / 3, x, y + drop * 2 / 3, x, y + drop);
+      for (var j = 0; j < P.length - 1; j++) {
+        var p0 = P[Math.max(0, j - 1)], p1 = P[j], p2 = P[j + 1], p3 = P[Math.min(P.length - 1, j + 2)];
+        cub(p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6, p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6, p2.x, p2.y);
+      }
+      var pe = P[P.length - 1], pq = P[P.length - 2];
+      h = Math.atan2(pe.y - pq.y, pe.x - pq.x) / rad;
+      heroEndY = heroBottom;                      /* nach dem Auftakt ist der Hero-Teil immer ganz gezeichnet */
     } else {
       x = W * 0.8; y = -vh * 0.15; h = 112;
       piece();                                    /* leeres Hero-Stueck: Stueck 0 ist immer der Hero */
@@ -732,9 +749,15 @@ var NAHLIO = (function () {
   var intro = true, introT0 = 0, introGoal = 0;
   /* Halb gleichmaessig, halb weich: Die Linie erreicht das erste Bild rasch und wird am Ende ruhiger. */
   function ease(t) { return 0.5 * t + 0.25 * (1 - Math.cos(Math.PI * t)); }
+  /* Start des Auftakts: im Hero mit Weg nach oben erst, wenn der Betrieb oben ist (hero-route.js setzt die Zeit) */
+  function introStart() {
+    var st = exitEl && Number(exitEl.getAttribute("data-line-start"));
+    return st || introT0;
+  }
   function introCur(now) {
-    if (!introT0) return 0;
-    var t = (now - introT0) / (INTRO_DUR * 1000);
+    var st = introStart();
+    if (!st) return 0;
+    var t = (now - st) / (INTRO_DUR * 1000);
     return t <= 0 ? 0 : ease(t >= 1 ? 1 : t) * introGoal;
   }
   /* Wunsch 30.10.: Von links nach rechts, nie alle zugleich: Ein Bild springt erst auf, wenn die Linie es erreicht
@@ -848,7 +871,7 @@ var NAHLIO = (function () {
     if (intro) {
       cur = Math.max(cur, introCur(now));
       devicesTick(now);
-      if (now >= introT0 + INTRO_DUR * 1000) introDone();
+      if (now >= introStart() + INTRO_DUR * 1000) introDone();
     } else {
       cur += (target - cur) * (1 - Math.exp(-dt / TAU));
       if (Math.abs(target - cur) < 0.8) { cur = target; running = false; }

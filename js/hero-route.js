@@ -3,8 +3,9 @@
    Rechts im Hero zeichnet sich die Linie (Farben der Seitenlinie) einen Zickzack-Weg hinauf und
    schiebt einen Betrieb (Ladensymbol) vor sich her. Die Leistungen sind Wegmarken: Die Linie erreicht
    eine Marke (Haken, Name erscheint), geht ein Stueck hinab und steigt hoeher zur naechsten. Nach der
-   letzten Marke geht es ganz nach oben. Der fertige Weg bleibt als Bild stehen.
-   Unten beginnt an derselben Stelle die Seitenlinie (25-line.js, data-line-exit) und folgt dem Scrollen.
+   letzten Marke geht es ganz nach oben: Dort wird der Betrieb zum Gewinner (Medaille). Der fertige Weg bleibt
+   als Bild stehen. Danach kommt die Linie oben beim Gewinner als Ornament herunter (Seitenlinie, 25-line.js;
+   Startpunkt data-line-exit, Startzeit data-line-start) und folgt dem Scrollen.
    Weniger Bewegung: fertiger Weg sofort. Ausserdem: Woerter der Ueberschrift fuer den Text-Auftakt
    fassen (premium.css) und das kleine Logo oben links im Hero ausblenden.
    ========================================================================== */
@@ -166,13 +167,35 @@
     badge = el("g", { "class": "route__badge" }, svg);
     var inner = el("g", { "class": "route__badge-in" }, badge);
     var BR = desk ? 30 : 22;
+    /* Lichtstrahlen beim Ankommen oben (einmal) */
+    var rays = el("g", { "class": "route__rays" }, badge);
+    for (var k = 0; k < 8; k++) {
+      var an = (k / 8) * Math.PI * 2 - Math.PI / 8, r1 = BR + (desk ? 9 : 7), r2 = BR + (desk ? 20 : 14);
+      el("line", { x1: (Math.cos(an) * r1).toFixed(1), y1: (Math.sin(an) * r1).toFixed(1), x2: (Math.cos(an) * r2).toFixed(1), y2: (Math.sin(an) * r2).toFixed(1) }, rays);
+    }
     el("circle", { r: String(BR) }, inner);
     var s = BR / 30;
     el("path", { "class": "route__shop", transform: "scale(" + s.toFixed(3) + ")",
       d: "M-13-5h26l-2.5-8h-21z M-11-5v15h22v-15 M-3.5 10v-8h7v8 M-13-5c0 3.2 4.3 3.2 4.3 0c0 3.2 4.3 3.2 4.3 0c0 3.2 4.3 3.2 4.4 0c0 3.2 4.3 3.2 4.3 0c0 3.2 4.3 3.2 4.3 0c0 3.2 4.4 3.2 4.4 0" }, inner);
+    /* Gewinner-Medaille: oben am Betrieb angeheftet (Markenfarben) */
+    var m = BR * 0.68;
+    var medal = el("g", { "class": "route__medal", transform: "translate(" + (BR * 0.8).toFixed(1) + " " + (-BR * 0.82).toFixed(1) + ")" }, badge);
+    var mi = el("g", { "class": "route__medal-in" }, medal);
+    el("path", { "class": "route__ribbon", d: "M" + (-0.55 * m).toFixed(1) + " " + (0.35 * m).toFixed(1) + "L" + (-0.85 * m).toFixed(1) + " " + (1.55 * m).toFixed(1) + "L" + (-0.42 * m).toFixed(1) + " " + (1.3 * m).toFixed(1) + "L" + (-0.08 * m).toFixed(1) + " " + (1.62 * m).toFixed(1) + "L" + (0.05 * m).toFixed(1) + " " + (0.5 * m).toFixed(1) + "Z" }, mi);
+    el("path", { "class": "route__ribbon", d: "M" + (0.55 * m).toFixed(1) + " " + (0.35 * m).toFixed(1) + "L" + (0.85 * m).toFixed(1) + " " + (1.55 * m).toFixed(1) + "L" + (0.42 * m).toFixed(1) + " " + (1.3 * m).toFixed(1) + "L" + (0.08 * m).toFixed(1) + " " + (1.62 * m).toFixed(1) + "L" + (-0.05 * m).toFixed(1) + " " + (0.5 * m).toFixed(1) + "Z" }, mi);
+    el("circle", { "class": "route__medal-disc", r: m.toFixed(1) }, mi);
+    var star = "";
+    for (var q = 0; q < 10; q++) {
+      var ang = -Math.PI / 2 + q * Math.PI / 5, rr = (q % 2 ? 0.24 : 0.56) * m;
+      star += (q ? "L" : "M") + (Math.cos(ang) * rr).toFixed(1) + " " + (Math.sin(ang) * rr).toFixed(1);
+    }
+    el("path", { "class": "route__star", d: star + "Z" }, mi);
 
-    /* Startpunkt der Seitenlinie: wo der Weg unten beginnt */
-    var ex = pts[0].x, ey = H - 2;
+    /* Startpunkt der Seitenlinie: oben beim Gewinner; sie zeichnet sich, wenn der Betrieb oben angekommen ist */
+    var topP = pts[pts.length - 1], ex = topP.x, ey = topP.y;
+    var tEnd = START, fromL = 0;
+    legs.forEach(function (lg, i) { tEnd += (lg - fromL) / SPEED + (i < legs.length - 1 ? HOLD : 0); fromL = lg; });
+    exitEl.setAttribute("data-line-start", String(Math.round(t0 + tEnd + 650)));
     if (Math.abs(exitEl.offsetLeft - ex) > 0.5 || Math.abs(exitEl.offsetTop - ey) > 0.5) {
       exitEl.style.left = ex.toFixed(1) + "px"; exitEl.style.top = ey.toFixed(1) + "px"; exitEl.style.bottom = "auto";
       if (window.NAHLIO && window.NAHLIO.recalc) window.NAHLIO.recalc();
@@ -204,6 +227,7 @@
     badge.setAttribute("transform", "translate(" + q.x.toFixed(1) + " " + q.y.toFixed(1) + ")");
     badge.classList.toggle("is-on", l > 0.5);
     root.classList.toggle("is-done", l >= total - 0.5);
+    root.classList.toggle("is-winner", l >= total - 0.5);
   }
 
   function tick() {
