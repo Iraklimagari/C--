@@ -54,14 +54,14 @@
   var STOPS = ["Google-Profil", "Website", "Digitale Karte", "WhatsApp", "Fotos & Kurzvideos"];
   /* Weg in Anteilen der Flaeche (x nach rechts, y nach unten): Start unten, je Leistung eine Marke,
      danach ein Stueck hinab, die naechste Marke liegt hoeher; zuletzt ganz nach oben. */
-  var ROUTE = [
-    { x: 0.05, y: 1.0 },
-    { x: 0.2, y: 0.8, stop: 0 }, { x: 0.28, y: 0.87 },
-    { x: 0.39, y: 0.66, stop: 1 }, { x: 0.47, y: 0.73 },
-    { x: 0.57, y: 0.52, stop: 2 }, { x: 0.64, y: 0.59 },
-    { x: 0.74, y: 0.38, stop: 3 }, { x: 0.8, y: 0.44 },
-    { x: 0.88, y: 0.24, stop: 4 }, { x: 0.92, y: 0.29 },
-    { x: 0.97, y: 0.07, top: true }
+  var ROUTE = [                     /* steile, hohe Anstiege (Wunsch 04.11.), kurze Senken dazwischen */
+    { x: 0.16, y: 1.0 },
+    { x: 0.24, y: 0.79, stop: 0 }, { x: 0.29, y: 0.83 },
+    { x: 0.37, y: 0.62, stop: 1 }, { x: 0.42, y: 0.66 },
+    { x: 0.5, y: 0.45, stop: 2 }, { x: 0.55, y: 0.49 },
+    { x: 0.63, y: 0.28, stop: 3 }, { x: 0.68, y: 0.32 },
+    { x: 0.76, y: 0.12, stop: 4 }, { x: 0.8, y: 0.16 },
+    { x: 0.88, y: -0.04, top: true }
   ];
 
   /* Zeit: Weg in gleichmaessigem Tempo, an jeder Marke weich abbremsen (ease-in-out je Abschnitt), kurz halten */
