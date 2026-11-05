@@ -348,9 +348,12 @@ html:not(.js) .ks__bar { display: none; }
   .ks *, .ks *::before, .ks *::after { transition-duration: 1ms !important; transition-delay: 0ms !important; animation-duration: 1ms !important; animation-delay: 0ms !important; }
 }
 
-/* ---------- 2. Fragen in Kreisen ------------------------------------------------------------------- */
+/* ---------- 2. Fragen in Quadraten (Wunsch 05.11., zweite Fassung) ---------------------------------
+   Erst der Titel gross in der Mitte, er loest sich beim Scrollen auf. Dann je Frage ein grosses Quadrat mit der
+   alten Szene (Laden mit Tuer, Preisschild, getippte Nachricht; journey.css, 35-qa.js spielt sie bei jedem
+   Nach-vorn-Kommen neu ab). Beim Weiterscrollen wird das Quadrat kleiner (direkt am Scrollweg, --k), dann
+   wechselt es: das alte tritt nach oben zurueck, das naechste kommt von unten. */
 .bq { padding-block: 0; --t: 0; }
-.bq > .shell { display: none; }
 .bq__track { position: relative; height: calc(100svh + 330svh); }
 .bq__stage { position: sticky; top: 0; height: 100svh; overflow: clip; }
 .bq__title {
@@ -365,59 +368,41 @@ html:not(.js) .ks__bar { display: none; }
   pointer-events: none;
 }
 .bq.is-orbit .bq__title { visibility: hidden; }
-.bq__space { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 900ms ease; }
-.bq.is-orbit .bq__space { opacity: 1; }
-.bq__ring { position: absolute; left: 50%; top: calc(50% + var(--nav-h) / 2); border-radius: 50%; translate: -50% -50%;
-            border: 1.5px solid color-mix(in srgb, var(--brand-deep) 16%, transparent); transition: rotate 1200ms var(--ks-move), scale 1200ms var(--ks-move); }
-.bq__ring--a { width: min(112vw, 1500px); height: 52svh; rotate: -7deg; }
-.bq__ring--b { width: min(82vw, 1080px); height: 34svh; rotate: 9deg; border-style: dashed; border-color: color-mix(in srgb, var(--brand) 24%, transparent); }
-.bq[data-front="1"] .bq__ring--a { rotate: -3deg; scale: 1.03; }
-.bq[data-front="1"] .bq__ring--b { rotate: 14deg; }
-.bq[data-front="2"] .bq__ring--a { rotate: -11deg; }
-.bq[data-front="2"] .bq__ring--b { rotate: 4deg; scale: 0.97; }
 
-.bq__orbit { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
-.bq__item {
-  --D: min(64svh, 600px, 88vw);
-  position: absolute; left: 50%; top: calc(50% + var(--nav-h) / 2); width: var(--D); height: var(--D);
-  margin: calc(var(--D) / -2) 0 0 calc(var(--D) / -2);
-  z-index: var(--z, 1);
-  transform: translate(var(--x, 0px), var(--y, 0px)) scale(var(--s, 1));
-  opacity: var(--op, 1); filter: blur(var(--bl, 0px));
-  transition: transform 950ms var(--ks-move), opacity 700ms ease, filter 700ms ease;
+.bq__deck { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+.bq .bq__card {
+  --S: min(62svh, 620px, 88vw);
+  position: absolute; left: 50%; top: calc(50% + var(--nav-h) / 2); width: var(--S); height: var(--S);
+  margin: calc(var(--S) / -2) 0 0 calc(var(--S) / -2); padding: 0; display: block; border: 0;
+  transition: transform 820ms var(--ks-move), opacity 520ms ease;
 }
-.bq.is-live .bq__item { --op: 0; --s: 0.86; }
-.bq.is-live.is-orbit .bq__item.is-front { --x: 0px; --y: 0px; --s: 1; --op: 1; --bl: 0px; --z: 3; }
-.bq.is-live.is-orbit .bq__item.is-right { --x: min(41vw, 590px); --y: -12svh; --s: 0.4; --op: 0.6; --bl: 1.5px; --z: 1; }
-.bq.is-live.is-orbit .bq__item.is-left  { --x: max(-41vw, -590px); --y: 10svh; --s: 0.4; --op: 0.6; --bl: 1.5px; --z: 2; }
-.bq__circle {
-  width: 100%; height: 100%; border-radius: 50%;
-  display: grid; place-content: center; justify-items: center; text-align: center; gap: clamp(10px, 1.7svh, 18px);
-  padding: 13%;
-  background: radial-gradient(circle at 50% 28%, #fff 0, #fff 52%, color-mix(in srgb, var(--aqua) 75%, #fff) 100%);
-  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--brand) 38%, transparent), 0 50px 90px -50px rgba(0, 127, 145, 0.45);
+.bq .qa + .qa::before { content: none; }
+.bq.is-live .bq__card { opacity: 0; transform: translateY(16svh) scale(0.92); z-index: 2; }
+.bq.is-live.is-orbit .bq__card.is-front { opacity: 1; transform: none; z-index: 3; }
+.bq.is-live.is-orbit .bq__card.is-past { opacity: 0; transform: translateY(-12svh) scale(0.84); z-index: 1; }
+.bq__sq {
+  position: relative; width: 100%; height: 100%;
+  display: grid; place-content: center; justify-items: center; text-align: center; padding: 10%;
+  border-radius: clamp(26px, 3.2vw, 44px);
+  background: linear-gradient(165deg, #fff 0%, #fff 52%, color-mix(in srgb, var(--aqua) 80%, #fff) 100%);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--brand) 32%, transparent),
+              0 50px 100px -50px rgba(0, 127, 145, 0.42), 0 18px 36px -24px rgba(11, 17, 20, 0.18);
+  transform: scale(var(--k, 1));
 }
-.bq__icon { display: grid; place-items: center; width: clamp(56px, 9svh, 86px); height: clamp(56px, 9svh, 86px); color: var(--brand-deep); }
-.bq__icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
-.bq__icon .bq-f { fill: var(--aqua); stroke: none; }
-.bq__icon .bq-s { stroke: var(--brand); }
-.bq__icon .bq-dots circle { fill: var(--brand); stroke: none; }
-.bq__q { margin: 0; font-family: var(--font-serif, Georgia, serif); font-weight: 440; font-size: clamp(30px, 3.6svh + 14px, 54px); line-height: 1.04; letter-spacing: -0.02em; color: var(--ink); text-wrap: balance; }
-.bq__a { margin: 0; max-width: 21em; font-size: clamp(16px, 1.3svh + 7px, 20px); line-height: 1.45; color: var(--text-2); }
-.bq__link { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: clamp(15px, 0.9svh + 8px, 17px); color: var(--brand-deep); text-decoration: none; }
-.bq__link svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.bq__link:hover { text-decoration: underline; text-underline-offset: 3px; }
-.bq.is-live .bq__a, .bq.is-live .bq__link { opacity: 0; transform: translateY(10px); transition: opacity 200ms ease, transform 200ms ease; }
-.bq.is-live .is-front .bq__a, .bq.is-live .is-front .bq__link { opacity: 1; transform: none; transition: opacity 420ms ease, transform 560ms var(--ks-out); }
-.bq.is-live .is-front .bq__a { transition-delay: 520ms; }
-.bq.is-live .is-front .bq__link { transition-delay: 620ms; }
-.bq.is-live:not(.is-orbit) .bq__a, .bq.is-live:not(.is-orbit) .bq__link { transition-delay: 0ms; }
-.bq.is-live .bq__item:not(.is-front) .bq__link { visibility: hidden; }
-html.motion-ok .bq.is-orbit .is-front .bq__icon { animation: bq-icon 760ms var(--ks-out) 300ms both; }
-@keyframes bq-icon { 0% { transform: translateY(14px) rotate(-8deg) scale(0.9); opacity: 0.4; } 100% { transform: none; opacity: 1; } }
-html.motion-ok .bq.is-orbit .bq__item[data-i="2"].is-front .bq-dots circle { animation: ks-dot 900ms ease-in-out infinite; }
-html.motion-ok .bq.is-orbit .bq__item[data-i="2"].is-front .bq-dots circle:nth-child(2) { animation-delay: 150ms; }
-html.motion-ok .bq.is-orbit .bq__item[data-i="2"].is-front .bq-dots circle:nth-child(3) { animation-delay: 300ms; }
+.bq__no { position: absolute; left: 8%; top: 7%; font: 600 14px/1 var(--font-display); letter-spacing: 0.08em; color: var(--brand-deep); font-variant-numeric: tabular-nums; }
+.bq__scene { display: grid; justify-items: center; gap: clamp(18px, 3svh, 32px); min-width: 0; }
+
+/* Die alten Szenen, groesser fuer das Quadrat */
+.bq .qa__q { justify-content: center; min-height: 0; gap: 18px; }
+.bq .qa__title, .bq .qa__tag-front { font-size: clamp(28px, 2.4svh + 13px, 40px); }
+.bq .qa__a { justify-items: center; text-align: center; font-size: clamp(17px, 0.9svh + 9px, 20px); }
+.bq .qa__body { max-width: 26ch; margin-inline: auto; }
+.bq .qa__link { justify-self: center; font-size: 16px; }
+.bq .qa__shop { width: 64px; }
+.bq .qa-anim .qa--angebot .qa__shop { width: 150px; }
+.bq .qa-anim .qa--angebot.is-play .qa__shop { animation-name: bq-shrink; }
+@keyframes bq-shrink { from { width: 150px; } to { width: 64px; } }
+
 .bq__count { position: absolute; left: 50%; bottom: max(22px, 3.5svh); display: flex; gap: 8px; translate: -50% 0; opacity: 0; transition: opacity 500ms ease; }
 .bq.is-orbit .bq__count { opacity: 1; }
 .bq__count i { width: 28px; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--brand-deep) 18%, transparent); transition: background-color 300ms ease; }
@@ -426,24 +411,24 @@ html.motion-ok .bq.is-orbit .bq__item[data-i="2"].is-front .bq-dots circle:nth-c
 @media (max-width: 47.99em) {
   .bq__track { height: calc(100svh + 290svh); }
   .bq__title { font-size: clamp(38px, 11vw, 56px); width: 92vw; }
-  .bq__item { --D: min(88vw, 62svh); }
-  .bq.is-live.is-orbit .bq__item.is-right { --x: 66vw; --y: -24svh; --s: 0.42; }
-  .bq.is-live.is-orbit .bq__item.is-left  { --x: -66vw; --y: 24svh; --s: 0.42; }
-  .bq__circle { padding: 11%; gap: 10px; }
-  .bq__q { font-size: clamp(25px, 7vw, 32px); }
-  .bq__a { font-size: 15px; }
-  .bq__ring--a { height: 40svh; }
-  .bq__ring--b { height: 26svh; }
+  .bq .bq__card { --S: min(90vw, 62svh); }
+  .bq__sq { padding: 9%; border-radius: 26px; }
+  .bq__no { font-size: 12px; }
+  .bq .qa__title, .bq .qa__tag-front { font-size: clamp(22px, 6.2vw, 28px); }
+  .bq .qa__a { font-size: 16px; }
+  .bq .qa__q { gap: 12px; }
+  .bq .qa__shop { width: 48px; }
+  .bq .qa-anim .qa--angebot .qa__shop { width: 104px; }
+  @keyframes bq-shrink { from { width: 104px; } to { width: 48px; } }
 }
 
 html:not(.js) .bq__track { height: auto; }
 html:not(.js) .bq__stage { position: relative; height: auto; overflow: visible; padding: 96px var(--gutter); display: grid; gap: 40px; justify-items: center; }
 html:not(.js) .bq__title { position: static; transform: none; filter: none; opacity: 1; width: auto; }
-html:not(.js) .bq__space, html:not(.js) .bq__count { display: none; }
-html:not(.js) .bq__orbit { position: static; display: grid; gap: 28px; justify-items: center; }
-html:not(.js) .bq__item { position: relative; left: auto; top: auto; margin: 0; }
+html:not(.js) .bq__count { display: none; }
+html:not(.js) .bq__deck { position: static; display: grid; gap: 28px; justify-items: center; }
+html:not(.js) .bq .bq__card { position: relative; left: auto; top: auto; margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   .bq__title { filter: none; transform: translate(-50%, -50%); }
-  .bq__item { filter: none !important; transition: opacity 300ms ease; }
-  .bq *, .bq *::before, .bq *::after { animation: none !important; }
+  .bq .bq__card { transition: opacity 300ms ease; }
 }

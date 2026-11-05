@@ -23,7 +23,7 @@
 <link rel="preload" href="fonts/newsreader-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/styles.css?v=d8378fc8c1">
 <link rel="stylesheet" href="css/premium.css?v=1">
-<link rel="stylesheet" href="css/story.css?v=1">
+<link rel="stylesheet" href="css/story.css?v=2">
 <script>(function(d,w){var c=d.documentElement.classList;c.add('js');if(!w.location.hash||w.location.hash==='#top')c.add('hero-in-view');try{if(!w.matchMedia('(prefers-reduced-motion: reduce)').matches){c.add('motion-ok');var n=w.performance&&w.performance.getEntriesByType?w.performance.getEntriesByType('navigation')[0]:null;if((!w.location.hash||w.location.hash==='#top')&&(!n||n.type==='navigate'))c.add('hero-intro');}}catch(e){c.add('motion-ok');}w.setTimeout(function(){if(!(w.NAHLIO&&w.NAHLIO.popReady))c.remove('motion-ok','hero-intro');},4000);})(document,window);</script>
 </head>
 <body>
@@ -212,32 +212,10 @@
   <div class="bq__track">
     <div class="bq__stage">
       <h2 class="bq__title" id="blick-titel">Finden Ihre Kunden online die richtigen Antworten?</h2>
-      <div class="bq__space" aria-hidden="true"><i class="bq__ring bq__ring--a"></i><i class="bq__ring bq__ring--b"></i></div>
-      <ol class="bq__orbit" role="list">
-        <li class="bq__item" data-i="0">
-          <div class="bq__circle">
-            <span class="bq__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="bq-f" d="M10 26h44v28H10z"/><path d="M8 16h48l-3 10H11zM10 26v28h44V26M27 54V40h10v14M15 33h8v7h-8zM41 33h8v7h-8z"/><path class="bq-s" d="M8 26c0 3.3 6 3.3 6 0 0 3.3 6 3.3 6 0 0 3.3 6 3.3 6 0 0 3.3 6 3.3 6 0 0 3.3 6 3.3 6 0 0 3.3 6 3.3 6 0 0 3.3 6 3.3 6 0 0 3.3 6 3.3 6 0M6 54h52"/></svg></span>
-            <h3 class="bq__q">„Was bieten Sie an?“</h3>
-            <p class="bq__a">Ihr Angebot auf einen Blick: mit Leistungen, Fotos und kurzen Beschreibungen.</p>
-            <a class="bq__link" href="#beispiele" data-show-slide="website">Beispiel: One-Page-Website<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></a>
-          </div>
-        </li>
-        <li class="bq__item" data-i="1">
-          <div class="bq__circle">
-            <span class="bq__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="bq-f" d="M34 8h20v20L30 52 12 34z"/><path d="M34 8h20v20L30 52 12 34z"/><circle cx="46" cy="16" r="3"/><path class="bq-s" d="M36.5 26.5a6 6 0 1 0 0 8.5M27 29.5h8M27 33h7"/></svg></span>
-            <h3 class="bq__q">„Was kostet das?“</h3>
-            <p class="bq__a">Leistungen und Preise, ohne langes Suchen.</p>
-            <a class="bq__link" href="#beispiele" data-show-slide="karte">Beispiel: Digitale Karte<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></a>
-          </div>
-        </li>
-        <li class="bq__item" data-i="2">
-          <div class="bq__circle">
-            <span class="bq__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="bq-f" d="M12 14h40a4 4 0 0 1 4 4v22a4 4 0 0 1-4 4H30l-12 10v-10h-6a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4z"/><path d="M12 14h40a4 4 0 0 1 4 4v22a4 4 0 0 1-4 4H30l-12 10v-10h-6a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4z"/><g class="bq-dots"><circle cx="22" cy="29" r="2.6"/><circle cx="32" cy="29" r="2.6"/><circle cx="42" cy="29" r="2.6"/></g></svg></span>
-            <h3 class="bq__q">„Wie kann ich Sie erreichen?“</h3>
-            <p class="bq__a">Anrufen, schreiben oder einen Termin anfragen, ohne Umwege.</p>
-            <a class="bq__link" href="#beispiele" data-show-slide="kontakt">Beispiel: Kontakt &amp; WhatsApp<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></a>
-          </div>
-        </li>
+      <ol class="bq__deck qa-list" role="list" data-qa-manual>
+        <li class="qa qa--angebot bq__card" data-i="0"><div class="bq__sq"><span class="bq__no" aria-hidden="true">01 / 03</span><div class="bq__scene"><div class="qa__q"><span class="qa__shop" aria-hidden="true"><svg class="qa__shop-svg" viewBox="0 0 96 72" focusable="false"><rect class="sh-wall" x="8" y="17" width="80" height="53" rx="2"/><rect class="sh-win" x="14" y="29" width="19" height="19" rx="2"/><rect class="sh-win" x="63" y="29" width="19" height="19" rx="2"/><path class="sh-mull" d="M23.5 29v19M14 38.5h19M72.5 29v19M63 38.5h19"/><rect class="sh-in" x="37" y="26" width="22" height="44"/><path class="sh-awn" d="M4 5h88l-4 12H8z"/><path class="sh-stripe" d="M15 5h8l-1 12h-8zM35 5h8l-.4 12h-8zM55 5h8l.2 12h-8zM75 5h8l.8 12h-8z"/><path class="sh-scal" d="M8 17a5 5 0 0 0 10 0a5 5 0 0 0 10 0a5 5 0 0 0 10 0a5 5 0 0 0 10 0a5 5 0 0 0 10 0a5 5 0 0 0 10 0a5 5 0 0 0 10 0a5 5 0 0 0 10 0z"/><path class="sh-ground" d="M2 70h92"/></svg><span class="qa__door"><i></i></span></span><div class="qa__exit"><h3 class="qa__title">„Was bieten Sie an?“</h3></div></div><div class="qa__a"><p class="qa__body">Ihr Angebot auf einen Blick — mit Leistungen, Fotos und kurzen Beschreibungen.</p><a class="qa__link" href="#beispiele" data-show-slide="website">Beispiel: One-Page-Website<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></a></div></div></div></li>
+        <li class="qa qa--preise bq__card" data-i="1"><div class="bq__sq"><span class="bq__no" aria-hidden="true">02 / 03</span><div class="bq__scene"><div class="qa__q"><div class="qa__tag"><div class="qa__tag-in"><span class="qa__tag-face qa__tag-front" aria-hidden="true"><span class="qa__euro" style="--e:0">€</span><span class="qa__euro" style="--e:1">€</span><span class="qa__euro" style="--e:2">€</span></span><h3 class="qa__tag-face qa__tag-back qa__title">„Was kostet das?“</h3></div></div></div><div class="qa__a"><p class="qa__body">Leistungen und Preise — ohne langes Suchen.</p><a class="qa__link" href="#beispiele" data-show-slide="karte">Beispiel: Digitale Karte<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></a></div></div></div></li>
+        <li class="qa qa--kontakt bq__card" data-i="2"><div class="bq__sq"><span class="bq__no" aria-hidden="true">03 / 03</span><div class="bq__scene"><div class="qa__q"><h3 class="qa__title qa__msg" data-qa-chars>„Wie kann ich Sie erreichen?“</h3></div><div class="qa__a"><p class="qa__body">Anrufen, schreiben oder einen Termin anfragen — ohne Umwege.</p><a class="qa__link" href="#beispiele" data-show-slide="kontakt">Beispiel: Kontakt &amp; WhatsApp<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></a></div></div></div></li>
       </ol>
       <div class="bq__count" aria-hidden="true"><i></i><i></i><i></i></div>
     </div>
@@ -434,8 +412,8 @@
     </div>
   </div>
 </footer>
-<script src="js/app.js?v=a58345b815" defer></script>
+<script src="js/app.js?v=6fcf5cac13" defer></script>
 <script src="js/hero-mark.js?v=1" defer></script>
-<script src="js/story.js?v=1" defer></script>
+<script src="js/story.js?v=2" defer></script>
 </body>
 </html>

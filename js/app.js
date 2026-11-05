@@ -928,14 +928,16 @@ var NAHLIO = (function () {
 /* ==== 35-qa.js ==== */
 /* ==========================================================================
    NAHLIO — Fragen "Finden Ihre Kunden online die richtigen Antworten?" (Wunsch 27.10.)
-   Jede Frage spielt einmal ab, sobald sie sichtbar ist (journey.css, .qa-anim / .is-play):
+   Jede Frage spielt ab, sobald sie sichtbar ist (journey.css, .qa-anim / .is-play):
    1. Laden: Die Tuer geht auf, die Frage geht aus der dunklen Tuer hinaus (zuerst das Ende, zuletzt der
       Anfang), die Tuer geht zu, der Laden wird klein, die Antwort erscheint.
    2. Preisschild: drei Euro-Zeichen werden einzeln gestempelt, es dreht sich um, hinten steht die Frage.
    3. Nachrichtenblase: Die Frage wird getippt, mit einem kleinen Tippfehler, der korrigiert wird.
-   Nacheinander: erst der Laden, dann das Schild, dann die Nachricht. Beim Tippen stehen die Buchstaben von Anfang
-   an an ihrem endgueltigen Platz (nur unsichtbar), deshalb bricht nichts anders um und nichts springt. Ohne
-   Skript oder bei reduzierter Bewegung steht alles fertig da (.qa-anim wird dann gar nicht gesetzt).
+   Ohne data-qa-manual: nacheinander, sobald sichtbar (einmal). Mit data-qa-manual (Quadrate, story.js, Wunsch
+   05.11.): story.js ruft NAHLIO.qaShow(frage) jedes Mal, wenn eine Frage nach vorn kommt; sie spielt dann von
+   vorn. Beim Tippen stehen die Buchstaben von Anfang an an ihrem endgueltigen Platz (nur unsichtbar), deshalb
+   bricht nichts anders um und nichts springt. Ohne Skript oder bei reduzierter Bewegung steht alles fertig da
+   (.qa-anim wird dann gar nicht gesetzt).
    ========================================================================== */
 (function () {
   "use strict";
@@ -944,6 +946,7 @@ var NAHLIO = (function () {
   if (!list || NAHLIO.isReduced() || !("IntersectionObserver" in window)) return;
   var items = Array.prototype.slice.call(list.querySelectorAll(".qa"));
   if (!items.length) return;
+  var manual = list.hasAttribute("data-qa-manual");
 
   /* Frage in Buchstaben zerlegen: Hilfstechnik liest den ganzen Text (visually-hidden), die Buchstaben sind
      aria-hidden. Woerter bleiben in einem nowrap-Span, Leerzeichen dazwischen, so bricht es wie vorher um. */
@@ -973,25 +976,38 @@ var NAHLIO = (function () {
     h.appendChild(vis);
     return Array.prototype.slice.call(vis.querySelectorAll(".qa-ch"));
   }
-  var chars = new Map();
+  var chars = new Map(), origChars = new Map(), timers = new Map();
   items.forEach(function (it) {
     var h = it.querySelector("[data-qa-chars]");
-    if (h) chars.set(it, split(h));
+    if (!h) return;
+    var cs = split(h);
+    chars.set(it, cs);
+    origChars.set(it, cs.map(function (c) { return c.textContent; }));
   });
   list.classList.add("qa-anim");
 
+  /* Zeitgeber je Frage merken, damit ein Neustart nichts Altes weiterlaufen laesst */
+  function wait(item, fn, ms) {
+    var id = window.setTimeout(fn, ms);
+    if (!timers.has(item)) timers.set(item, []);
+    timers.get(item).push(id);
+  }
+
   /* Laden: Die Frage geht aus der Tuer hinaus. Gemessen kurz vor dem Start (Laden noch gross): --qa-exit = vom
      linken Tuerrand bis zum Anfang der Frage (bis dorthin reicht der Ausschnitt), --qa-walk = Weg, auf dem die
-     Frage anfangs ganz im Laden steht. Nach dem Hinausgehen faellt der Ausschnitt weg (.is-out). */
+     Frage anfangs ganz im Laden steht. Nach dem Hinausgehen faellt der Ausschnitt weg (.is-out).
+     Steht die Frage in einem skalierten Rahmen (Quadrate), werden die Masse auf ungedrehte Pixel umgerechnet. */
   function aimFromDoor(item) {
     var door = item.querySelector(".qa__door"), shop = item.querySelector(".qa__shop"), h = item.querySelector(".qa__title");
     if (!door || !shop || !h) return;
     var gap = parseFloat(getComputedStyle(item.querySelector(".qa__q")).columnGap) || 14;
     var s = shop.getBoundingClientRect(), d = door.getBoundingClientRect();
-    var exit = Math.max(0, s.right + gap - d.left);
+    var k = shop.offsetWidth ? s.width / shop.offsetWidth : 1;
+    if (!(k > 0.05)) k = 1;
+    var exit = Math.max(0, (s.right - d.left) / k + gap);
     item.style.setProperty("--qa-exit", exit.toFixed(1) + "px");
     item.style.setProperty("--qa-walk", (exit + h.offsetWidth + 4).toFixed(1) + "px");
-    window.setTimeout(function () { item.classList.add("is-out"); }, 1210);
+    wait(item, function () { item.classList.add("is-out"); }, 1210);
   }
 
   /* Tippen: Buchstaben nacheinander sichtbar; am Ende des letzten Wortes die zwei letzten Buchstaben vertauscht
@@ -1002,7 +1018,7 @@ var NAHLIO = (function () {
     var text = cs.map(function (c) { return c.textContent; }).join("");
     var m = /[A-Za-zÄÖÜäöüß]{4,}(?=[^A-Za-zÄÖÜäöüß]*$)/.exec(text);
     var steps = [], n = cs.length, k;
-    function show(count, swap, wait) { steps.push({ n: count, swap: swap, wait: wait }); }
+    function show(count, swap, ms) { steps.push({ n: count, swap: swap, wait: ms }); }
     if (m) {
       var e = m.index + m[0].length;                 /* Ende des letzten Wortes */
       for (k = 1; k <= e - 2; k++) show(k, false, 30);
@@ -1017,7 +1033,8 @@ var NAHLIO = (function () {
     var a = m ? m.index + m[0].length - 2 : -1, b = a + 1;
     var orig = a >= 0 ? [cs[a].textContent, cs[b].textContent] : null;
     var last = null, i = 0;
-    function next() {
+    /* eigener Name: "next" ist die Warteschlange unten (vorher rief sich diese Funktion am Ende endlos selbst auf) */
+    function step() {
       if (i >= steps.length) {
         if (last) last.classList.remove("is-caret");
         item.classList.add("is-typed");
@@ -1031,10 +1048,10 @@ var NAHLIO = (function () {
       last = st.n ? cs[st.n - 1] : null;
       if (last) last.classList.add("is-caret");
       if (msg) msg.classList.toggle("is-caret-start", !st.n);
-      window.setTimeout(next, st.wait + (i < steps.length ? Math.random() * 16 : 500));
+      wait(item, step, st.wait + (i < steps.length ? Math.random() * 16 : 500));
     }
     if (msg) msg.classList.add("is-caret-start");
-    window.setTimeout(next, delay);
+    wait(item, step, delay);
   }
 
   /* Nacheinander (Wunsch 27.10.): erst der Laden; erst wenn er fertig ist das Preisschild, danach die Nachricht.
@@ -1050,15 +1067,36 @@ var NAHLIO = (function () {
     if (key === "angebot") aimFromDoor(item);
     item.classList.add("is-play");
     if (key === "kontakt") typeIt(item, 200);
-    else window.setTimeout(function () { busy = false; next(); }, DONE[key] || 2600);
+    else wait(item, function () { busy = false; next(); }, DONE[key] || 2600);
   }
   function next() {
-    if (busy) return;
+    if (busy || manual) return;
     for (var i = 0; i < items.length; i++) {
       if (items[i].classList.contains("is-play")) continue;
       if (seen[i]) play(items[i]);
       return;                                         /* immer nur die naechste in der Reihe */
     }
+  }
+
+  /* Zurueck auf Anfang: Zeitgeber stoppen, Klassen weg, Buchstaben wie vorher; danach spielt die Szene neu. */
+  function reset(item) {
+    (timers.get(item) || []).forEach(function (id) { window.clearTimeout(id); });
+    timers.set(item, []);
+    item.classList.remove("is-play", "is-out", "is-typed");
+    var cs = chars.get(item), oc = origChars.get(item), msg = item.querySelector(".qa__msg");
+    if (cs) cs.forEach(function (c, j) { c.textContent = oc[j]; c.classList.remove("is-on", "is-caret"); });
+    if (msg) msg.classList.remove("is-caret-start");
+    void item.offsetWidth;                            /* Animationen beginnen beim naechsten Setzen von vorn */
+  }
+
+  if (manual) {
+    NAHLIO.qaShow = function (item) {
+      if (items.indexOf(item) < 0) return;
+      reset(item);
+      play(item);
+      busy = false;
+    };
+    return;
   }
 
   var io = new IntersectionObserver(function (entries) {

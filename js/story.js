@@ -87,27 +87,39 @@
     jobs.push(update);
   })();
 
-  /* --- 2. Fragen in Kreisen ------------------------------------------------------------------- */
+  /* --- 2. Fragen in Quadraten ----------------------------------------------------------------- */
   var bq = document.querySelector("[data-bq]");
   if (bq) (function () {
     var track = bq.querySelector(".bq__track");
-    var items = bq.querySelectorAll(".bq__item"), dots = bq.querySelectorAll(".bq__count i");
-    var lastT = -1, front = -1, orbit = null;
-    var TITLE = 0.26;                                   /* Anteil des Scrollwegs, in dem sich der Titel aufloest */
-    var POS = ["is-front", "is-right", "is-left"];
+    var cards = bq.querySelectorAll(".bq__card"), dots = bq.querySelectorAll(".bq__count i");
+    var sqs = Array.prototype.map.call(cards, function (c) { return c.querySelector(".bq__sq"); });
+    var lastT = -1, front = -1, orbit = null, lastK = [];
+    var TITLE = 0.22;                                   /* Anteil des Scrollwegs, in dem sich der Titel aufloest */
+    var SHRINK = 0.34;                                  /* so viel kleiner wird ein Quadrat bis zum Wechsel */
 
-    function setFront(f) {
-      if (f === front) return;
+    function setK(i, k) {
+      if (Math.abs((lastK[i] || 1) - k) < 0.001 && lastK[i] !== undefined) return;
+      lastK[i] = k;
+      sqs[i].style.setProperty("--k", k.toFixed(4));
+    }
+    function setFront(f, replay) {
+      if (f === front && !replay) return;
+      var changed = f !== front;
       front = f;
       bq.setAttribute("data-front", String(f));
-      each(items, function (it, i) {
-        var pos = POS[(i - f + 3) % 3];
-        POS.forEach(function (c) { it.classList.toggle(c, c === pos); });
-        it.setAttribute("aria-hidden", pos === "is-front" ? "false" : "true");
-        var a = it.querySelector("a");
-        if (a) a.tabIndex = pos === "is-front" ? 0 : -1;
+      each(cards, function (c, i) {
+        c.classList.toggle("is-front", i === f);
+        c.classList.toggle("is-past", i < f);
+        c.classList.toggle("is-next", i > f);
+        c.setAttribute("aria-hidden", i === f ? "false" : "true");
+        var a = c.querySelector("a");
+        if (a) a.tabIndex = i === f ? 0 : -1;
+        if (i > f) setK(i, 1);
+        if (i < f) setK(i, 1 - SHRINK);
       });
       each(dots, function (d, i) { d.classList.toggle("is-on", i === f); });
+      /* die alte Szene im Quadrat spielt jedes Mal neu, wenn es nach vorn kommt */
+      if ((changed || replay) && orbit && window.NAHLIO && NAHLIO.qaShow) NAHLIO.qaShow(cards[f]);
     }
 
     function update() {
@@ -115,11 +127,17 @@
       var t = (p.y - p.span * 0.03) / (p.span * TITLE);
       t = t < 0 ? 0 : t > 1 ? 1 : t;
       if (Math.abs(t - lastT) > 0.002) { lastT = t; bq.style.setProperty("--t", t.toFixed(3)); }
-      var on = t > 0.62;
+      var on = t > 0.62, turnedOn = on && orbit === false;
       if (on !== orbit) { orbit = on; bq.classList.toggle("is-orbit", on); }
-      var rest = p.span * (1 - TITLE - 0.03);
-      var f = Math.floor((p.y - p.span * (TITLE + 0.03)) / (rest / 3));
-      setFront(!on || f < 0 ? 0 : f > 2 ? 2 : f);
+      var seg = p.span * (1 - TITLE - 0.03) / 3;
+      var pos = (p.y - p.span * (TITLE + 0.03)) / seg;
+      var f = Math.floor(pos);
+      f = !on || f < 0 ? 0 : f > 2 ? 2 : f;
+      setFront(f, turnedOn);
+      /* kleiner werden: kurz voll stehen lassen, dann bis zum Wechsel schrumpfen */
+      var u = on ? (pos - f - 0.12) / 0.88 : 0;
+      u = u < 0 ? 0 : u > 1 ? 1 : u;
+      setK(f, 1 - SHRINK * (u * u * (3 - 2 * u)));
     }
 
     bq.classList.add("is-live");
