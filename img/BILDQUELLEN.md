@@ -91,3 +91,20 @@ Die folgenden WebP-Dateien wurden unverändert einschließlich Alpha-Kanal aus `
 | nordcut-whatsapp-confirmation.webp | Чат WhatsApp с подтверждением записи.webp | Nur Hero WhatsApp; die Showcase-Demo bleibt animiert |
 
 Google: 1024 × 1536 px; WhatsApp: 1122 × 1402 px. Transparenter Rand wird im Hero durch optische Platzierung ausgeglichen, ohne die Bilddateien zu beschneiden oder ihr Seitenverhältnis zu verändern.
+
+## Kfz-Bilder für den Kundenweg (05.11.2026)
+
+Mit KI erzeugt (Figma, Bildgenerierung), keine echten Betriebe oder Personen. Verwendet im Handy des
+Abschnitts „So finden Kunden zu Ihnen“ (erfundener Beispielbetrieb „Motorwerk Dorsten“). Die Originale in voller
+Größe liegen in der Figma-Datei (Seite „Hero v2“, Knoten 10:8 bis 10:15); hier eingebunden in Vorschaugröße,
+doppelt hochgerechnet.
+
+| Datei | Motiv |
+| --- | --- |
+| kfz-werkstatt-aussen.webp | Werkstatt von außen, offene Tore |
+| kfz-hebebuehne.webp | Auto auf der Hebebühne, Mechaniker |
+| kfz-meister.webp | Meister, Porträt (auch WhatsApp-Bild) |
+| kfz-diagnose.webp | Diagnose am Motor mit Tablet |
+| kfz-reifen.webp | Radwechsel mit Schlagschrauber |
+| kfz-uebergabe.webp | Schlüsselübergabe am Empfang (Reserve) |
+| kfz-alt-1.webp, kfz-alt-2.webp | einfache Werkstätten (Mitbewerber in der Suche) |
