@@ -179,3 +179,6 @@ html:not(.js) .hero__ink, html:not(.js) .hero__gl { display: none; }
 }
 
 /* Weniger Bewegung: hero-mark.js zeigt die fertige 3D-Marke ohne Auftakt und ohne Atmen */
+
+/* Audit 05.11.: Die Marke ragte bei 768 px 66 px ueber den Rand (waagerechtes Scrollen). Nur seitlich beschneiden. */
+.hero.hero--mark { overflow-x: clip; }

@@ -33,7 +33,7 @@
 .ks__title {
   font-family: var(--font-serif, Georgia, serif); font-weight: 440;
   font-size: clamp(40px, 4.6vw, 84px); line-height: 1.02; letter-spacing: -0.02em;
-  color: var(--ink); max-width: 11ch; text-wrap: balance;
+  color: var(--ink); max-width: 16ch; text-wrap: balance;
   margin: 0 0 clamp(28px, 4.5svh, 52px);
 }
 .ks__steps { display: grid; margin: 0; padding: 0; list-style: none; }
@@ -43,7 +43,6 @@
   transition: opacity 220ms ease, transform 360ms var(--ks-out);
 }
 .ks__step.is-active { opacity: 1; transform: none; transition-delay: 140ms; }
-.ks__num { font: 600 14px/1 var(--font-display); letter-spacing: 0.08em; color: var(--brand-deep); font-variant-numeric: tabular-nums; }
 .ks__step-title {
   margin: 10px 0 10px; font-family: var(--font-display); font-weight: 600;
   font-size: clamp(22px, 1.1vw + 10px, 30px); line-height: 1.2; letter-spacing: -0.015em; color: var(--ink);
@@ -59,14 +58,14 @@
   container-type: inline-size;
   height: min(calc(100svh - var(--nav-h) - 64px), 760px); aspect-ratio: 0.486;
   padding: 3.1%; border-radius: 13.5% / 6.6%;
-  background: linear-gradient(150deg, #30363a 0%, #111416 38%, #0b0d0e 100%);
+  background: #111416;
   box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.09), 0 40px 70px -30px rgba(11, 17, 20, 0.45), 0 14px 28px -14px rgba(11, 17, 20, 0.3);
 }
 .ks-phone__screen {
   position: relative; width: 100%; height: 100%; overflow: hidden; isolation: isolate;
   border-radius: 10.8% / 5.2%; background: #fff; color: #1f1f1f;
   font-size: 4cqi;                                   /* Bildschirm = 25 em breit, gut 53 em hoch */
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; line-height: 1.3;
+  font-family: var(--font-display); line-height: 1.3;          /* Geist wie die Seite (keine Systemschriften) */
   -webkit-user-select: none; user-select: none;
 }
 .ks-status {
@@ -74,7 +73,7 @@
   display: flex; align-items: center; justify-content: space-between; padding: 0.15em 1.55em 0 2.1em;
   font-size: 0.86em; color: #0b0d0e; pointer-events: none;
 }
-.ks-status b { font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; font-weight: 600; letter-spacing: 0.01em; }
+.ks-status b { font-weight: 600; letter-spacing: 0.01em; font-variant-numeric: tabular-nums; }
 .ks-status__ic { display: flex; align-items: center; gap: 0.35em; }
 .ks-status__ic svg { height: 0.78em; width: auto; fill: currentColor; }
 .ks-island { position: absolute; z-index: 21; top: 0.5em; left: 50%; width: 6.6em; height: 1.9em; margin-left: -3.3em; border-radius: 1em; background: #000; }
@@ -235,7 +234,7 @@
 
 /* ---------- 3) WhatsApp ----------------------------------------------------------------------------- */
 .ks-w {
-  font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #111b21;
+  color: #111b21;
   opacity: 0; transform: translateY(4%) scale(0.96); transition: opacity 240ms ease, transform 320ms ease;
 }
 .ks.is-s6 .ks-w { opacity: 1; transform: none; transition: opacity 320ms ease 420ms, transform 560ms var(--ks-out) 420ms; }
@@ -247,9 +246,7 @@
 .ks-w__head .ks-ic { width: 1.35em; height: 1.35em; }
 .ks-w__chat {
   flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 0.45em; padding: 0.7em 0.7em 0.5em;
-  background-color: #efeae2;
-  background-image: radial-gradient(rgba(84, 70, 44, 0.07) 0.08em, transparent 0.1em);
-  background-size: 1.05em 1.05em;
+  background-color: #efeae2;                     /* WhatsApp-Chatgrund, flach */
 }
 .ks-w__day { align-self: center; padding: 0.3em 0.85em; border-radius: 0.6em; background: #fff; color: #54656f; font-size: 0.64em; font-weight: 600; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06); }
 .ks-w__msg { position: relative; max-width: 82%; padding: 0.45em 0.65em 0.4em; border-radius: 0.75em; font-size: 0.76em; line-height: 1.38;
@@ -348,8 +345,7 @@
   .ks__title { font-size: clamp(28px, 7.2vw, 44px); max-width: none; margin-bottom: 8px; }
   .ks__step-title { font-size: 18px; margin: 4px 0 4px; }
   .ks__step-text { font-size: 15px; line-height: 1.45; }
-  .ks__num { font-size: 12px; }
-  .ks__bar { margin-top: 10px; }
+    .ks__bar { margin-top: 10px; }
   .ks__bar i { width: 22px; height: 3px; }
   .ks-phone { justify-self: center; height: 100%; max-height: 720px; min-height: 0; }
 }
@@ -389,33 +385,15 @@ html:not(.js) .ks__bar { display: none; }
 }
 .bq.is-orbit .bq__title { visibility: hidden; }
 
-/* Raum (Wunsch 05.11.): helles Licht in der Mitte, ein Bodenraster in Perspektive und ein Tunnel aus feinen
-   Quadrat-Rahmen. Beim Scrollen kommen die Rahmen auf einen zu (story.js setzt Groesse und Deckkraft je Rahmen),
-   passend zu den Quadraten, die kleiner werden. Alles nur transform und opacity. */
-.bq__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.bq__glow {
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(46% 42% at 50% 54%, color-mix(in srgb, var(--aqua) 95%, #fff) 0%, color-mix(in srgb, var(--aqua) 45%, #fff) 48%, transparent 100%),
-    linear-gradient(180deg, var(--soft) 0%, #fff 38%, #fff 62%, color-mix(in srgb, var(--mist) 70%, #fff) 100%);
-}
-.bq__plane {
-  position: absolute; left: -60%; right: -60%; height: 62%;
-  background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--brand-deep) 16%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--brand-deep) 16%, transparent) 1px, transparent 1px);
-  background-size: 76px 76px; background-position: center top;
-}
-.bq__plane--floor { bottom: -18%; transform-origin: 50% 0; transform: perspective(560px) rotateX(74deg);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 55%); mask-image: linear-gradient(to bottom, transparent 0%, #000 55%); }
-.bq__plane--ceil { top: -18%; transform-origin: 50% 100%; transform: perspective(560px) rotateX(-74deg); opacity: 0.55;
-  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 55%); mask-image: linear-gradient(to top, transparent 0%, #000 55%); }
+/* Raum (Wunsch 05.11., zweite Fassung): kein Blau, keine Linien, keine Verlaeufe. Die Tiefe kommt aus flachen,
+   ineinander liegenden Quadraten in Tonstufen (Tinte mit wenig Deckkraft, eckig): je weiter innen, desto dunkler,
+   wie ein Blick in einen Gang. Beim Scrollen kommen sie auf einen zu (story.js: transform und opacity je Quadrat). */
+.bq__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--white); }
 .bq__tunnel { position: absolute; left: 50%; top: calc(50% + var(--nav-h) / 2); width: 0; height: 0; }
 .bq__tunnel i {
   --S: min(62svh, 620px, 88vw);
   position: absolute; left: calc(var(--S) / -2); top: calc(var(--S) / -2); width: var(--S); height: var(--S);
-  border: 1.5px solid color-mix(in srgb, var(--brand-deep) 55%, transparent); border-radius: clamp(26px, 3.2vw, 44px);
-  opacity: 0; will-change: transform, opacity;
+  background: var(--ink); opacity: 0; will-change: transform, opacity;
 }
 .bq__title, .bq__deck, .bq__count { z-index: 2; }
 .bq__title { z-index: 4; }
@@ -434,21 +412,22 @@ html:not(.js) .ks__bar { display: none; }
 .bq__sq {
   position: relative; width: 100%; height: 100%;
   display: grid; place-content: center; justify-items: center; text-align: center; padding: 10%;
-  border-radius: clamp(26px, 3.2vw, 44px);
-  background: linear-gradient(165deg, #fff 0%, #fff 52%, color-mix(in srgb, var(--aqua) 80%, #fff) 100%);
-  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--brand) 32%, transparent),
-              0 50px 100px -50px rgba(0, 127, 145, 0.42), 0 18px 36px -24px rgba(11, 17, 20, 0.18);
+  background: var(--ink); color: var(--white);
   transform: scale(var(--k, 1));
 }
-.bq__no { position: absolute; left: 8%; top: 7%; font: 600 14px/1 var(--font-display); letter-spacing: 0.08em; color: var(--brand-deep); font-variant-numeric: tabular-nums; }
 .bq__scene { display: grid; justify-items: center; gap: clamp(18px, 3svh, 32px); min-width: 0; }
 
-/* Die alten Szenen, groesser fuer das Quadrat */
+/* Die alten Szenen, groesser fuer das Quadrat, hell auf Tinte. Preisschild und Nachrichtenblase behalten ihre
+   eigenen hellen Flaechen (dunkle Schrift darauf). */
 .bq .qa__q { justify-content: center; min-height: 0; gap: 18px; }
 .bq .qa__title, .bq .qa__tag-front { font-size: clamp(28px, 2.4svh + 13px, 40px); }
+.bq .qa--angebot .qa__title { color: var(--white); }
 .bq .qa__a { justify-items: center; text-align: center; font-size: clamp(17px, 0.9svh + 9px, 20px); }
-.bq .qa__body { max-width: 26ch; margin-inline: auto; }
-.bq .qa__link { justify-self: center; font-size: 16px; }
+.bq .qa__body { max-width: 26ch; margin-inline: auto; color: var(--mist-70); font-weight: 400; }
+.bq .qa__link { justify-self: center; font-size: 16px; color: var(--brand); }
+.bq .qa__link:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 0; }
+.bq .sh-ground { stroke: var(--brand); }
+.bq .qa__msg { box-shadow: none; }
 .bq .qa__shop { width: 64px; }
 .bq .qa-anim .qa--angebot .qa__shop { width: 150px; }
 .bq .qa-anim .qa--angebot.is-play .qa__shop { animation-name: bq-shrink; }
@@ -456,15 +435,14 @@ html:not(.js) .ks__bar { display: none; }
 
 .bq__count { position: absolute; left: 50%; bottom: max(22px, 3.5svh); display: flex; gap: 8px; translate: -50% 0; opacity: 0; transition: opacity 500ms ease; }
 .bq.is-orbit .bq__count { opacity: 1; }
-.bq__count i { width: 28px; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--brand-deep) 18%, transparent); transition: background-color 300ms ease; }
-.bq__count i.is-on { background: var(--brand-deep); }
+.bq__count i { width: 10px; height: 10px; background: color-mix(in srgb, var(--ink) 14%, var(--white)); transition: background-color 300ms ease; }
+.bq__count i.is-on { background: var(--ink); }
 
 @media (max-width: 47.99em) {
   .bq__track { height: calc(100svh + 290svh); }
   .bq__title { font-size: clamp(38px, 11vw, 56px); width: 92vw; }
   .bq .bq__card { --S: min(90vw, 62svh); }
-  .bq__sq { padding: 9%; border-radius: 26px; }
-  .bq__no { font-size: 12px; }
+  .bq__sq { padding: 9%; }
   .bq .qa__title, .bq .qa__tag-front { font-size: clamp(22px, 6.2vw, 28px); }
   .bq .qa__a { font-size: 16px; }
   .bq .qa__q { gap: 12px; }

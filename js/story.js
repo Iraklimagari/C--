@@ -122,20 +122,33 @@
       if ((changed || replay) && orbit && window.NAHLIO && NAHLIO.qaShow) NAHLIO.qaShow(cards[f]);
     }
 
-    /* Tunnel: Rahmen in Tiefe d (0 = vorn, gross) bis FR (hinten, klein); beim Scrollen wandern sie nach vorn und
-       beginnen hinten von neuem. Vorn und hinten blenden sie aus, damit nichts springt. */
+    /* Gang: flache Flaechen in Tiefe d (0 = vorn, so gross wie die Buehne) bis FR (hinten, kleiner als das
+       Quadrat). Vorn haben sie die Form des Fensters, nach hinten werden sie quadratisch: so entsteht ein Gang,
+       an dessen Ende das Quadrat steht. Beim Scrollen kommen sie naeher und beginnen hinten von neuem; vorn und
+       hinten blenden sie aus, damit nichts springt. Nur transform und opacity. */
     var frames = bq.querySelectorAll(".bq__tunnel i"), FR = frames.length, lastPhase = -1;
+    var stage = bq.querySelector(".bq__stage"), dims = null;
+    function measure() {
+      var S = frames.length ? frames[0].offsetWidth : 0;
+      dims = S ? { S: S, W: stage.clientWidth * 1.08, H: stage.clientHeight * 1.12 } : null;
+      lastPhase = -1;
+    }
     function tunnel(prog) {
+      if (!dims) measure();
+      if (!dims) return;
       var ph = reduce ? 0.5 : (prog * 3.2) % 1;
       if (Math.abs(ph - lastPhase) < 0.0015) return;
       lastPhase = ph;
+      var far = dims.S * 0.55;
       each(frames, function (fr, i) {
-        var d = i + 1 - ph, s = 2.3 * Math.pow(0.7, d);
-        var o = Math.min(1, d / 1.2) * Math.max(0, 1 - d / FR) * 0.5;
-        fr.style.transform = "scale(" + s.toFixed(4) + ")";
+        var d = i + 1 - ph, f = Math.pow(0.6, d);
+        var w = far + (dims.W - far) * f, h = far + (dims.H - far) * f;
+        var o = Math.min(1, d / 0.9) * Math.max(0, 1 - d / FR) * 0.075;   /* flache Tonstufen, innen dunkler */
+        fr.style.transform = "scale(" + (w / dims.S).toFixed(4) + "," + (h / dims.S).toFixed(4) + ")";
         fr.style.opacity = o.toFixed(3);
       });
     }
+    window.addEventListener("resize", measure);
 
     function update() {
       var p = progress(track);
