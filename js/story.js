@@ -1,7 +1,7 @@
 /* ==========================================================================
    NAHLIO — Scroll-Geschichten (Wunsch 05.11.), Stil in css/story.css
-   1. Kundenweg (.ks): Der Scrollweg der Sektion ist in 10 Stufen geteilt. Jede Stufe setzt eine Klasse
-      (.is-s0 ... .is-s9, aufsteigend). Die Bewegung selbst laeuft mit Zeit (CSS-Uebergaenge), damit sie
+   1. Kundenweg (.ks): Der Scrollweg der Sektion ist in 11 Stufen geteilt. Jede Stufe setzt eine Klasse
+      (.is-s0 ... .is-s10, aufsteigend). Die Bewegung selbst laeuft mit Zeit (CSS-Uebergaenge), damit sie
       ruhig aussieht; zurueckscrollen nimmt sie wieder weg. Getippt werden die Suche (ab Stufe 1) und die
       Bewertung (ab Stufe 8).
    2. Fragen (.bq): Der Titel loest sich mit dem Scrollen auf (--t von 0 bis 1, direkt an den Scrollweg
@@ -30,13 +30,13 @@
   if (ks) (function () {
     var track = ks.querySelector(".ks__track");
     var steps = ks.querySelectorAll(".ks__step"), bars = ks.querySelectorAll(".ks__bar i");
-    var N = 10;
-    var STEP_OF = [0, 0, 0, 1, 1, 2, 3, 3, 4, 4];       /* welche Erklaerung links zu welcher Stufe gehoert */
+    var N = 11;
+    var STEP_OF = [0, 0, 0, 1, 1, 2, 3, 3, 3, 4, 4];       /* welche Erklaerung links zu welcher Stufe gehoert */
     var typers = [];
     each(ks.querySelectorAll("[data-ks-type]"), function (el) {
       typers.push({ el: el, wrap: el.parentNode, text: el.getAttribute("data-ks-type"), timer: 0 });
     });
-    var TYPE_AT = [1, 8];                               /* Suche ab Stufe 1, Bewertung ab Stufe 8 */
+    var TYPE_AT = [1, 9];                               /* Suche ab Stufe 1, Bewertung ab Stufe 9 */
     var cur = -1;
 
     function type(t, on, j) {
@@ -122,8 +122,24 @@
       if ((changed || replay) && orbit && window.NAHLIO && NAHLIO.qaShow) NAHLIO.qaShow(cards[f]);
     }
 
+    /* Tunnel: Rahmen in Tiefe d (0 = vorn, gross) bis FR (hinten, klein); beim Scrollen wandern sie nach vorn und
+       beginnen hinten von neuem. Vorn und hinten blenden sie aus, damit nichts springt. */
+    var frames = bq.querySelectorAll(".bq__tunnel i"), FR = frames.length, lastPhase = -1;
+    function tunnel(prog) {
+      var ph = reduce ? 0.5 : (prog * 3.2) % 1;
+      if (Math.abs(ph - lastPhase) < 0.0015) return;
+      lastPhase = ph;
+      each(frames, function (fr, i) {
+        var d = i + 1 - ph, s = 2.3 * Math.pow(0.7, d);
+        var o = Math.min(1, d / 1.2) * Math.max(0, 1 - d / FR) * 0.5;
+        fr.style.transform = "scale(" + s.toFixed(4) + ")";
+        fr.style.opacity = o.toFixed(3);
+      });
+    }
+
     function update() {
       var p = progress(track);
+      tunnel(Math.max(-0.2, Math.min(1.2, p.y / p.span)));
       var t = (p.y - p.span * 0.03) / (p.span * TITLE);
       t = t < 0 ? 0 : t > 1 ? 1 : t;
       if (Math.abs(t - lastT) > 0.002) { lastT = t; bq.style.setProperty("--t", t.toFixed(3)); }

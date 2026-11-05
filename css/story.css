@@ -3,8 +3,8 @@
    1. "So finden Kunden zu Ihnen" (.ks): eine Seite, die beim Scrollen stehen bleibt. Links in der Mitte der
       Titel und der aktuelle Schritt, rechts ein Handy: Google-Suche "Kfz Mechatroniker" -> der Betrieb mit den
       besten Bewertungen faellt auf -> Tipp aufs Foto: Profil mit Bildern und Bewertungen (Vertrauen) ->
-      Leistungen -> Tipp auf WhatsApp: ein Mitarbeiter antwortet, Termin steht (kein Chatbot) -> Bewertung.
-      story.js setzt die Stufen als Klassen .is-s0 ... .is-s9 (aufsteigend: .is-s5 heisst "mindestens Stufe 5").
+      Leistungen -> Tipp auf WhatsApp: der Termin-Assistent (Bot) bucht per Antwort-Knoepfen -> Bewertung.
+      story.js setzt die Stufen als Klassen .is-s0 ... .is-s10 (aufsteigend: .is-s5 heisst "mindestens Stufe 5").
       Kein Finger-Kreis: Ein Tipp zeigt sich nur am Element selbst (kurz eingedrueckt).
    2. "Finden Ihre Kunden online die richtigen Antworten?" (.bq): zuerst gross in der Mitte, beim Scrollen
       loest sich der Titel auf (Raum entsteht), dann drei Fragen in Kreisen, eine nach der anderen vorn.
@@ -18,7 +18,7 @@
 
 /* ---------- 1. Kundenweg: Buehne ------------------------------------------------------------------ */
 .ks.section { padding-block: 0; }
-.ks { --ks-n: 9; --ks-step: 52svh; }
+.ks { --ks-n: 10; --ks-step: 50svh; }
 .ks__track { position: relative; height: calc(100svh + var(--ks-n) * var(--ks-step)); }
 .ks__stage {
   position: sticky; top: 0; height: 100svh;
@@ -258,39 +258,59 @@
 .ks-w__msg--in { border-top-left-radius: 0.2em; }
 .ks-w__t { float: right; display: inline-flex; align-items: center; gap: 0.25em; margin: 0.55em 0 -0.2em 0.7em; font-size: 0.74em; color: #667781; white-space: nowrap; }
 .ks-w__t svg { width: 1.3em; height: 0.75em; fill: none; stroke: #53bdeb; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.ks-w__typing { display: flex; gap: 0.25em; align-items: center; height: 0; padding: 0 0.75em; border-radius: 0.75em; background: #fff; overflow: hidden; opacity: 0; }
-.ks-w__typing i { width: 0.4em; height: 0.4em; border-radius: 50%; background: #8696a0; }
 .ks-w__input { flex: none; display: flex; align-items: center; gap: 0.75em; padding: 0.5em 0.85em 1.7em; background: #f6f6f6; color: #54656f; }
 .ks-w__input span { flex: 1; padding: 0.45em 0.85em; border-radius: 1.2em; background: #fff; border: 1px solid #e2e2e2; font-size: 0.78em; color: #8696a0; }
-.ks.is-live .ks-w__msg { opacity: 0; transform: translateY(0.6em) scale(0.98); transition: opacity 160ms ease, transform 160ms ease; }
-.ks.is-s6 .ks-w__msg[data-m="1"],
-.ks.is-s7 .ks-w__msg { opacity: 1; transform: none; transition: opacity 260ms ease, transform 420ms var(--ks-out); }
-.ks.is-s6 .ks-w__msg[data-m="1"] { transition-delay: 900ms; }
-.ks.is-s7 .ks-w__msg[data-m="1"] { transition-delay: 0ms; }
-.ks.is-s7 .ks-w__msg[data-m="3"] { transition-delay: 1250ms; }
-.ks.is-s7 .ks-w__msg[data-m="4"] { transition-delay: 2150ms; }
-.ks.is-s7 .ks-w__msg[data-m="5"] { transition-delay: 3000ms; }
-.ks.is-s7 .ks-w__typing { animation: ks-typing 1250ms ease both; }
-@keyframes ks-typing {
-  0%   { height: 0; padding-block: 0; opacity: 0; }
-  12%  { height: 1.9em; opacity: 1; }
-  88%  { height: 1.9em; opacity: 1; }
-  100% { height: 0; opacity: 0; margin-top: -0.45em; }
+/* Der Termin-Assistent (Bot, Wunsch 05.11.): Antworten kommen sofort, mit Antwort-Knoepfen. Ein Tipp zeigt sich
+   am Knopf selbst (kurz eingedrueckt, dann markiert), danach steht die Wahl als eigene Nachricht im Verlauf.
+   Neue Nachrichten schieben die alten nach oben (Zeilen klappen auf, der Verlauf haengt unten wie im Original). */
+.ks-w__chat { justify-content: flex-end; gap: 0; }
+.ks-w__day, .ks-w__note { flex: none; }
+.ks-w__note { align-self: center; max-width: 88%; margin-top: 0.45em; padding: 0.35em 0.8em; border-radius: 0.6em; background: #fff5c4; color: #54656f; font-size: 0.6em; text-align: center; }
+.ks-w__row { flex: none; display: grid; grid-template-rows: 0fr; width: 100%; margin-top: 0; opacity: 0;
+             transition: grid-template-rows 160ms ease, margin-top 160ms ease, opacity 120ms ease; }
+.ks-w__row > * { min-height: 0; overflow: hidden; padding: 0 0.1em 0.12em; }
+.ks-w__row--out > * { display: flex; flex-direction: column; align-items: flex-end; }
+.ks-w__row--out .ks-w__msg { max-width: 82%; }
+.ks-w__bot { display: grid; gap: 0.2em; width: 80%; }
+.ks-w__bot .ks-w__msg { max-width: none; }
+.ks-w__btns { display: grid; gap: 0.2em; }
+.ks-w__btn { display: block; padding: 0.55em 0.6em; border-radius: 0.6em; background: #fff; color: #008069; font-size: 0.74em; font-weight: 600; text-align: center;
+             box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13); }
+.ks-w__conf { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.6em; align-items: start; }
+.ks-w__conf > div { display: grid; gap: 0.15em; }
+.ks-w__conf b { font-size: 1.05em; }
+.ks-w__conf div span { color: #3b4a54; font-size: 0.92em; }
+.ks-w__conf .ks-w__t { grid-column: 1 / -1; justify-self: end; margin-top: 0; }
+.ks-w__ok { display: grid; place-items: center; width: 2em; height: 2em; border-radius: 50%; background: #00a884; }
+.ks-w__ok svg { width: 1.2em; height: 1.2em; fill: none; stroke: #fff; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.ks.is-s6 .ks-w__row[data-m="1"], .ks.is-s6 .ks-w__row[data-m="2"],
+.ks.is-s7 .ks-w__row[data-m="3"], .ks.is-s7 .ks-w__row[data-m="4"],
+.ks.is-s8 .ks-w__row[data-m="5"], .ks.is-s8 .ks-w__row[data-m="6"] {
+  grid-template-rows: 1fr; margin-top: 0.45em; opacity: 1;
+  transition: grid-template-rows 360ms var(--ks-out), margin-top 360ms var(--ks-out), opacity 260ms ease;
 }
-html.motion-ok .ks.is-s7 .ks-w__typing i { animation: ks-dot 900ms ease-in-out infinite; }
-html.motion-ok .ks.is-s7 .ks-w__typing i:nth-child(2) { animation-delay: 150ms; }
-html.motion-ok .ks.is-s7 .ks-w__typing i:nth-child(3) { animation-delay: 300ms; }
-@keyframes ks-dot { 0%, 60%, 100% { transform: none; opacity: 0.5; } 30% { transform: translateY(-0.2em); opacity: 1; } }
+.ks.is-s6 .ks-w__row[data-m="1"] { transition-delay: 900ms; }
+.ks.is-s6 .ks-w__row[data-m="2"] { transition-delay: 1600ms; }
+.ks.is-s7 .ks-w__row[data-m="1"], .ks.is-s7 .ks-w__row[data-m="2"] { transition-delay: 0ms; }
+.ks.is-s7 .ks-w__row[data-m="3"] { transition-delay: 420ms; }
+.ks.is-s7 .ks-w__row[data-m="4"] { transition-delay: 1050ms; }
+.ks.is-s8 .ks-w__row[data-m="3"], .ks.is-s8 .ks-w__row[data-m="4"] { transition-delay: 0ms; }
+.ks.is-s8 .ks-w__row[data-m="5"] { transition-delay: 420ms; }
+.ks.is-s8 .ks-w__row[data-m="6"] { transition-delay: 1050ms; }
+.ks.is-s7 .ks-w__row[data-m="2"] .ks-w__btn--pick,
+.ks.is-s8 .ks-w__row[data-m="4"] .ks-w__btn--pick { animation: ks-btn 420ms ease-out both; }
+@keyframes ks-btn { 0% { transform: none; background: #fff; } 35% { transform: scale(0.95); background: #d7efe6; } 100% { transform: none; background: #e7f6f1; } }
 
 /* ---------- 4) Rezension ---------------------------------------------------------------------------- */
 .ks-r { transform: translateY(101%); transition: transform 420ms var(--ks-move); box-shadow: 0 -0.6em 1.6em rgba(0, 0, 0, 0.14); }
-.ks.is-s8 .ks-r { transform: none; transition: transform 600ms var(--ks-move) 120ms; }
+.ks.is-s9 .ks-r { transform: none; transition: transform 600ms var(--ks-move) 120ms; }
 .ks-r__write { padding: 0.5em 0.95em; transition: opacity 260ms ease, transform 420ms var(--ks-out); }
 .ks-r__head { display: flex; align-items: center; gap: 0.85em; height: 2.6em; color: #3c4043; }
 .ks-r__head span { flex: 1; font-size: 0.95em; color: #1f1f1f; }
 .ks-r__post { padding: 0.42em 1em; border-radius: 1.2em; background: #0b57d0; color: #fff; font-size: 0.76em; font-weight: 700; opacity: 0.38; transition: opacity 260ms ease; }
 .ks.is-review-typed .ks-r__post { opacity: 1; }
-.ks.is-s9 .ks-r__post { animation: ks-tap 300ms ease-out both; }
+.ks.is-s10 .ks-r__post { animation: ks-tap 300ms ease-out both; }
 .ks-r__who { display: flex; align-items: center; gap: 0.7em; margin: 1.1em 0 0.9em; }
 .ks-r__who > div { display: grid; line-height: 1.25; }
 .ks-r__who b { font-size: 0.86em; }
@@ -298,7 +318,7 @@ html.motion-ok .ks.is-s7 .ks-w__typing i:nth-child(3) { animation-delay: 300ms; 
 .ks-r__stars { display: flex; justify-content: center; gap: 0.55em; margin: 0.4em 0 1.1em; }
 .ks-r__stars svg { width: 2.5em; height: 2.5em; fill: transparent; stroke: #80868b; stroke-width: 1.3; stroke-linejoin: round;
                    transition: fill 160ms ease, stroke 160ms ease, transform 160ms ease; }
-.ks.is-s8 .ks-r__stars svg { fill: #fbbc04; stroke: #fbbc04; animation: ks-star 360ms var(--ks-out) both; animation-delay: calc(560ms + var(--k) * 130ms);
+.ks.is-s9 .ks-r__stars svg { fill: #fbbc04; stroke: #fbbc04; animation: ks-star 360ms var(--ks-out) both; animation-delay: calc(560ms + var(--k) * 130ms);
                              transition-delay: calc(560ms + var(--k) * 130ms); }
 @keyframes ks-star { 0% { transform: scale(0.82); } 55% { transform: scale(1.14); } 100% { transform: none; } }
 .ks-r__field { position: relative; min-height: 9.5em; padding: 0.8em 0.85em; border: 1px solid #747775; border-radius: 0.5em; font-size: 0.8em; line-height: 1.45; color: #1f1f1f; }
@@ -308,8 +328,8 @@ html.motion-ok .ks.is-s7 .ks-w__typing i:nth-child(3) { animation-delay: 300ms; 
 .ks-r__chips span { padding: 0.32em 0.75em; border: 1px solid #c4c7c5; border-radius: 0.5em; font-size: 0.68em; color: #444746; }
 .ks-r__done { position: absolute; inset: 2.6em 0 0; padding: 1.4em 0.95em; opacity: 0; transform: translateY(1.2em); pointer-events: none;
               transition: opacity 200ms ease, transform 200ms ease; }
-.ks.is-s9 .ks-r__write { opacity: 0; transform: translateY(-1.2em); transition-delay: 260ms; }
-.ks.is-s9 .ks-r__done { opacity: 1; transform: none; transition: opacity 360ms ease 520ms, transform 560ms var(--ks-out) 520ms; }
+.ks.is-s10 .ks-r__write { opacity: 0; transform: translateY(-1.2em); transition-delay: 260ms; }
+.ks.is-s10 .ks-r__done { opacity: 1; transform: none; transition: opacity 360ms ease 520ms, transform 560ms var(--ks-out) 520ms; }
 .ks-r__ok { display: grid; justify-items: center; gap: 0.35em; text-align: center; margin-bottom: 1.2em; }
 .ks-r__ok svg { width: 3em; height: 3em; padding: 0.55em; border-radius: 50%; background: #e6f4ea; fill: none; stroke: #188038; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .ks-r__ok b { font-size: 1.05em; font-weight: 400; }
@@ -321,7 +341,7 @@ html.motion-ok .ks.is-s7 .ks-w__typing i:nth-child(3) { animation-delay: 300ms; 
 
 /* ---------- Handy und Tablet: Titel und Schritt oben, das Handy fuellt den Rest ------------------- */
 @media (max-width: 63.99em) {
-  .ks { --ks-step: 46svh; }
+  .ks { --ks-step: 44svh; }
   .ks__stage { align-items: stretch; }
   .ks__in { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); align-items: stretch;
             gap: 14px; height: calc(100svh - var(--nav-h)); padding-block: 14px 18px; }
@@ -368,6 +388,37 @@ html:not(.js) .ks__bar { display: none; }
   pointer-events: none;
 }
 .bq.is-orbit .bq__title { visibility: hidden; }
+
+/* Raum (Wunsch 05.11.): helles Licht in der Mitte, ein Bodenraster in Perspektive und ein Tunnel aus feinen
+   Quadrat-Rahmen. Beim Scrollen kommen die Rahmen auf einen zu (story.js setzt Groesse und Deckkraft je Rahmen),
+   passend zu den Quadraten, die kleiner werden. Alles nur transform und opacity. */
+.bq__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.bq__glow {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(46% 42% at 50% 54%, color-mix(in srgb, var(--aqua) 95%, #fff) 0%, color-mix(in srgb, var(--aqua) 45%, #fff) 48%, transparent 100%),
+    linear-gradient(180deg, var(--soft) 0%, #fff 38%, #fff 62%, color-mix(in srgb, var(--mist) 70%, #fff) 100%);
+}
+.bq__plane {
+  position: absolute; left: -60%; right: -60%; height: 62%;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--brand-deep) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--brand-deep) 16%, transparent) 1px, transparent 1px);
+  background-size: 76px 76px; background-position: center top;
+}
+.bq__plane--floor { bottom: -18%; transform-origin: 50% 0; transform: perspective(560px) rotateX(74deg);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 55%); mask-image: linear-gradient(to bottom, transparent 0%, #000 55%); }
+.bq__plane--ceil { top: -18%; transform-origin: 50% 100%; transform: perspective(560px) rotateX(-74deg); opacity: 0.55;
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 55%); mask-image: linear-gradient(to top, transparent 0%, #000 55%); }
+.bq__tunnel { position: absolute; left: 50%; top: calc(50% + var(--nav-h) / 2); width: 0; height: 0; }
+.bq__tunnel i {
+  --S: min(62svh, 620px, 88vw);
+  position: absolute; left: calc(var(--S) / -2); top: calc(var(--S) / -2); width: var(--S); height: var(--S);
+  border: 1.5px solid color-mix(in srgb, var(--brand-deep) 55%, transparent); border-radius: clamp(26px, 3.2vw, 44px);
+  opacity: 0; will-change: transform, opacity;
+}
+.bq__title, .bq__deck, .bq__count { z-index: 2; }
+.bq__title { z-index: 4; }
 
 .bq__deck { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
 .bq .bq__card {
@@ -425,7 +476,7 @@ html:not(.js) .ks__bar { display: none; }
 html:not(.js) .bq__track { height: auto; }
 html:not(.js) .bq__stage { position: relative; height: auto; overflow: visible; padding: 96px var(--gutter); display: grid; gap: 40px; justify-items: center; }
 html:not(.js) .bq__title { position: static; transform: none; filter: none; opacity: 1; width: auto; }
-html:not(.js) .bq__count { display: none; }
+html:not(.js) .bq__count, html:not(.js) .bq__tunnel { display: none; }
 html:not(.js) .bq__deck { position: static; display: grid; gap: 28px; justify-items: center; }
 html:not(.js) .bq .bq__card { position: relative; left: auto; top: auto; margin: 0; }
 @media (prefers-reduced-motion: reduce) {
