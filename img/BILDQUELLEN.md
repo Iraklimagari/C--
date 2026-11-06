@@ -108,18 +108,3 @@ doppelt hochgerechnet.
 | kfz-reifen.webp | Radwechsel mit Schlagschrauber |
 | kfz-uebergabe.webp | Schlüsselübergabe am Empfang (Reserve) |
 | kfz-alt-1.webp, kfz-alt-2.webp | einfache Werkstätten (Mitbewerber in der Suche) |
-
-## Leistungen im Vorher-Nachher-Vergleich (06.11.2026)
-
-Mit Higgsfield erzeugt (Modell GPT Image 2, 16:9, 1344 × 752; Nachher in mittlerer, Vorher in einfacher
-Qualität). Erfundener Beispielbetrieb „Motorwerk Dorsten“; keine echten Personen, Betriebe oder Bewertungen.
-Jedes „Vorher“ ist eine Bearbeitung des zugehörigen „Nachher“ (gleiche Hand, gleiches Handy, gleicher
-Hintergrund), damit der Schieber deckungsgleich ist. Prompts: `docs/higgsfield-prompts.md`.
-
-| Datei (je auch -768.webp) | Motiv |
-| --- | --- |
-| lv-google-nachher / -vorher | Google-Profil gepflegt / leer |
-| lv-website-nachher / -vorher | moderne mobile Website / alte Desktop-Seite auf dem Handy |
-| lv-karte-nachher / -vorher | digitale Preisliste / Foto einer Papierliste |
-| lv-kontakt-nachher / -vorher | WhatsApp-Terminbuchung / verpasste Anrufe |
-| lv-fotos-nachher / -vorher | professionelles Werkstattfoto / dunkler Schnappschuss |
