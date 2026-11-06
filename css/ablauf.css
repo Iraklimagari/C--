@@ -1,0 +1,52 @@
+/* ==========================================================================
+   NAHLIO — Ablauf (neu, 06.11.): "Sie fuehren Ihren Betrieb. Wir kuemmern uns um die Umsetzung."
+   Die Ueberschrift wird sichtbar gemacht: Jeder der vier Schritte zeigt einen kleinen hellen Block "Ihr Teil"
+   und einen grossen dunklen Block "Unser Teil". Das Gewicht der Flaechen erzaehlt, wer die Arbeit macht.
+   Eine Leiste in Markenfarbe fuellt sich beim Scrollen von Schritt zu Schritt (ablauf.js, --p 0 bis 1);
+   erreicht sie einen Schritt, erscheinen seine Bloecke. Flach und eckig, keine Linien, keine Schatten.
+   ========================================================================== */
+.ab { --p: 0; --ab-out: cubic-bezier(0.23, 1, 0.32, 1); }
+.ab .process__title { max-width: 18ch; }
+.ab__wrap { position: relative; margin-top: clamp(40px, 5vw, 72px); }
+.ab__rail { position: absolute; left: 0; right: 0; top: 0; height: 8px; background: color-mix(in srgb, var(--ink) 8%, var(--white)); }
+.ab__fill { position: absolute; inset: 0; background: var(--brand); transform: scaleX(var(--p)); transform-origin: 0 50%; }
+.ab__steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 28px); margin: 0; padding: 0; list-style: none; }
+.ab__step { position: relative; display: grid; grid-template-rows: auto auto auto 1fr; align-content: start; padding-top: 36px; }
+.ab__stop { position: absolute; left: 0; top: -3px; width: 14px; height: 14px; background: color-mix(in srgb, var(--ink) 22%, var(--white)); transition: background-color 300ms ease, transform 300ms var(--ab-out); }
+.ab__step.is-on .ab__stop { background: var(--brand-deep); transform: scale(1.15); }
+.ab__name { margin: 0 0 18px; font-family: var(--font-serif); font-weight: 440; font-size: clamp(28px, 1.5vw + 14px, 40px); line-height: 1.04; letter-spacing: -0.022em; color: var(--ink); }
+.ab__who { margin: 0 0 6px; font-size: 14px; font-weight: 600; }
+.ab__txt { margin: 0; line-height: 1.45; }
+.ab__you { padding: 14px 16px 16px; background: color-mix(in srgb, var(--ink) 5%, var(--white)); color: var(--ink); }
+.ab__you .ab__who { color: var(--teal-deep); }
+.ab__you .ab__txt { font-size: 16px; }
+.ab__we { margin-top: 8px; padding: 18px 18px 22px; min-height: clamp(180px, 15vw, 240px); background: var(--ink); color: var(--white); }
+.ab__we .ab__who { color: var(--brand); }
+.ab__we .ab__txt { font-size: clamp(17px, 0.4vw + 13px, 20px); color: var(--white); }
+
+/* Bewegung: Bloecke erscheinen, wenn die Leiste den Schritt erreicht */
+html.js.motion-ok .ab.is-live .ab__name,
+html.js.motion-ok .ab.is-live .ab__you,
+html.js.motion-ok .ab.is-live .ab__we { opacity: 0; transform: translateY(22px); }
+html.js.motion-ok .ab.is-live .ab__step.is-on .ab__name,
+html.js.motion-ok .ab.is-live .ab__step.is-on .ab__you,
+html.js.motion-ok .ab.is-live .ab__step.is-on .ab__we { opacity: 1; transform: none; transition: opacity 420ms ease, transform 620ms var(--ab-out); }
+html.js.motion-ok .ab.is-live .ab__step.is-on .ab__you { transition-delay: 90ms; }
+html.js.motion-ok .ab.is-live .ab__step.is-on .ab__we { transition-delay: 170ms; }
+
+/* Handy und Tablet: Schritte untereinander, die Leiste senkrecht links */
+@media (max-width: 63.99em) {
+  .ab__wrap { padding-left: 30px; }
+  .ab__rail { left: 3px; right: auto; top: 0; bottom: 0; width: 8px; height: auto; }
+  .ab__fill { transform: scaleY(var(--p)); transform-origin: 50% 0; }
+  .ab__steps { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
+  .ab__step { padding-top: 0; }
+  .ab__stop { left: -30px; top: 8px; }
+  .ab__we { min-height: 0; }
+}
+@media (min-width: 40em) and (max-width: 63.99em) {
+  .ab__step { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); grid-template-rows: auto 1fr; column-gap: 16px; }
+  .ab__name { grid-column: 1 / -1; }
+  .ab__we { margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .ab { --p: 1; } }
