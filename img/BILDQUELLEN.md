@@ -70,8 +70,7 @@ entfernt, verkleinert (nie vergrößert) und als WebP mit Transparenz gespeicher
 
 | Datei | Original | Verwendung |
 | --- | --- | --- |
-| website-motorwerk-1280.webp, website-motorwerk-720.webp | Адаптивный сайт MOTORWERK DORSTEN.webp | One-Page-Website (Beispiele und Hero): Desktop und Smartphone derselben Kfz-Werkstatt |
-| website-motorwerk-mobil.webp | dasselbe Original, nur das Smartphone (Umriss freigestellt) | One-Page-Website auf schmalen Bühnen |
+| website-archi-1280.webp, website-archi-720.webp | Bildschirmfoto einer Website („ARCHI“), vom Inhaber bereitgestellt (08.11.2026), in den Bildschirm der bisherigen Website-Darstellung gesetzt | One-Page-Website (Beispiele) |
 | karte-lino-1000.webp, karte-lino-560.webp | Изображение ChatGPT 2 окт. 2026 г., 22_20_49-Photoroom.webp | Digitale Karte (LINO CAFÉ, zwei Smartphones) |
 | hero-whatsapp-nordcut.webp | Айфон с чатом WhatsApp NordCut.png | Frühere Hero-Grafik, seit 22.10.2026 durch die unten genannte Datei ersetzt |
 | google-nordcut-laden.webp, google-nordcut-pole.webp, google-nordcut-stuhl.webp, google-nordcut-bank.webp | Фотограф за работой_ четыре истории съемки.webp (Bild unten rechts, ohne den Fotografen) | Frühere Google-Demo, seit 22.10.2026 nicht mehr gerendert |

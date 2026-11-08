@@ -1838,12 +1838,8 @@ html.js .sc__scene.is-active { opacity: 1; visibility: visible; transition: opac
   html.js .sc__stack > .sc__item, html.js .sc__scene, .sc__tab, .sc__tab::after, .sc__dot span, .sc__concept, .sc__concept-trigger { transition: none !important; }
 }
 
-/* Handy und Tablet mit schmaler Buehnenspalte (48-60em, nebeneinander): die Website zeigt nur ihr
-   Smartphone (eigene Bildfassung per picture/source in scenes.py) - so fuellt das Geraet die schmale Buehne
-   statt als kleine Komposition darin zu stehen. Das Seitenverhaeltnis folgt diesem Bild. */
-@media (max-width: 35.99em), (min-width: 48em) and (max-width: 59.99em) {
-  .sc__scene .vis--website > .sz { --arn: 0.431 !important; }
-}
+/* (Frueher zeigte die Website auf schmalen Buehnen nur ihr Smartphone mit eigenem Seitenverhaeltnis. Seit 08.11.
+   ist das Website-Beispiel ein einzelner Bildschirm fuer alle Breiten: keine eigene Fassung mehr.) */
 /* Handy: hochkante Buehne (2:3) und schmale Raender, damit Telefone gut lesbar gross sind
    (WhatsApp bei 390 px etwa 210 px breit statt ~150 px). */
 @media (max-width: 35.99em) {
