@@ -414,6 +414,7 @@ html:not(.js) .ks__bar { display: none; }
   position: relative; display: grid; place-items: center;
   padding: clamp(40px, 4.4vw + 12px, 76px) var(--gutter);
   background:
+    var(--edges),
     radial-gradient(50% 80% at 50% 50%, #ffffff 0%, color-mix(in srgb, #ffffff 70%, transparent) 50%, transparent 82%),
     radial-gradient(36% 90% at 92% 10%, color-mix(in srgb, var(--brand) 12%, transparent), transparent 72%),
     radial-gradient(36% 90% at 6% 96%, color-mix(in srgb, var(--brand-deep) 9%, transparent), transparent 74%),

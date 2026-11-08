@@ -5,9 +5,20 @@
    Der Hero bleibt unveraendert.
    ========================================================================== */
 
+/* Nahtlos (Wunsch 08.11.: "Uebergaenge sollen nicht zu sehen sein"): jede helle Seite beginnt und endet im selben
+   Ton wie die Seite unter dem Hero (Soft) und laeuft erst danach in ihre eigene Schattierung. So stossen helle
+   Seiten ohne Kante aneinander. Dunkle Seiten (Leistungen, Kontakt) bleiben bewusst ein Wechsel. */
+:root {
+  --seam-h: clamp(80px, 9vw, 140px);
+  --edges:
+    linear-gradient(180deg, var(--soft), color-mix(in srgb, var(--soft) 0%, transparent) var(--seam-h)),
+    linear-gradient(0deg, var(--soft), color-mix(in srgb, var(--soft) 0%, transparent) var(--seam-h));
+}
+
 /* So finden Kunden zu Ihnen: helles Licht hinter dem Handy, kuehler Rand */
 .ks__stage {
   background:
+    var(--edges),
     radial-gradient(46% 56% at 72% 52%, color-mix(in srgb, var(--brand) 14%, transparent), transparent 72%),
     radial-gradient(38% 46% at 10% 90%, color-mix(in srgb, var(--brand-deep) 9%, transparent), transparent 74%),
     radial-gradient(130% 110% at 45% 45%, transparent 56%, color-mix(in srgb, var(--ink) 7%, transparent) 100%),
@@ -17,6 +28,7 @@
 /* Preise (Mist): Licht von oben, Tuerkis unten rechts, weicher Rand */
 .plans::before {
   background:
+    var(--edges),
     radial-gradient(56% 42% at 50% 0%, rgba(255, 255, 255, 0.9), transparent 72%),
     radial-gradient(40% 50% at 100% 88%, color-mix(in srgb, var(--brand) 15%, transparent), transparent 72%),
     radial-gradient(130% 110% at 50% 45%, transparent 56%, color-mix(in srgb, var(--brand-deep) 11%, transparent) 100%),
@@ -26,6 +38,7 @@
 /* Ablauf (hell): Tuerkis von links, Mist unten rechts */
 .process::before {
   background:
+    var(--edges),
     radial-gradient(48% 60% at 0% 28%, color-mix(in srgb, var(--brand) 11%, transparent), transparent 70%),
     radial-gradient(46% 52% at 100% 100%, color-mix(in srgb, var(--mist) 95%, transparent), transparent 72%),
     linear-gradient(180deg, var(--white), var(--soft));
@@ -34,6 +47,7 @@
 /* Fragen & Antworten (Mist): Licht in der Mitte, tiefes Tuerkis unten links */
 .faq-sec::before {
   background:
+    var(--edges),
     radial-gradient(52% 56% at 50% 38%, rgba(255, 255, 255, 0.8), transparent 72%),
     radial-gradient(40% 50% at 0% 100%, color-mix(in srgb, var(--brand-deep) 11%, transparent), transparent 70%),
     radial-gradient(130% 110% at 50% 45%, transparent 58%, color-mix(in srgb, var(--ink) 6%, transparent) 100%),
