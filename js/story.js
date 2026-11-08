@@ -9,9 +9,8 @@
    2. Scroll-Hinweis (.sg, Wunsch 08.11.): rechts eine Maus mit laufendem Rad (am Handy ein Wisch-Zeichen) und
       eine kleine Leiste mit dem Fortschritt, solange die Geschichte steht, damit niemand denkt, die Seite haenge.
       Auch ganz oben im Hero, wenn noch nicht gescrollt wurde.
-   3. Uebergang (.ue, Wunsch 08.11.): "Ihr Online-Auftritt als Aushaengeschild ..." steht elegant in der Mitte.
-      Beim Weiterscrollen loest er sich auf und die Flaeche wird dunkel: daraus kommen die Leistungen.
-      (--t direkt am Scrollweg, kein Zeitablauf.)
+   3. Uebergang (.ue, Wunsch 08.11.): "Ihr Online-Auftritt als Aushaengeschild ..." als kompaktes Band in der
+      Mitte (keine ganze Seite), blendet beim ersten Erscheinen weich ein.
    Ohne Skript stehen alle Sektionen als normale Inhalte da (siehe story.css).
    ========================================================================== */
 (function () {
@@ -171,36 +170,15 @@
     jobs.push(update);
   })();
 
-  /* --- 3. Uebergang: Ueberschrift in der Mitte, loest sich auf, die Flaeche wird dunkel ----------- */
+  /* --- 3. Uebergang: kompaktes Band, blendet beim ersten Erscheinen ein --------------------------- */
   var ue = document.querySelector("[data-ue]");
-  if (ue) (function () {
-    var track = ue.querySelector(".ue__track"), lastT = -1;
-    function smooth(x) { x = x < 0 ? 0 : x > 1 ? 1 : x; return x * x * (3 - 2 * x); }
-    function update() {
-      var p = progress(track);
-      var t = (p.y - p.span * 0.12) / (p.span * 0.7);
-      t = t < 0 ? 0 : t > 1 ? 1 : t;
-      if (Math.abs(t - lastT) < 0.002) return;
-      lastT = t;
-      ue.style.setProperty("--t", t.toFixed(3));
-      var d = smooth((t - 0.3) / 0.7);
-      ue.style.setProperty("--d", d.toFixed(3));
-      /* ist die Flaeche ueberwiegend dunkel, wird auch die Navigation dunkel */
-      var theme = d > 0.5 ? "dark" : "light";
-      if (ue.getAttribute("data-nav-theme") !== theme) {
-        ue.setAttribute("data-nav-theme", theme);
-        window.dispatchEvent(new Event("nahlio:navtheme"));
-      }
-    }
+  if (ue && !reduce && "IntersectionObserver" in window) {
     ue.classList.add("is-live");
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (es) {
-        if (es.some(function (e) { return e.isIntersecting; })) { ue.classList.add("is-in"); io.disconnect(); }
-      }, { threshold: 0.35 });
-      io.observe(ue.querySelector(".ue__stage"));
-    } else ue.classList.add("is-in");
-    jobs.push(update);
-  })();
+    var ueIo = new IntersectionObserver(function (es) {
+      if (es.some(function (e) { return e.isIntersecting; })) { ue.classList.add("is-in"); ueIo.disconnect(); }
+    }, { threshold: 0.35 });
+    ueIo.observe(ue.querySelector(".ue__stage"));
+  }
 
   /* --- Seitenlinie: In den stehenden Sektionen laeuft sie nicht hinter Text und Bildern durch. Sie blendet
      kurz davor weich aus und danach wieder ein (Maske auf der Linienebene, in Seitenkoordinaten). ---------- */

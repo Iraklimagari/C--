@@ -121,7 +121,7 @@ h1, h2,
 .hero__gl { opacity: 0; transition: opacity 240ms ease; }
 .hero__gl.is-on { opacity: 1; }
 .hero__ink { overflow: visible; }
-.hero__strokes { fill: none; stroke: var(--brand); stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 8; }
+.hero__strokes { fill: none; stroke: var(--brand); stroke-linecap: round; stroke-linejoin: miter; stroke-miterlimit: 8; }
 .hero__fill, .hero__dot { fill: var(--brand); }
 /* --- Text-Auftakt im Hero (selten gesehen: Freude erlaubt) ----------------------------------------
    Oberzeile steigt auf, dann die Ueberschrift Wort fuer Wort (aus leichter Unschaerfe, 55 ms versetzt),

@@ -48,14 +48,17 @@ function init(root) {
   const EXIT = { x: 700, y: 832 };                     /* Linie: unter der Spitze der Nadel, im Fuss (dahinter verborgen) */
 
   /* --- Zeitplan (ms ab Start) ---------------------------------------------------------------- */
+  /* Wunsch 08.11.: schneller, von einem Punkt aus, ohne Luecken. Die Linie startet an der Spitze des linken
+     Fusses und fliesst in einem Zug mit gleichem Tempo: Stamm, Spitze, Diagonale, am Knoten weiter in Nadel und
+     Ring (b) und zugleich in den Fuss (c). Sie ist breiter als jeder Teil der Marke und auf die Marke
+     zugeschnitten: Was sie ueberstrichen hat, ist voll gefuellt. */
   const T = {
-    a0: 250, a1: 1150,           /* Stamm + Spitze + Diagonale bis zum Knoten */
-    b1: 2050, c1: 1600,          /* vom Knoten: Nadel + Ring (b), Fuss (c) mit gleichem Tempo */
-    dot0: 1880, dot1: 2200,      /* Punkt erscheint (nicht aus dem Nichts: ab 0.85) */
-    fill0: 2050, fill1: 2350,    /* exakte Marke blendet ueber die Striche */
-    gl: 2350,                    /* WebGL uebernimmt deckungsgleich */
-    d0: 2600, d1: 4100,          /* Tiefe, Drehung, Metall */
-    breathIn: 4100               /* Atmen blendet sich ein */
+    draw0: 120, draw1: 1150,     /* der ganze Zug */
+    dot0: 1000, dot1: 1220,      /* Punkt erscheint, wenn der Ring sich schliesst (nicht aus dem Nichts: ab 0.85) */
+    fill0: 1120, fill1: 1260,    /* exakte Marke ersetzt die Striche (deckungsgleich, kaum zu sehen) */
+    gl: 1260,                    /* WebGL uebernimmt deckungsgleich */
+    d0: 1360, d1: 2460,          /* Tiefe, Drehung, Metall */
+    breathIn: 2460               /* Atmen blendet sich ein */
   };
   const BREATH = 6200;           /* ein Atemzug: ~6 s (ruhig, wie in Ruhe) */
 
@@ -110,10 +113,14 @@ function init(root) {
   }
   dot.style.transformBox = "fill-box"; dot.style.transformOrigin = "center";
   dot.style.opacity = "0"; fillEl.style.opacity = "0";
+  /* ein Weg ab dem Startpunkt: a bis zum Knoten, danach b und c gleichzeitig (gleiches Tempo, kein Halt) */
+  const DIST = lens.a + Math.max(lens.b, lens.c);
+  const easeFlow = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
   function draw2d(now) {
-    const pa = easeInOut(span(now, T.a0, T.a1));
-    const pb = easeInOut(span(now, T.a1, T.b1));
-    const pc = easeInOut(span(now, T.a1, T.c1));
+    const d = DIST * easeFlow(span(now, T.draw0, T.draw1));
+    const pa = clamp01(d / lens.a);
+    const pb = clamp01((d - lens.a) / lens.b);
+    const pc = clamp01((d - lens.a) / lens.c);
     strokes.a.style.strokeDashoffset = String(lens.a * (1 - pa));
     strokes.b.style.strokeDashoffset = String(lens.b * (1 - pb));
     strokes.c.style.strokeDashoffset = String(lens.c * (1 - pc));

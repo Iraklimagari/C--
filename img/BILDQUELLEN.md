@@ -118,8 +118,20 @@ Hintergrund), damit der Schieber deckungsgleich ist. Prompts: `docs/higgsfield-p
 
 | Datei (je auch -768.webp) | Motiv |
 | --- | --- |
-| lv-google-nachher / -vorher | Google-Profil gepflegt / leer |
-| lv-website-nachher / -vorher | moderne mobile Website / alte Desktop-Seite auf dem Handy |
-| lv-karte-nachher / -vorher | digitale Preisliste / Foto einer Papierliste |
-| lv-kontakt-nachher / -vorher | WhatsApp-Terminbuchung / verpasste Anrufe |
-| lv-fotos-nachher / -vorher | professionelles Werkstattfoto / dunkler Schnappschuss |
+| lv-website-nachher / -vorher | moderne mobile Website / alte Desktop-Seite auf dem Handy (Kfz-Werkstatt) |
+
+Seit 08.11.2026 zeigen die übrigen vier Leistungen verschiedene Branchen (Wunsch: nicht nur Kfz):
+
+| Datei (je auch -768.webp) | Branche | Motiv |
+| --- | --- | --- |
+| lv-salon-nachher / -vorher | Friseursalon „Salon Mira“ | Google-Profil gepflegt / leer |
+| lv-cafe-nachher / -vorher | Café „Café Lindenhof“ | digitale Speisekarte / Handyfoto der Papierkarte |
+| lv-kosmetik-nachher / -vorher | Kosmetikstudio „Studio Elara“ | WhatsApp-Termin-Assistent / besetzt, drei Anrufversuche |
+| lv-baeckerei-nachher / -vorher | Bäckerei | professionelles Thekenfoto / dunkler Schnappschuss |
+
+Entstehung: Die Fotos (Hand mit Handy im Salon, Café und Kosmetikstudio, Bäckerei-Theke) sind mit KI erzeugt
+(Figma, Bildgenerierung, Modell gpt-image-2.5-flare, 1536 × 864), das Handy mit ausgeschaltetem, schwarzem
+Bildschirm. Die Bildschirme sind eigene HTML-Entwürfe (Schrift Inter), als Bild gerendert und genau in die
+erkannte Bildschirmfläche eingesetzt; der Daumen bleibt davor. So liegen Vorher und Nachher pixelgenau
+übereinander. Das Vorher der Bäckerei ist dasselbe Foto, nur dunkler, gelbstichig, flau und körnig. Die kleinen
+Speisenfotos in der Karte sind Ausschnitte aus dem Bäckereifoto. Keine echten Betriebe, Personen oder Bewertungen.
