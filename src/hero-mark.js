@@ -52,13 +52,15 @@ function init(root) {
      Fusses und fliesst in einem Zug mit gleichem Tempo: Stamm, Spitze, Diagonale, am Knoten weiter in Nadel und
      Ring (b) und zugleich in den Fuss (c). Sie ist breiter als jeder Teil der Marke und auf die Marke
      zugeschnitten: Was sie ueberstrichen hat, ist voll gefuellt. */
+  /* Wunsch 08.11.: kein Stocken beim Wechsel nach 3D. Der Zug wird zum Ende nicht langsamer, WebGL uebernimmt im
+     selben Bild, in dem er fertig ist, und die Drehung setzt sofort mit Schwung ein (ease-out). */
   const T = {
     draw0: 120, draw1: 1150,     /* der ganze Zug */
-    dot0: 1000, dot1: 1220,      /* Punkt erscheint, wenn der Ring sich schliesst (nicht aus dem Nichts: ab 0.85) */
-    fill0: 1120, fill1: 1260,    /* exakte Marke ersetzt die Striche (deckungsgleich, kaum zu sehen) */
-    gl: 1260,                    /* WebGL uebernimmt deckungsgleich */
-    d0: 1360, d1: 2460,          /* Tiefe, Drehung, Metall */
-    breathIn: 2460               /* Atmen blendet sich ein */
+    dot0: 980, dot1: 1150,       /* Punkt erscheint, wenn der Ring sich schliesst (nicht aus dem Nichts: ab 0.85) */
+    fill0: 1080, fill1: 1150,    /* exakte Marke ersetzt die Striche (deckungsgleich, kaum zu sehen) */
+    gl: 1150,                    /* WebGL uebernimmt deckungsgleich, ohne Ueberblendung */
+    d0: 1150, d1: 2300,          /* Tiefe, Drehung, Metall: beginnt ohne Pause */
+    breathIn: 2300               /* Atmen blendet sich ein */
   };
   const BREATH = 9400;           /* ein Atemzug: ~9 s (Wunsch 08.11.: langsamer, weniger Bewegung) */
 
@@ -120,7 +122,9 @@ function init(root) {
   dot.style.opacity = "0"; fillEl.style.opacity = "0";
   /* ein Weg ab dem Startpunkt: a bis zum Knoten, danach b und c gleichzeitig (gleiches Tempo, kein Halt) */
   const DIST = lens.a + Math.max(lens.b, lens.c);
-  const easeFlow = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+  /* anfangs beschleunigen, dann gleichmaessig bis zum Ende (kein Abbremsen vor dem Wechsel nach 3D) */
+  const FA = 0.25, FK = 1 / (2 * FA - FA * FA);
+  const easeFlow = (t) => (t < FA ? FK * t * t : FK * FA * FA + 2 * FK * FA * (t - FA));
   function draw2d(now) {
     const d = DIST * easeFlow(span(now, T.draw0, T.draw1));
     const pa = clamp01(d / lens.a);
@@ -259,11 +263,14 @@ function init(root) {
     place();
   }
 
+  /* Die Leinwand ist immer sichtbar (kein Hochstufen der Ebene im Wechsel-Bild = kein Ruckler); vorher ist sie
+     leer. Im Wechsel-Bild erscheint die Marke in WebGL und die 2D-Linie verschwindet: beide sind deckungsgleich. */
   function setGL(on) {
     if (on === glOn) return;
     glOn = on;
+    mesh.visible = on;
     canvas.classList.toggle("is-on", on);
-    ink.style.transition = DBG === null ? "opacity 240ms ease" : "none";
+    ink.style.transition = "none";
     ink.style.opacity = on ? "0" : "1";
   }
 
@@ -273,8 +280,8 @@ function init(root) {
     const t = DBG !== null ? Number(DBG) : reduce ? 1e9 : clock;
     if (t < T.gl + 300) draw2d(t);
     setGL(t >= T.gl);
-    const dp = easeInOut(span(t, T.d0, T.d1));
-    U.uFlat.value = 1 - smooth(0.15, 0.85, span(t, T.d0, T.d1));
+    const dp = 1 - Math.pow(1 - span(t, T.d0, T.d1), 2.2);   /* setzt mit Schwung ein, kommt weich zur Ruhe */
+    U.uFlat.value = 1 - smooth(0, 0.7, span(t, T.d0, T.d1));
     let breath = 0, amp = 0, sway = 0;
     if (!reduce && t > T.breathIn) {
       const bt = t - T.breathIn;
@@ -316,6 +323,8 @@ function init(root) {
   fit();
   pose(0.002, 0, 0, 0, 0);
   renderer.compile(scene, camera);
+  renderer.initTexture(brushed.normal);                /* Texturen vorab hochladen: kein Ruckler im Wechsel-Bild */
+  renderer.initTexture(brushed.rough);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(rebuild);   /* Textbreite steht erst mit den Schriften fest */
   kick();
 }

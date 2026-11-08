@@ -1,0 +1,180 @@
+/* ==========================================================================
+   NAHLIO — Beispielbetrieb "Uferhaus" (Restaurant am Kanal) in den Leistungen (Wunsch 08.11.)
+   Digitale Karte: Speisekarte auf Tablet und Smartphone, Hinweis "Karte aktualisiert".
+   Website: One-Page-Website auf Laptop und Smartphone.
+   Uebernommen aus der frueheren Fassung (scenes.py / scenes.css): nur die Regeln dieser zwei Darstellungen,
+   unveraendert; Szene, Geraete und Masse folgen dem bestehenden System (.sz, 1 em = 1/60 der Szenenhoehe).
+   ========================================================================== */
+.dv-tab {
+  --tw: 36;
+  position: absolute; z-index: 1;
+  font-size: calc(var(--tw) / 54 * 1em);
+  width: 54em; aspect-ratio: 0.7;
+  border-radius: 3.4em;
+  background: linear-gradient(140deg, #808b91 0%, #3a4246 9%, #1d2326 38%, #171c1f 68%, #4b555a 92%, #8a959a 100%);
+  box-shadow:
+    inset 0 0 0 0.08em rgba(255, 255, 255, 0.3),
+    0 3.4em 6em -2em rgba(6, 12, 15, 0.5),
+    0 1.4em 2.4em -1em rgba(6, 12, 15, 0.3);
+}
+.dv-tab::before { content: ""; position: absolute; inset: 0.32em; border-radius: 3.1em; background: #030405; }
+.dv-tab__screen { position: absolute; inset: 1.6em; z-index: 1; border-radius: 1.65em; overflow: hidden; isolation: isolate;
+                  display: flex; flex-direction: column; background: #f7f4ee; }
+.dv-tab__cam { position: absolute; z-index: 2; top: 0.58em; left: 50%; width: 0.5em; height: 0.5em; margin-left: -0.25em; border-radius: 50%;
+               background: #1b2226; box-shadow: inset 0 0 0 0.12em #0c1012; }
+.dv-tab__glare { position: absolute; inset: 1.6em; z-index: 3; border-radius: 1.65em; pointer-events: none;
+                 background: linear-gradient(118deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 26%, rgba(255, 255, 255, 0) 42%); }
+.dv-sb--tab { height: 2.3em; padding: 0.25em 1.6em 0; font-size: 0.8em; }
+.dv-laptop { position: absolute; z-index: 1; }
+.dv-laptop__lid {
+  position: relative; aspect-ratio: 16 / 10.4; padding: 0.95em 0.95em 1.45em;
+  border-radius: 1.5em 1.5em 0.45em 0.45em; background: #07090a;
+  box-shadow: inset 0 0 0 0.14em #30393d, inset 0 0 0 0.24em #07090a, 0 2em 4em -1.2em rgba(6, 12, 15, 0.42);
+}
+.dv-laptop__cam { position: absolute; top: 0.38em; left: 50%; width: 0.34em; height: 0.34em; margin-left: -0.17em; border-radius: 50%; background: #232b2f; }
+.dv-laptop__screen { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 0.3em; background: #fff; }
+.dv-laptop__base {
+  position: relative; height: 1.55em; margin: 0 -6.5%;
+  border-radius: 0.2em 0.2em 2.4em 2.4em / 0.2em 0.2em 1.3em 1.3em;
+  background: linear-gradient(180deg, #e3e7e9 0%, #c3c9cc 38%, #8e979b 100%);
+  box-shadow: 0 1.6em 2.6em -1em rgba(6, 12, 15, 0.5), inset 0 0.08em 0 rgba(255, 255, 255, 0.8);
+}
+.dv-laptop__base i { position: absolute; top: 0; left: 50%; width: 15%; height: 0.5em; transform: translateX(-50%);
+                     border-radius: 0 0 0.7em 0.7em; background: linear-gradient(180deg, #9aa3a7, #c8ced1); }
+.sz--karte .sz__tab { --tw: 37; left: 1%; top: 9%; }
+.sz--karte .sz__phone { --pw: 15.5; left: 66%; top: 40%; z-index: 2; }
+.dv-phone--mn .dv-phone__screen { background: #f7f4ee; }
+.mn { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.55em; padding: 0.15em 1em 0; color: #1b1d1a; }
+.mn__bar { display: flex; align-items: center; justify-content: space-between; padding: 0.15em 0 0.5em; border-bottom: 0.06em solid rgba(30, 58, 47, 0.14); }
+.mn__brand { display: grid; line-height: 1.05; }
+.mn__brand b { font-family: var(--serif); font-size: 1.2em; font-weight: 600; color: #1e3a2f; }
+.mn__brand i { margin-top: 0.2em; font-style: normal; font-size: 0.56em; letter-spacing: 0.16em; text-transform: uppercase; color: #8a7a5c; }
+.mn__search { width: 2.1em; height: 2.1em; border-radius: 50%; display: grid; place-items: center; background: #fff; box-shadow: 0 0.06em 0.2em rgba(0, 0, 0, 0.1); }
+.sz .mn__search .ic { width: 1.1em; height: 1.1em; }
+.mn__title { margin-top: 0.1em; font-family: var(--serif); font-size: 1.75em; font-weight: 600; color: #1e3a2f; }
+.mn__tabs { display: flex; gap: 0.4em; margin-right: -1em; overflow: hidden; white-space: nowrap; }
+.mn__tab { flex: none; padding: 0.44em 0.88em; border-radius: 2em; border: 0.06em solid rgba(30, 58, 47, 0.14); background: #fff; color: #4a4a42; font-size: 0.74em; font-weight: 600; }
+.mn__tab.is-on { background: #1e3a2f; border-color: #1e3a2f; color: #f6f1e8; }
+.mn__sec { margin-top: 0.35em; font-size: 0.64em; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #8a7a5c; }
+.mn__list { display: grid; gap: 0.55em; }
+.mn__item { display: grid; grid-template-columns: 4.3em minmax(0, 1fr) auto; gap: 0.7em; align-items: center; padding: 0.45em; border-radius: 1em;
+            background: #fff; box-shadow: 0 0.1em 0.45em rgba(30, 40, 30, 0.08); }
+.mn__img { width: 4.3em; height: 4.3em; border-radius: 0.75em; object-fit: cover; }
+.mn__txt { display: grid; gap: 0.14em; min-width: 0; }
+.mn__txt b { font-size: 0.9em; font-weight: 600; }
+.mn__txt i { font-style: normal; font-size: 0.7em; line-height: 1.3; color: #6f6a5f; }
+.mn__price { padding-right: 0.35em; font-size: 0.86em; font-weight: 700; color: #1e3a2f; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mn__foot { margin: auto -1em 0; padding: 0.7em 1em 1.65em; display: flex; align-items: center; justify-content: space-between; gap: 0.6em;
+            background: #fff; border-top: 0.06em solid rgba(30, 58, 47, 0.1); }
+.mn__all { display: flex; align-items: center; gap: 0.2em; font-size: 0.72em; font-weight: 600; color: #5b574e; }
+.mn__cta { padding: 0.62em 1.05em; border-radius: 2em; background: #1e3a2f; color: #f6f1e8; font-size: 0.76em; font-weight: 700; white-space: nowrap; }
+.mn-card { left: 59%; top: 1.2%; width: 40%; display: flex; align-items: center; gap: 0.85em; padding: 1.05em 1.2em; }
+.mn-card__ic { width: 2.7em; height: 2.7em; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--aqua); color: var(--brand-deep); }
+.sz .mn-card__ic .ic { width: 1.4em; height: 1.4em; stroke-width: 2.1; }
+.mn-card > span:last-child { display: grid; gap: 0.15em; }
+.mn-card b { font-size: 1.02em; }
+.mn-card i { font-style: normal; font-size: 0.88em; line-height: 1.3; color: #42555a; }
+.mt { flex: 1; min-height: 0; display: flex; flex-direction: column; color: #1b1d1a; }
+.mt__bar { flex: none; display: flex; align-items: center; gap: 1.2em; padding: 0.5em 2em 0.95em; border-bottom: 0.06em solid rgba(30, 58, 47, 0.12); }
+.mt__brand b { font-size: 1.5em; }
+.mt__brand i { font-size: 0.6em; }
+.mt__search { flex: 1; max-width: 17em; margin-left: auto; display: flex; align-items: center; gap: 0.6em; padding: 0.6em 1em; border-radius: 2em;
+              background: #fff; color: #8a8579; font-size: 0.85em; box-shadow: inset 0 0 0 0.07em rgba(30, 58, 47, 0.14); }
+.sz .mt__search .ic { width: 1.1em; height: 1.1em; }
+.mt__cta { padding: 0.72em 1.25em; border-radius: 2em; background: #1e3a2f; color: #f6f1e8; font-size: 0.85em; font-weight: 700; white-space: nowrap; }
+.mt__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1em; padding: 1.5em 2em 0.7em; }
+.mt__title { font-family: var(--serif); font-size: 2.5em; font-weight: 600; line-height: 1; color: #1e3a2f; }
+.mt__open { display: flex; align-items: center; gap: 0.45em; padding-bottom: 0.25em; font-size: 0.8em; font-weight: 600; color: #2f6b4f; }
+.mt__open i { width: 0.55em; height: 0.55em; border-radius: 50%; background: #34a26a; }
+.mt__tabs { display: flex; gap: 0.5em; padding: 0.4em 2em 1em; overflow: hidden; white-space: nowrap; }
+.mt__tabs .mn__tab { font-size: 0.86em; padding: 0.5em 1em; }
+.mt__sec { padding: 0 2em 0.7em; font-size: 0.72em; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #8a7a5c; }
+.mt__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; padding: 0 2em; }
+.mt__card { display: grid; overflow: hidden; border-radius: 1.1em; background: #fff; box-shadow: 0 0.15em 0.6em rgba(30, 40, 30, 0.08); }
+.mt__img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.mt__body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.25em 0.8em; padding: 0.85em 1em 1.05em; }
+.mt__body b { font-size: 1.02em; font-weight: 600; }
+.mt__body i { grid-column: 1 / -1; font-style: normal; font-size: 0.78em; line-height: 1.35; color: #6f6a5f; }
+.mt__price { font-size: 0.98em; font-weight: 700; color: #1e3a2f; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mt__lunch { display: grid; grid-template-columns: 9.5em minmax(0, 1fr) auto; align-items: center; gap: 1.1em; margin: 1em 2em 0; padding: 0.7em 1.1em 0.7em 0.7em;
+             border-radius: 1.1em; background: #1e3a2f; color: #f6f1e8; }
+.mt__lunch img { width: 9.5em; height: 5.8em; border-radius: 0.75em; object-fit: cover; }
+.mt__lunch > span { display: grid; gap: 0.2em; }
+.mt__lunch b { font-family: var(--serif); font-size: 1.2em; font-weight: 600; }
+.mt__lunch span span { font-size: 0.78em; opacity: 0.86; }
+.sz .mt__lunch > .ic { width: 1.3em; height: 1.3em; color: #c9a26a; }
+.mt__foot { margin-top: auto; padding: 0.95em 2em 1.25em; background: #fff; border-top: 0.06em solid rgba(30, 58, 47, 0.1); }
+.sz--website .sz__laptop { left: 1%; top: 7.5%; width: 84%; }
+.sz--website .sz__phone2 { --pw: 17.5; left: 78.5%; top: 34%; }
+.uf { --uf-g: #1e3a2f; --uf-c: #f6f1e8; --uf-b: #c9a26a;
+      flex: 1; min-height: 0; height: 100%; display: flex; flex-direction: column; overflow: hidden; background: var(--uf-c); color: #1d1f1a; }
+.uf__nav { flex: none; display: flex; align-items: center; gap: 1.6em; padding: 0.9em 2em; }
+.uf__logo { display: grid; line-height: 1; }
+.uf__logo b { font-family: var(--serif); font-size: 1.32em; font-weight: 600; color: var(--uf-g); }
+.uf__logo i { margin-top: 0.35em; font-style: normal; font-size: 0.42em; letter-spacing: 0.22em; text-transform: uppercase; color: #8a7a5c; }
+.uf__links { display: flex; gap: 1.7em; margin-left: auto; font-size: 0.6em; font-weight: 600; color: #3b3d36; }
+.uf__btn { padding: 0.62em 1.2em; border-radius: 0.35em; background: var(--uf-g); color: var(--uf-c); font-size: 0.6em; font-weight: 700; white-space: nowrap; }
+.uf__hero { position: relative; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; }
+.uf__heroimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.uf__tint { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14, 24, 19, 0.88) 0%, rgba(14, 24, 19, 0.58) 40%, rgba(14, 24, 19, 0.04) 74%); }
+.uf__copy { position: relative; display: grid; gap: 0.7em; justify-items: start; max-width: 30em; padding: 0 2.6em; color: var(--uf-c); }
+.uf__eyebrow { font-size: 0.5em; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--uf-b); }
+.uf__h1 { font-family: var(--serif); font-size: 2.6em; font-weight: 600; line-height: 1.02; letter-spacing: -0.01em; }
+.uf__sub { max-width: 24em; font-size: 0.7em; line-height: 1.45; opacity: 0.9; }
+.uf__ctas { display: flex; gap: 0.6em; margin-top: 0.3em; }
+.uf__btn--brass { background: var(--uf-b); color: #1d1f1a; }
+.uf__btn--ghost { background: transparent; color: var(--uf-c); box-shadow: inset 0 0 0 0.1em rgba(246, 241, 232, 0.72); }
+.uf__row { flex: none; display: grid; grid-template-columns: repeat(3, 1fr) 0.9fr; gap: 1em; padding: 1.15em 2em 1.35em; }
+.uf__card { display: grid; gap: 0.3em; align-content: start; }
+.uf__cimg { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 0.35em; }
+.uf__card b { margin-top: 0.2em; font-family: var(--serif); font-size: 0.85em; font-weight: 600; color: var(--uf-g); }
+.uf__card span { font-size: 0.55em; color: #6b665b; }
+.uf__hours { display: grid; align-content: start; gap: 0.35em; padding: 0.85em 1em; border-radius: 0.35em; background: var(--uf-g); color: var(--uf-c); }
+.uf__hours b { font-family: var(--serif); font-size: 0.8em; font-weight: 600; }
+.uf__hours span { font-size: 0.55em; opacity: 0.88; }
+.dv-phone--uf .dv-phone__screen { background: #f6f1e8; }
+.uf--mob .uf__nav { padding: 0.25em 1.05em 0.65em; }
+.uf--mob .uf__logo b { font-size: 1.12em; }
+.uf__burger { margin-left: auto; color: #1e3a2f; }
+.sz .uf__burger .ic { width: 1.5em; height: 1.5em; }
+.uf--mob .uf__hero { flex: none; height: 18.5em; align-items: flex-end; }
+.uf--mob .uf__tint { background: linear-gradient(180deg, rgba(14, 24, 19, 0.1) 18%, rgba(14, 24, 19, 0.86)); }
+.uf--mob .uf__copy { gap: 0.55em; padding: 0 1.05em 1.3em; }
+.uf--mob .uf__eyebrow { font-size: 0.58em; }
+.uf--mob .uf__h1 { font-size: 1.72em; }
+.uf--mob .uf__btn { font-size: 0.74em; padding: 0.65em 1.1em; }
+.uf__list { display: grid; gap: 0.9em; padding: 1em 1.05em; }
+.uf--mob .uf__card b { font-size: 1em; }
+.uf--mob .uf__card span { font-size: 0.72em; }
+
+/* ---------- Lesbar (Wunsch 08.11.: "dass jeder den Text der Speisekarte lesen kann") ---------------------------
+   In der Buehne der Leistungen waren die Geraete so klein, dass Gerichte und Preise nur 4-6 px gross waren.
+   Breit: Tablet und Handy deutlich groesser (die Buehne schneidet sie am Rand an), die Schrift darin etwas
+   groesser. Schmale Buehnen (Handy, Tablet mit schmaler Spalte): nur das Handy, gross. */
+.sc__scene .sz--karte .sz__tab { --tw: 58; left: -4%; top: 6%; }
+.sc__scene .sz--karte .sz__phone { --pw: 28; left: 56%; top: 40%; }
+.sc__scene .sz--karte .mn-card { left: 47%; top: 0.5%; width: 56%; font-size: 1.3em; }
+.sc__scene .mt__body b { font-size: 1.28em; }
+.sc__scene .mt__price { font-size: 1.24em; }
+.sc__scene .mt__body i { font-size: 1em; }
+.sc__scene .mt__tabs .mn__tab { font-size: 1.02em; }
+.sc__scene .mt__sec { font-size: 0.86em; }
+.sc__scene .mt__open { font-size: 0.94em; }
+.sc__scene .mn__txt b { font-size: 1.1em; }
+.sc__scene .mn__price { font-size: 1.04em; }
+.sc__scene .mn__txt i { font-size: 0.84em; }
+/* Website "Uferhaus": Laptop als Ganzes vergroessert (Breite und Schrift, rechts angeschnitten), Handy groesser */
+.sc__scene .sz--website .sz__laptop { left: -3%; top: 4%; width: 146%; font-size: 1.74em; }
+.sc__scene .sz--website .sz__phone2 { --pw: 26; left: 66%; top: 32%; }
+.sc__scene .uf--desk .uf__links { font-size: 0.82em; }
+.sc__scene .uf--desk .uf__btn { font-size: 0.7em; }
+.sc__scene .uf--desk .uf__sub { font-size: 0.8em; }
+.sc__scene .uf--desk .uf__card b { font-size: 0.95em; }
+.sc__scene .uf__card span, .sc__scene .uf__hours span { font-size: 0.8em; }
+.sc__scene .uf--mob .uf__card span { font-size: 0.8em; }
+@media (max-width: 35.99em), (min-width: 48em) and (max-width: 59.99em) {
+  .sc__scene .sz--karte .sz__tab, .sc__scene .sz--karte .mn-card, .sc__scene .sz--website .sz__laptop { display: none; }
+  .sc__scene .sz--karte .sz__phone { --pw: 44; left: 50%; top: 2%; translate: -50% 0; }
+  .sc__scene .vis--website > .sz { --arn: 0.62 !important; }        /* hochkant: Platz fuer das grosse Handy */
+  .sc__scene .sz--website .sz__phone2 { --pw: 33; left: 50%; top: 2%; translate: -50% 0; }
+}

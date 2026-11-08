@@ -70,8 +70,6 @@ entfernt, verkleinert (nie vergrößert) und als WebP mit Transparenz gespeicher
 
 | Datei | Original | Verwendung |
 | --- | --- | --- |
-| website-archi-1280.webp, website-archi-720.webp | Bildschirmfoto einer Website („ARCHI“), vom Inhaber bereitgestellt (08.11.2026), in den Bildschirm der bisherigen Website-Darstellung gesetzt | One-Page-Website (Beispiele) |
-| karte-lino-1000.webp, karte-lino-560.webp | Изображение ChatGPT 2 окт. 2026 г., 22_20_49-Photoroom.webp | Digitale Karte (LINO CAFÉ, zwei Smartphones) |
 | hero-whatsapp-nordcut.webp | Айфон с чатом WhatsApp NordCut.png | Frühere Hero-Grafik, seit 22.10.2026 durch die unten genannte Datei ersetzt |
 | google-nordcut-laden.webp, google-nordcut-pole.webp, google-nordcut-stuhl.webp, google-nordcut-bank.webp | Фотограф за работой_ четыре истории съемки.webp (Bild unten rechts, ohne den Fotografen) | Frühere Google-Demo, seit 22.10.2026 nicht mehr gerendert |
 
@@ -107,3 +105,10 @@ doppelt hochgerechnet.
 | kfz-reifen.webp | Radwechsel mit Schlagschrauber |
 | kfz-uebergabe.webp | Schlüsselübergabe am Empfang (Reserve) |
 | kfz-alt-1.webp, kfz-alt-2.webp | einfache Werkstätten (Mitbewerber in der Suche) |
+
+## Leistungen: Digitale Karte und Website als „Uferhaus“ (08.11.2026)
+
+Die Bilder „karte-lino“ (Digitale Karte) und „website-archi“ (Website) wurden ersetzt durch die Darstellungen des
+erfundenen Restaurants „Uferhaus“ aus der früheren Fassung (HTML statt Bild, Texte lesbar): Speisekarte auf Tablet
+und Smartphone, One-Page-Website auf Laptop und Smartphone. Fotos: sz-fisch, sz-fleisch, sz-lachs, sz-dessert,
+sz-terrasse (Unsplash, siehe oben).

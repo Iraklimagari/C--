@@ -118,8 +118,7 @@ h1, h2,
 .hero__gl, .hero__ink, .hero__static { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .hero__static { inset: 8% 10% 22%; width: auto; height: auto; margin: auto; }
 .hero__static path { fill: var(--brand); }
-.hero__gl { opacity: 0; transition: opacity 240ms ease; }
-.hero__gl.is-on { opacity: 1; }
+.hero__gl { opacity: 1; }                 /* immer sichtbar; vor dem Wechsel ist sie leer (hero-mark.js) */
 .hero__ink { overflow: visible; }
 .hero__strokes { fill: none; stroke: var(--brand); stroke-linecap: round; stroke-linejoin: miter; stroke-miterlimit: 8; }
 .hero__fill, .hero__dot { fill: var(--brand); }
@@ -151,11 +150,13 @@ html.js.motion-ok .hero.hero--mark .hero__copy .hero__sub { animation: hero-up 9
   html.js .hero.hero--mark .hero__copy .hero__sub { animation: hero-fade 400ms ease both; animation-delay: 0ms; }
 }
 
-/* Kleines Logo oben links: im Hero nicht noetig (die grosse Marke ist das Logo); nach dem Hero blendet es ein */
-.nav__logo { transition: opacity 240ms ease, transform 240ms var(--ease-enter), visibility 0s linear 0s; }
-html.hero-in-view .nav__logo { opacity: 0; transform: translateY(-6px); visibility: hidden; pointer-events: none;
-  transition: opacity 200ms ease, transform 200ms ease, visibility 0s linear 200ms; }
-@media (prefers-reduced-motion: reduce) { .nav__logo, html.hero-in-view .nav__logo { transform: none; } }
+/* Logo oben links (Wunsch 08.11.): Im Hero steht nur der Schriftzug "NAHLIO" (die grosse Marke ist dort das
+   Bildzeichen); nach dem Hero kommt das Bildzeichen wieder dazu und der Schriftzug rueckt an seinen Platz. */
+.nav__logo .logo__type, .nav__logo .logo__dot { transition: transform 360ms var(--ease-enter); }
+.nav__logo .logo__mark:not(.logo__dot) { transition: opacity 240ms ease; }
+html.hero-in-view .nav__logo .logo__mark:not(.logo__dot) { opacity: 0; }
+html.hero-in-view .nav__logo .logo__type, html.hero-in-view .nav__logo .logo__dot { transform: translateX(-335px); }
+@media (prefers-reduced-motion: reduce) { .nav__logo .logo__type, .nav__logo .logo__dot, .nav__logo .logo__mark { transition: none; } }
 
 /* Uebergabepunkt an die Seitenlinie (25-line.js): unten in der Buehne */
 .hero__exit { position: absolute; left: 88%; bottom: 0; width: 0; height: 0; }
