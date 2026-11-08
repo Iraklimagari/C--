@@ -106,9 +106,12 @@ doppelt hochgerechnet.
 | kfz-uebergabe.webp | Schlüsselübergabe am Empfang (Reserve) |
 | kfz-alt-1.webp, kfz-alt-2.webp | einfache Werkstätten (Mitbewerber in der Suche) |
 
-## Leistungen: Digitale Karte und Website als „Uferhaus“ (08.11.2026)
+## Leistungen: Digitale Karte „Uferhaus“ und Website-Bildschirmfoto (08.11.2026)
 
-Die Bilder „karte-lino“ (Digitale Karte) und „website-archi“ (Website) wurden ersetzt durch die Darstellungen des
-erfundenen Restaurants „Uferhaus“ aus der früheren Fassung (HTML statt Bild, Texte lesbar): Speisekarte auf Tablet
-und Smartphone, One-Page-Website auf Laptop und Smartphone. Fotos: sz-fisch, sz-fleisch, sz-lachs, sz-dessert,
-sz-terrasse (Unsplash, siehe oben).
+Digitale Karte: Statt des Bildes „karte-lino“ zeigt die Leistung die Speisekarte des erfundenen Restaurants
+„Uferhaus“ aus der früheren Fassung (HTML statt Bild, Texte lesbar) auf Tablet und Smartphone. Fotos: sz-fisch,
+sz-fleisch, sz-lachs, sz-dessert, sz-terrasse (Unsplash, siehe oben).
+
+| Datei | Original | Verwendung |
+| --- | --- | --- |
+| website-archi-1200.webp, website-archi-720.webp | Bildschirmfoto einer Website („ARCHI“), vom Inhaber bereitgestellt (08.11.2026), ohne Geräterahmen | Leistung „Website“ |

@@ -1,9 +1,9 @@
 /* ==========================================================================
-   NAHLIO — Beispielbetrieb "Uferhaus" (Restaurant am Kanal) in den Leistungen (Wunsch 08.11.)
-   Digitale Karte: Speisekarte auf Tablet und Smartphone, Hinweis "Karte aktualisiert".
-   Website: One-Page-Website auf Laptop und Smartphone.
-   Uebernommen aus der frueheren Fassung (scenes.py / scenes.css): nur die Regeln dieser zwei Darstellungen,
-   unveraendert; Szene, Geraete und Masse folgen dem bestehenden System (.sz, 1 em = 1/60 der Szenenhoehe).
+   NAHLIO — Darstellungen in den Leistungen (Wunsch 08.11.)
+   1. Digitale Karte: Speisekarte des erfundenen Restaurants "Uferhaus" auf Tablet und Smartphone, Hinweis
+      "Karte aktualisiert". Uebernommen aus der frueheren Fassung (scenes.py / scenes.css): nur die Regeln dieser
+      Darstellung, unveraendert; dazu unten "Lesbar".
+   2. Website: Bildschirmfoto einer Website (vom Inhaber geliefert), ohne Geraeterahmen.
    ========================================================================== */
 .dv-tab {
   --tw: 36;
@@ -25,22 +25,6 @@
 .dv-tab__glare { position: absolute; inset: 1.6em; z-index: 3; border-radius: 1.65em; pointer-events: none;
                  background: linear-gradient(118deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 26%, rgba(255, 255, 255, 0) 42%); }
 .dv-sb--tab { height: 2.3em; padding: 0.25em 1.6em 0; font-size: 0.8em; }
-.dv-laptop { position: absolute; z-index: 1; }
-.dv-laptop__lid {
-  position: relative; aspect-ratio: 16 / 10.4; padding: 0.95em 0.95em 1.45em;
-  border-radius: 1.5em 1.5em 0.45em 0.45em; background: #07090a;
-  box-shadow: inset 0 0 0 0.14em #30393d, inset 0 0 0 0.24em #07090a, 0 2em 4em -1.2em rgba(6, 12, 15, 0.42);
-}
-.dv-laptop__cam { position: absolute; top: 0.38em; left: 50%; width: 0.34em; height: 0.34em; margin-left: -0.17em; border-radius: 50%; background: #232b2f; }
-.dv-laptop__screen { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 0.3em; background: #fff; }
-.dv-laptop__base {
-  position: relative; height: 1.55em; margin: 0 -6.5%;
-  border-radius: 0.2em 0.2em 2.4em 2.4em / 0.2em 0.2em 1.3em 1.3em;
-  background: linear-gradient(180deg, #e3e7e9 0%, #c3c9cc 38%, #8e979b 100%);
-  box-shadow: 0 1.6em 2.6em -1em rgba(6, 12, 15, 0.5), inset 0 0.08em 0 rgba(255, 255, 255, 0.8);
-}
-.dv-laptop__base i { position: absolute; top: 0; left: 50%; width: 15%; height: 0.5em; transform: translateX(-50%);
-                     border-radius: 0 0 0.7em 0.7em; background: linear-gradient(180deg, #9aa3a7, #c8ced1); }
 .sz--karte .sz__tab { --tw: 37; left: 1%; top: 9%; }
 .sz--karte .sz__phone { --pw: 15.5; left: 66%; top: 40%; z-index: 2; }
 .dv-phone--mn .dv-phone__screen { background: #f7f4ee; }
@@ -104,48 +88,6 @@
 .mt__lunch span span { font-size: 0.78em; opacity: 0.86; }
 .sz .mt__lunch > .ic { width: 1.3em; height: 1.3em; color: #c9a26a; }
 .mt__foot { margin-top: auto; padding: 0.95em 2em 1.25em; background: #fff; border-top: 0.06em solid rgba(30, 58, 47, 0.1); }
-.sz--website .sz__laptop { left: 1%; top: 7.5%; width: 84%; }
-.sz--website .sz__phone2 { --pw: 17.5; left: 78.5%; top: 34%; }
-.uf { --uf-g: #1e3a2f; --uf-c: #f6f1e8; --uf-b: #c9a26a;
-      flex: 1; min-height: 0; height: 100%; display: flex; flex-direction: column; overflow: hidden; background: var(--uf-c); color: #1d1f1a; }
-.uf__nav { flex: none; display: flex; align-items: center; gap: 1.6em; padding: 0.9em 2em; }
-.uf__logo { display: grid; line-height: 1; }
-.uf__logo b { font-family: var(--serif); font-size: 1.32em; font-weight: 600; color: var(--uf-g); }
-.uf__logo i { margin-top: 0.35em; font-style: normal; font-size: 0.42em; letter-spacing: 0.22em; text-transform: uppercase; color: #8a7a5c; }
-.uf__links { display: flex; gap: 1.7em; margin-left: auto; font-size: 0.6em; font-weight: 600; color: #3b3d36; }
-.uf__btn { padding: 0.62em 1.2em; border-radius: 0.35em; background: var(--uf-g); color: var(--uf-c); font-size: 0.6em; font-weight: 700; white-space: nowrap; }
-.uf__hero { position: relative; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; }
-.uf__heroimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
-.uf__tint { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14, 24, 19, 0.88) 0%, rgba(14, 24, 19, 0.58) 40%, rgba(14, 24, 19, 0.04) 74%); }
-.uf__copy { position: relative; display: grid; gap: 0.7em; justify-items: start; max-width: 30em; padding: 0 2.6em; color: var(--uf-c); }
-.uf__eyebrow { font-size: 0.5em; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--uf-b); }
-.uf__h1 { font-family: var(--serif); font-size: 2.6em; font-weight: 600; line-height: 1.02; letter-spacing: -0.01em; }
-.uf__sub { max-width: 24em; font-size: 0.7em; line-height: 1.45; opacity: 0.9; }
-.uf__ctas { display: flex; gap: 0.6em; margin-top: 0.3em; }
-.uf__btn--brass { background: var(--uf-b); color: #1d1f1a; }
-.uf__btn--ghost { background: transparent; color: var(--uf-c); box-shadow: inset 0 0 0 0.1em rgba(246, 241, 232, 0.72); }
-.uf__row { flex: none; display: grid; grid-template-columns: repeat(3, 1fr) 0.9fr; gap: 1em; padding: 1.15em 2em 1.35em; }
-.uf__card { display: grid; gap: 0.3em; align-content: start; }
-.uf__cimg { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 0.35em; }
-.uf__card b { margin-top: 0.2em; font-family: var(--serif); font-size: 0.85em; font-weight: 600; color: var(--uf-g); }
-.uf__card span { font-size: 0.55em; color: #6b665b; }
-.uf__hours { display: grid; align-content: start; gap: 0.35em; padding: 0.85em 1em; border-radius: 0.35em; background: var(--uf-g); color: var(--uf-c); }
-.uf__hours b { font-family: var(--serif); font-size: 0.8em; font-weight: 600; }
-.uf__hours span { font-size: 0.55em; opacity: 0.88; }
-.dv-phone--uf .dv-phone__screen { background: #f6f1e8; }
-.uf--mob .uf__nav { padding: 0.25em 1.05em 0.65em; }
-.uf--mob .uf__logo b { font-size: 1.12em; }
-.uf__burger { margin-left: auto; color: #1e3a2f; }
-.sz .uf__burger .ic { width: 1.5em; height: 1.5em; }
-.uf--mob .uf__hero { flex: none; height: 18.5em; align-items: flex-end; }
-.uf--mob .uf__tint { background: linear-gradient(180deg, rgba(14, 24, 19, 0.1) 18%, rgba(14, 24, 19, 0.86)); }
-.uf--mob .uf__copy { gap: 0.55em; padding: 0 1.05em 1.3em; }
-.uf--mob .uf__eyebrow { font-size: 0.58em; }
-.uf--mob .uf__h1 { font-size: 1.72em; }
-.uf--mob .uf__btn { font-size: 0.74em; padding: 0.65em 1.1em; }
-.uf__list { display: grid; gap: 0.9em; padding: 1em 1.05em; }
-.uf--mob .uf__card b { font-size: 1em; }
-.uf--mob .uf__card span { font-size: 0.72em; }
 
 /* ---------- Lesbar (Wunsch 08.11.: "dass jeder den Text der Speisekarte lesen kann") ---------------------------
    In der Buehne der Leistungen waren die Geraete so klein, dass Gerichte und Preise nur 4-6 px gross waren.
@@ -163,18 +105,10 @@
 .sc__scene .mn__txt b { font-size: 1.1em; }
 .sc__scene .mn__price { font-size: 1.04em; }
 .sc__scene .mn__txt i { font-size: 0.84em; }
-/* Website "Uferhaus": Laptop als Ganzes vergroessert (Breite und Schrift, rechts angeschnitten), Handy groesser */
-.sc__scene .sz--website .sz__laptop { left: -3%; top: 4%; width: 146%; font-size: 1.74em; }
-.sc__scene .sz--website .sz__phone2 { --pw: 26; left: 66%; top: 32%; }
-.sc__scene .uf--desk .uf__links { font-size: 0.82em; }
-.sc__scene .uf--desk .uf__btn { font-size: 0.7em; }
-.sc__scene .uf--desk .uf__sub { font-size: 0.8em; }
-.sc__scene .uf--desk .uf__card b { font-size: 0.95em; }
-.sc__scene .uf__card span, .sc__scene .uf__hours span { font-size: 0.8em; }
-.sc__scene .uf--mob .uf__card span { font-size: 0.8em; }
 @media (max-width: 35.99em), (min-width: 48em) and (max-width: 59.99em) {
-  .sc__scene .sz--karte .sz__tab, .sc__scene .sz--karte .mn-card, .sc__scene .sz--website .sz__laptop { display: none; }
+  .sc__scene .sz--karte .sz__tab, .sc__scene .sz--karte .mn-card { display: none; }
   .sc__scene .sz--karte .sz__phone { --pw: 44; left: 50%; top: 2%; translate: -50% 0; }
-  .sc__scene .vis--website > .sz { --arn: 0.62 !important; }        /* hochkant: Platz fuer das grosse Handy */
-  .sc__scene .sz--website .sz__phone2 { --pw: 33; left: 50%; top: 2%; translate: -50% 0; }
 }
+
+/* ---------- Website: Bildschirmfoto ohne Geraet --------------------------------------------------------- */
+.sz__shot--web { object-fit: cover; border-radius: 0.9em; filter: none; box-shadow: 0 1.4em 2.6em -0.6em rgba(6, 12, 15, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06); }
