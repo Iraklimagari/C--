@@ -1,8 +1,8 @@
 /* ==========================================================================
    NAHLIO — Scroll-Geschichten, Stil in css/story.css
-   1. Kundenweg (.ks): Der Scrollweg der Sektion ist in 11 Stufen geteilt. Jede Stufe setzt eine Klasse
-      (.is-s0 ... .is-s10, aufsteigend). Die Bewegung selbst laeuft mit Zeit (CSS-Uebergaenge). Getippt werden
-      die Suche (ab Stufe 1) und die Bewertung (ab Stufe 9).
+   1. Kundenweg (.ks): Der Scrollweg der Sektion ist in 12 Stufen geteilt. Jede Stufe setzt eine Klasse
+      (.is-s0 ... .is-s11, aufsteigend). Die Bewegung selbst laeuft mit Zeit (CSS-Uebergaenge). Getippt werden
+      die Suche (ab Stufe 1) und die Bewertung (ab Stufe 10).
       Wunsch 08.11.: Wer einmal ganz durch ist, muss es nicht noch einmal ansehen. Ist die Sektion oben aus dem
       Bild, faltet sie sich zu einer ruhigen Zusammenfassung (.is-done: alle Schritte, Handy im Endzustand,
       kein Festhalten); die Scrollposition wird dabei so verschoben, dass auf dem Bildschirm nichts springt.
@@ -71,13 +71,13 @@
   if (ks) (function () {
     var track = ks.querySelector(".ks__track");
     var steps = ks.querySelectorAll(".ks__step"), bars = ks.querySelectorAll(".ks__bar i");
-    var N = 11;
-    var STEP_OF = [0, 0, 0, 1, 1, 2, 3, 3, 3, 4, 4];       /* welche Erklaerung links zu welcher Stufe gehoert */
+    var N = 12;
+    var STEP_OF = [0, 0, 0, 1, 1, 2, 3, 3, 3, 3, 4, 4];    /* welche Erklaerung links zu welcher Stufe gehoert */
     var typers = [];
     each(ks.querySelectorAll("[data-ks-type]"), function (el) {
       typers.push({ el: el, wrap: el.parentNode, text: el.getAttribute("data-ks-type"), timer: 0 });
     });
-    var TYPE_AT = [1, 9];                               /* Suche ab Stufe 1, Bewertung ab Stufe 9 */
+    var TYPE_AT = [1, 10];                              /* Suche ab Stufe 1, Bewertung ab Stufe 10 */
     var cur = -1, done = false, idle = 0, pauseHint = 0;
 
     function type(t, on, j) {

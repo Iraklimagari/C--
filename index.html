@@ -23,7 +23,7 @@
 <link rel="preload" href="fonts/newsreader-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/styles.css?v=d8378fc8c1">
 <link rel="stylesheet" href="css/premium.css?v=6">
-<link rel="stylesheet" href="css/story.css?v=9">
+<link rel="stylesheet" href="css/story.css?v=11">
 <link rel="stylesheet" href="css/flat.css?v=1">
 <link rel="stylesheet" href="css/space.css?v=5">
 <script>(function(d,w){var c=d.documentElement.classList;c.add('js');if(!w.location.hash||w.location.hash==='#top')c.add('hero-in-view');try{if(!w.matchMedia('(prefers-reduced-motion: reduce)').matches){c.add('motion-ok');var n=w.performance&&w.performance.getEntriesByType?w.performance.getEntriesByType('navigation')[0]:null;if((!w.location.hash||w.location.hash==='#top')&&(!n||n.type==='navigate'))c.add('hero-intro');}}catch(e){c.add('motion-ok');}w.setTimeout(function(){if(!(w.NAHLIO&&w.NAHLIO.popReady))c.remove('motion-ok','hero-intro');},4000);})(document,window);</script>
@@ -218,7 +218,7 @@
             <li class="ks__step is-active" data-step="0"><h3 class="ks__step-title">Gefunden werden</h3><p class="ks__step-text">Jemand sucht „Kfz Mechatroniker“. Unter den Treffern fällt der Betrieb mit den besten Bewertungen sofort auf.</p></li>
             <li class="ks__step" data-step="1"><h3 class="ks__step-title">Vertrauen gewinnen</h3><p class="ks__step-text">Ein Tipp aufs Foto: echte Bilder aus der Werkstatt und viele gute Bewertungen zeigen, dass hier Profis arbeiten.</p></li>
             <li class="ks__step" data-step="2"><h3 class="ks__step-title">Angebot verstehen</h3><p class="ks__step-text">Unter „Leistungen“ steht klar, was gemacht wird und womit man ungefähr rechnen kann.</p></li>
-            <li class="ks__step" data-step="3"><h3 class="ks__step-title">Kontakt aufnehmen</h3><p class="ks__step-text">Ein Tipp auf WhatsApp: Der Termin-Assistent antwortet sofort, auch abends. Leistung und Uhrzeit antippen, der Termin steht.</p></li>
+            <li class="ks__step" data-step="3"><h3 class="ks__step-title">Kontakt aufnehmen</h3><p class="ks__step-text">Ein Tipp auf WhatsApp: Der Termin-Assistent antwortet sofort, auch abends. Kurz die Terminanfrage ausfüllen, absenden: Der Termin ist bestätigt und im Kalender.</p></li>
             <li class="ks__step" data-step="4"><h3 class="ks__step-title">Weiterempfehlen</h3><p class="ks__step-text">Nach dem Termin schreibt der Kunde eine Bewertung: schnell und professionell. Der Nächste findet Sie noch leichter.</p></li>
           </ol>
           <div class="ks__bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -299,20 +299,40 @@
               </div>
             </div>
 
-            <!-- 3) WhatsApp: ein Mitarbeiter antwortet (kein Chatbot) -->
+            <!-- 3) WhatsApp: Termin-Assistent (Bot) -> Terminanfrage (Formular) -> bestaetigt -> Kalender (Wunsch 08.11.) -->
             <div class="ks-app ks-w">
               <div class="ks-w__head"><svg class="ks-ic" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg><img src="img/kfz-werkstatt-aussen.webp" alt=""><div><b>Motorwerk Dorsten</b><i>Geschäftskonto · Termin-Assistent</i></div><svg class="ks-ic" viewBox="0 0 24 24"><rect x="3" y="6.5" width="12.5" height="11" rx="2.5"/><path d="m15.5 10.5 5-3v9l-5-3z"/></svg><svg class="ks-ic" viewBox="0 0 24 24"><path d="M6.6 3.5 9 3l1.6 4.2-1.9 1.3a10 10 0 0 0 6.8 6.8l1.3-1.9L21 15l-.5 2.4a2.2 2.2 0 0 1-2.3 1.8A15.6 15.6 0 0 1 4.8 5.8a2.2 2.2 0 0 1 1.8-2.3z"/></svg></div>
               <div class="ks-w__chat">
                 <span class="ks-w__day">Heute</span>
                 <span class="ks-w__note">Automatische Antworten von Motorwerk Dorsten</span>
-                <div class="ks-w__row ks-w__row--out" data-m="1"><div class="ks-w__msg ks-w__msg--out">Hallo, ich brauche einen Termin für mein Auto.<span class="ks-w__t">18:42 <svg viewBox="0 0 18 10"><path d="m1 5.5 3 3 6-7M7 8.5l.8.8 6-7"/></svg></span></div></div>
-                <div class="ks-w__row" data-m="2"><div class="ks-w__bot"><div class="ks-w__msg ks-w__msg--in">Hallo! Ich bin der Termin-Assistent von Motorwerk Dorsten. Wofür brauchen Sie einen Termin?<span class="ks-w__t">18:42</span></div><div class="ks-w__btns"><span class="ks-w__btn ks-w__btn--pick">Inspektion</span><span class="ks-w__btn">Bremsen</span><span class="ks-w__btn">Reifenwechsel</span></div></div></div>
-                <div class="ks-w__row ks-w__row--out" data-m="3"><div class="ks-w__msg ks-w__msg--out">Inspektion<span class="ks-w__t">18:42 <svg viewBox="0 0 18 10"><path d="m1 5.5 3 3 6-7M7 8.5l.8.8 6-7"/></svg></span></div></div>
-                <div class="ks-w__row" data-m="4"><div class="ks-w__bot"><div class="ks-w__msg ks-w__msg--in">Gern. Diese Termine sind frei:<span class="ks-w__t">18:42</span></div><div class="ks-w__btns"><span class="ks-w__btn ks-w__btn--pick">Do., 13.11. · 8:00 Uhr</span><span class="ks-w__btn">Do., 13.11. · 10:30 Uhr</span><span class="ks-w__btn">Fr., 14.11. · 9:00 Uhr</span></div></div></div>
-                <div class="ks-w__row ks-w__row--out" data-m="5"><div class="ks-w__msg ks-w__msg--out">Do., 13.11. · 8:00 Uhr<span class="ks-w__t">18:43 <svg viewBox="0 0 18 10"><path d="m1 5.5 3 3 6-7M7 8.5l.8.8 6-7"/></svg></span></div></div>
-                <div class="ks-w__row" data-m="6"><div class="ks-w__bot"><div class="ks-w__msg ks-w__msg--in ks-w__conf"><span class="ks-w__ok"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><div><b>Termin bestätigt</b><span>Inspektion · Do., 13.11. · 8:00 Uhr</span><span>Industriestraße 12, Dorsten</span></div><span class="ks-w__t">18:43</span></div><div class="ks-w__btns"><span class="ks-w__btn">Im Kalender speichern</span></div></div></div>
+                <div class="ks-w__row ks-w__row--out" data-m="1"><div class="ks-w__msg ks-w__msg--out">Hallo 👋<span class="ks-w__t">18:42 <svg viewBox="0 0 18 10"><path d="m1 5.5 3 3 6-7M7 8.5l.8.8 6-7"/></svg></span></div></div>
+                <div class="ks-w__row" data-m="2"><div class="ks-w__bot"><div class="ks-w__msg ks-w__msg--in">Hallo! Schön, dass Sie da sind 😊<br>Wie können wir Ihnen helfen?<span class="ks-w__t">18:42</span></div><div class="ks-w__btns"><span class="ks-w__btn ks-w__btn--pick">📅 Termin anfragen</span><span class="ks-w__btn">🔧 Leistungen ansehen</span><span class="ks-w__btn">💬 Direkt kontaktieren</span><span class="ks-w__btn">🌐 Website</span></div></div></div>
+                <div class="ks-w__row ks-w__row--out" data-m="3"><div class="ks-w__msg ks-w__msg--out">📅 Termin anfragen<span class="ks-w__t">18:42 <svg viewBox="0 0 18 10"><path d="m1 5.5 3 3 6-7M7 8.5l.8.8 6-7"/></svg></span></div></div>
+                <div class="ks-w__row" data-m="4"><div class="ks-w__bot"><div class="ks-w__msg ks-w__msg--in">Gerne 😊<br>Füllen Sie kurz die Terminanfrage aus.<span class="ks-w__t">18:42</span></div><div class="ks-w__btns"><span class="ks-w__btn ks-w__btn--flow"><svg viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/></svg>Terminanfrage</span></div></div></div>
+                <div class="ks-w__row" data-m="5"><div class="ks-w__bot"><div class="ks-w__msg ks-w__msg--in ks-w__done"><b>Termin bestätigt ✅</b><span>Inspektion</span><span>14.11. · 15:30 Uhr</span><span class="ks-w__t">18:43</span></div><div class="ks-w__btns"><span class="ks-w__btn ks-w__btn--cal">📅 Im Kalender speichern</span><span class="ks-w__btn">💬 Direkt kontaktieren</span></div></div></div>
               </div>
               <div class="ks-w__input"><svg class="ks-ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Nachricht</span><svg class="ks-ic" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="13" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8.5 6.5 10 4h4l1.5 2.5"/></svg><svg class="ks-ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></div>
+              <div class="ks-w__dim"></div>
+              <!-- Terminanfrage als WhatsApp-Formular: fuellt sich von selbst, dann "Anfrage senden" -->
+              <div class="ks-w__sheet">
+                <div class="ks-w__sh-head"><svg class="ks-ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg><b>Terminanfrage</b><svg class="ks-ic" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="18.5" r="1.2"/></svg></div>
+                <div class="ks-w__fields">
+                  <p class="ks-w__lead">Wählen Sie Leistung und Wunschtermin.</p>
+                  <div class="ks-w__f" data-f="1"><span class="ks-w__fl">Leistung</span><span class="ks-w__fv"><em>Auswählen</em><b>Inspektion</b></span><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></div>
+                  <div class="ks-w__f" data-f="2"><span class="ks-w__fl">Datum</span><span class="ks-w__fv"><em>TT.MM.</em><b>14.11.</b></span><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg></div>
+                  <div class="ks-w__f" data-f="3"><span class="ks-w__fl">Uhrzeit</span><span class="ks-w__fv"><em>Auswählen</em><b>15:30</b></span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/></svg></div>
+                  <div class="ks-w__f" data-f="4"><span class="ks-w__fl">Name</span><span class="ks-w__fv"><em>Ihr Name</em><b class="ks-w__typed">Max Mustermann</b></span></div>
+                </div>
+                <div class="ks-w__sh-foot"><span class="ks-w__send">Anfrage senden</span><span class="ks-w__managed">Verwaltet von Motorwerk Dorsten. <u>Mehr erfahren</u></span></div>
+              </div>
+              <!-- Kalender: Termin uebernehmen -->
+              <div class="ks-w__cal">
+                <div class="ks-w__cal-bar"><span>Abbrechen</span><b>Neues Ereignis</b><span class="ks-w__cal-add">Hinzufügen</span></div>
+                <div class="ks-w__cal-card"><b>Inspektion</b><span>Motorwerk Dorsten · Industriestraße 12</span></div>
+                <div class="ks-w__cal-card"><p><span>Beginn</span><b>14.11. · 15:30</b></p><p><span>Ende</span><b>14.11. · 16:30</b></p></div>
+                <div class="ks-w__cal-card"><p><span>Erinnerung</span><b>1 Tag vorher</b></p></div>
+              </div>
+              <span class="ks-w__toast">📅 Im Kalender gespeichert</span>
             </div>
 
             <!-- 4) Rezension schreiben -->
@@ -530,6 +550,6 @@
 </footer>
 <script src="js/app.js?v=6fcf5cac18" defer></script>
 <script src="js/hero-mark.js?v=8" defer></script>
-<script src="js/story.js?v=14" defer></script>
+<script src="js/story.js?v=15" defer></script>
 </body>
 </html>
