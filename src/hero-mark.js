@@ -8,8 +8,8 @@
    2. Die exakte Marke blendet ein (2D), WebGL uebernimmt deckungsgleich: Tiefe waechst, die Marke
       dreht sich in eine 3/4-Ansicht und wird gebuerstetes Metall in der Markenfarbe (ohne Schatten).
    3. Danach atmet die Marke: langsam heben und weiten, senken und loesen.
-   Die Linie haengt nicht als Schweif an der Marke: Sie kommt erst beim Scrollen unter der Spitze der
-   Nadel gerade nach unten heraus und folgt dem Blick (Seitenlinie, 25-line.js; Startpunkt data-line-exit).
+   Die Seitenlinie (25-line.js) ist im Hero nicht zu sehen (Wunsch 08.11.); ihr Startpunkt data-line-exit liegt
+   verborgen im Fuss. Groesse und Lage: die fertige, geneigte Marke wird gemessen und ganz in die Seite eingepasst.
    Farben: die der Marke (--brand). Weniger Bewegung: fertige 3D-Marke ohne Auftakt und ohne Atmen.
    Ohne WebGL: die 2D-Marke.
    ========================================================================== */
@@ -60,7 +60,7 @@ function init(root) {
     d0: 1360, d1: 2460,          /* Tiefe, Drehung, Metall */
     breathIn: 2460               /* Atmen blendet sich ein */
   };
-  const BREATH = 6200;           /* ein Atemzug: ~6 s (ruhig, wie in Ruhe) */
+  const BREATH = 9400;           /* ein Atemzug: ~9 s (Wunsch 08.11.: langsamer, weniger Bewegung) */
 
   /* Kurven: Eintritt ease-out, Bewegung auf dem Bildschirm ease-in-out (stark, nicht die eingebauten) */
   const easeOut = (t) => 1 - Math.pow(1 - t, 3);
@@ -87,9 +87,14 @@ function init(root) {
       s = Math.min((W * 1.08) / vw, (H * 0.62) / vh);
       vcx = W * 0.5 + vw * s * 0.12; vcy = H * 0.6;
     }
-    L = VB * s;
     cx = vcx - ((VIS.x0 + VIS.x1) / 2 - C0) * s;
     cy = vcy - ((VIS.y0 + VIS.y1) / 2 - C0) * s;
+    place();
+  }
+  /* Groesse und Lage (s, cx, cy) auf die 2D-Linie und den Startpunkt der Seitenlinie uebertragen. Mit WebGL
+     werden sie danach an die fertige 3D-Haltung angepasst (fit), damit die ganze Marke in die Seite passt. */
+  function place() {
+    L = VB * s;
     ink.setAttribute("viewBox", "0 0 " + W + " " + H);
     inkG.setAttribute("transform", "translate(" + (cx - L / 2).toFixed(2) + " " + (cy - L / 2).toFixed(2) + ") scale(" + s.toFixed(5) + ")");
     /* Startpunkt der Seitenlinie: unter der Spitze der Nadel, im Fuss verborgen. Sie baut sich danach neu. */
@@ -149,7 +154,7 @@ function init(root) {
   scene.environment = studioEnv(renderer);       /* Metall lebt von Spiegelungen: eigenes Studio-Licht */
   scene.environmentIntensity = 1.5;              /* auf --brand geeicht (Vorderseite im Mittel = Markenfarbe) */
 
-  const FOV = 22;
+  const FOV = 28;                 /* etwas staerkere Perspektive: mehr Raumgefuehl */
   const camera = new PerspectiveCamera(FOV, 1, 10, 40000);
 
   /* Marke als Koerper */
@@ -178,8 +183,10 @@ function init(root) {
   const mesh = new Mesh(geo, mat);
   inner.add(mesh); pivot.add(inner); scene.add(pivot);
 
-  /* Endhaltung der Marke (3/4-Ansicht): rechte und obere Flanken zeigen sich */
-  const POSE = { rx: 0.12, ry: -0.28, rz: 0.02 };
+
+  /* Endhaltung der Marke (3/4-Ansicht): rechte und obere Flanken zeigen sich.
+     Wunsch 08.11.: staerker geneigt (mehr Tiefe, mehr Raum) */
+  const POSE = { rx: 0.27, ry: -0.4, rz: 0.03 };
 
   /* --- Szene an die Buehne anpassen ----------------------------------------------------------- */
   function sizeScene() {
@@ -201,11 +208,57 @@ function init(root) {
   function pose(depthP, turnP, breath, amp, sway) {
     const Dw = (DEPTH + 2 * BT) * s * depthP;
     inner.position.set(0, 0, Dw / 2);                   /* Drehpunkt in der Mitte des Koerpers */
-    pivot.position.set(cx - W / 2, H / 2 - cy + breath * 0.012 * L * amp, -Dw / 2);
+    pivot.position.set(cx - W / 2, H / 2 - cy + breath * 0.005 * L * amp, -Dw / 2);
     mesh.scale.z = Math.max(0.002, depthP);
-    pivot.rotation.set(POSE.rx * turnP + 0.018 * breath * amp, POSE.ry * turnP + 0.03 * sway * amp, POSE.rz * turnP);
-    pivot.scale.setScalar(1 + 0.022 * breath * amp);
+    pivot.rotation.set(POSE.rx * turnP + 0.007 * breath * amp, POSE.ry * turnP + 0.012 * sway * amp, POSE.rz * turnP);
+    pivot.scale.setScalar(1 + 0.009 * breath * amp);
   }
+  /* --- Einpassen (Wunsch 08.11.: "passt nicht in die Seite") -------------------------------------
+     Die fertige, geneigte Marke wird gemessen (Umriss auf dem Bildschirm) und so gross wie moeglich in die
+     freie Flaeche gesetzt: am Rechner rechts neben dem Text, mit Rand; am Handy ganz in der Breite. Nichts
+     wird mehr abgeschnitten. 3 % Reserve fuer das Atmen. */
+  const posAttr = geo.attributes.position, pv = new Vector3();
+  function target() {
+    if (deskQ.matches) {
+      const left = root.getBoundingClientRect().left;
+      let copyR = 0;                                    /* wo der Text wirklich endet (Zeilen, nicht Kaesten) */
+      document.querySelectorAll(".hero--mark .hero__copy > *").forEach((el) => {
+        const rg = document.createRange(); rg.selectNodeContents(el);
+        for (const q of rg.getClientRects()) if (q.width) copyR = Math.max(copyR, q.right);
+      });
+      return { x0: Math.max(W * 0.03, copyR - left + Math.max(28, W * 0.035)), x1: W - Math.max(24, window.innerWidth * 0.022),
+               y0: H * 0.04, y1: H * 0.96, right: true };
+    }
+    return { x0: W * 0.03, x1: W * 0.97, y0: H * 0.28, y1: H * 0.98, right: false };
+  }
+  function screenBox() {
+    inner.scale.setScalar(s);
+    pose(1, 1, 0, 0, 0);
+    pivot.updateMatrixWorld(true);
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    const take = (attr, m, step) => {
+      for (let i = 0; i < attr.count; i += step) {
+        pv.fromBufferAttribute(attr, i).applyMatrix4(m).project(camera);
+        const x = (pv.x + 1) * W / 2, y = (1 - pv.y) * H / 2;
+        if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+      }
+    };
+    take(posAttr, mesh.matrixWorld, 5);
+    return { x0, x1, y0, y1 };
+  }
+  function fit() {
+    const R = target(), M = 1.015;
+    for (let k = 0; k < 4; k++) {
+      const b = screenBox();
+      const f = Math.min((R.x1 - R.x0) / ((b.x1 - b.x0) * M), (R.y1 - R.y0) / ((b.y1 - b.y0) * M));
+      const bx = (b.x0 + b.x1) / 2, by = (b.y0 + b.y1) / 2;
+      const tx = R.right ? R.x1 - (b.x1 - b.x0) * f * M / 2 : (R.x0 + R.x1) / 2;
+      s *= f; cx = tx + (cx - bx) * f; cy = (R.y0 + R.y1) / 2 + (cy - by) * f;
+    }
+    inner.scale.setScalar(s);
+    place();
+  }
+
   function setGL(on) {
     if (on === glOn) return;
     glOn = on;
@@ -246,7 +299,7 @@ function init(root) {
     new IntersectionObserver((es) => { visible = es[0].isIntersecting; if (visible) kick(); }, { threshold: 0 }).observe(root);
   }
   document.addEventListener("visibilitychange", () => { pageVisible = !document.hidden; if (pageVisible) kick(); });
-  function rebuild() { layout(); sizeScene(); kick(); }
+  function rebuild() { layout(); sizeScene(); fit(); kick(); }
   let rt = 0;
   window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(rebuild, 120); });
 
@@ -260,9 +313,10 @@ function init(root) {
 
   /* Alles einmal aufbauen und die Shader vorab uebersetzen, erst dann laeuft die Zeitachse */
   sizeScene();
+  fit();
   pose(0.002, 0, 0, 0, 0);
   renderer.compile(scene, camera);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!deskQ.matches) rebuild(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(rebuild);   /* Textbreite steht erst mit den Schriften fest */
   kick();
 }
 

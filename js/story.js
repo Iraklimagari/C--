@@ -183,7 +183,8 @@
   /* --- Seitenlinie: In den stehenden Sektionen laeuft sie nicht hinter Text und Bildern durch. Sie blendet
      kurz davor weich aus und danach wieder ein (Maske auf der Linienebene, in Seitenkoordinaten). ---------- */
   var line = document.querySelector("[data-pageline]");
-  var hideIn = [document.querySelector(".ks__track"), document.querySelector(".ue__track")].filter(Boolean);
+  /* Wunsch 08.11.: auch im Hero keine Linie; sie erscheint erst in den freien Flaechen der folgenden Seiten */
+  var hideIn = [document.querySelector(".hero"), document.querySelector(".ks__track"), document.querySelector(".ue__track")].filter(Boolean);
   var lastMask = "";
   function maskLine() {
     if (!line || !hideIn.length) return;
