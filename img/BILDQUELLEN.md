@@ -62,32 +62,3 @@ gespeichert). Alle „Kostenloses Foto“ unter der Unsplash-Lizenz. Seite: unsp
 Ein elftes Foto (Kaffeetasse, photo-1788313707611-119735d8a36b) wurde geladen, aber nicht verwendet: Auf der Tasse
 steht der Name eines echten Cafés. Die älteren JPG-Fotos oben in dieser Datei werden von der Seite nicht mehr
 benutzt, liegen aber noch im Ordner.
-
-## Ableitungen aus den Bildern des Auftraggebers (22.10.2026)
-
-Aus den gelieferten Originalen in `07_Brand_Design/Sources` (unverändert) zugeschnitten, transparente Ränder
-entfernt, verkleinert (nie vergrößert) und als WebP mit Transparenz gespeichert.
-
-| Datei | Original | Verwendung |
-| --- | --- | --- |
-| website-motorwerk-1280.webp, website-motorwerk-720.webp | Адаптивный сайт MOTORWERK DORSTEN.webp | One-Page-Website (Beispiele und Hero): Desktop und Smartphone derselben Kfz-Werkstatt |
-| website-motorwerk-mobil.webp | dasselbe Original, nur das Smartphone (Umriss freigestellt) | One-Page-Website auf schmalen Bühnen |
-| karte-lino-1000.webp, karte-lino-560.webp | Изображение ChatGPT 2 окт. 2026 г., 22_20_49-Photoroom.webp | Digitale Karte (LINO CAFÉ, zwei Smartphones) |
-| hero-whatsapp-nordcut.webp | Айфон с чатом WhatsApp NordCut.png | Frühere Hero-Grafik, seit 22.10.2026 durch die unten genannte Datei ersetzt |
-| google-nordcut-laden.webp, google-nordcut-pole.webp, google-nordcut-stuhl.webp, google-nordcut-bank.webp | Фотограф за работой_ четыре истории съемки.webp (Bild unten rechts, ohne den Fotografen) | Frühere Google-Demo, seit 22.10.2026 nicht mehr gerendert |
-
-Die früheren Google-Ausschnitte bleiben zur Nachvollziehbarkeit erhalten. Die aktuelle Darstellung
-verwendet ausschließlich die unten dokumentierten gelieferten NordCut-Profile.
-
-
-## NordCut — gezielte Aktualisierung vom 22.10.2026
-
-Die folgenden WebP-Dateien wurden unverändert einschließlich Alpha-Kanal aus `D:/NAHLIO/07_Brand_Design/Sources/` übernommen. Geräte und Oberflächen sind bereits Teil der Bilder; es wird kein zusätzlicher Telefonrahmen gezeichnet. Konzeptdarstellungen sind keine verifizierten Kundenergebnisse.
-
-| Projektdatei | Gelieferte Originaldatei | Verwendung |
-|---|---|---|
-| nordcut-google-nachher.webp | Профиль NordCut Barbershop на графитовом iPhone.webp | Hero Google und Google Nachher |
-| nordcut-google-vorher.webp | Профиль NordCut с живыми фото.webp | Google Vorher |
-| nordcut-whatsapp-confirmation.webp | Чат WhatsApp с подтверждением записи.webp | Nur Hero WhatsApp; die Showcase-Demo bleibt animiert |
-
-Google: 1024 × 1536 px; WhatsApp: 1122 × 1402 px. Transparenter Rand wird im Hero durch optische Platzierung ausgeglichen, ohne die Bilddateien zu beschneiden oder ihr Seitenverhältnis zu verändern.

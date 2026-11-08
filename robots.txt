@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /vorschau/
 
-Sitemap: https://nahlio.org/sitemap.xml
+Sitemap: https://www.nahlio.de/sitemap.xml

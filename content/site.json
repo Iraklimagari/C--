@@ -1,0 +1,480 @@
+{
+  "_hinweis": "Alle sichtbaren Texte der Startseite stehen hier. Quelle: Word-Datei vom 07.10.2026. Werte in [[doppelten Klammern]] sind bewusste Platzhalter.",
+  "site": {
+    "name": "NAHLIO",
+    "url": "https://www.nahlio.de",
+    "_url_todo": "[[DOMAIN]] - Canonical-Domain vor Veroeffentlichung bestaetigen.",
+    "lang": "de",
+    "locale": "de_DE",
+    "region": "Dorsten · Nordrhein-Westfalen",
+    "meta_title": "NAHLIO — Digitale Präsenz für lokale Betriebe in Dorsten",
+    "meta_description": "Google-Profil, frische Fotos, digitale Karten und Websites für Betriebe in Dorsten und Umgebung. Damit Kunden Ihr Angebot verstehen und einfach Kontakt aufnehmen.",
+    "structured_data_enabled": false
+  },
+  "business": {
+    "legal_name": "[[FIRMIERUNG LT. IMPRESSUM]]",
+    "street": "[[STRASSE UND HAUSNUMMER]]",
+    "postal_code": "[[PLZ]]",
+    "city": "Dorsten",
+    "country": "DE",
+    "phone": "[[TELEFON]]",
+    "email": "[[E-MAIL]]",
+    "whatsapp": "[[WHATSAPP-NUMMER]]"
+  },
+  "nav": {
+    "items": [
+      {
+        "label": "Beispiele",
+        "href": "#beispiele"
+      },
+      {
+        "label": "Leistungen & Preise",
+        "href": "#preise"
+      },
+      {
+        "label": "Ablauf",
+        "href": "#ablauf"
+      },
+      {
+        "label": "FAQ",
+        "href": "#fragen"
+      }
+    ],
+    "cta": {
+      "label": "Kontakt aufnehmen",
+      "href": "#kontakt"
+    },
+    "wa": {
+      "label": "WhatsApp"
+    },
+    "menu_open": "Menü öffnen",
+    "menu_close": "Menü schließen",
+    "skip": "Direkt zum Inhalt"
+  },
+  "hero": {
+    "headline": "Damit Ihr Unternehmen online genauso überzeugt — wie vor Ort.",
+    "eyebrow": "DIGITALE PRÄSENZ FÜR LOKALE BETRIEBE",
+    "sub": "Google-Profil, frische Fotos, digitale Karten und Websites für Betriebe in Dorsten und Umgebung. Damit Kunden Ihr Angebot verstehen und einfach Kontakt aufnehmen.",
+    "cta_primary": {
+      "label": "Kontakt aufnehmen",
+      "href": "#kontakt"
+    },
+    "wa_label": "WhatsApp schreiben",
+    "more": {
+      "label": "Beispiele ansehen",
+      "href": "#beispiele"
+    },
+    "art": "szenen",
+    "_art": "szenen = selbst gebaute Darstellungen (scenes.py), bilder = die fuenf Bilder des Auftraggebers"
+  },
+  "blick": {
+    "headline": "Finden Ihre Kunden online die richtigen Antworten?",
+    "image": {
+      "file": "kunde-nachdenklich.png",
+      "alt": ""
+    },
+    "items": [
+      {
+        "key": "angebot",
+        "q": "„Was bieten Sie an?“",
+        "body": "Ihr Angebot auf einen Blick — mit Leistungen, Fotos und kurzen Beschreibungen.",
+        "link": {
+          "label": "Beispiel: One-Page-Website",
+          "target": "website"
+        }
+      },
+      {
+        "key": "preise",
+        "q": "„Was kostet das?“",
+        "body": "Leistungen und Preise — ohne langes Suchen.",
+        "link": {
+          "label": "Beispiel: Digitale Karte",
+          "target": "karte"
+        }
+      },
+      {
+        "key": "kontakt",
+        "q": "„Wie kann ich Sie erreichen?“",
+        "body": "Anrufen, schreiben oder einen Termin anfragen — ohne Umwege.",
+        "link": {
+          "label": "Beispiel: Kontakt & WhatsApp",
+          "target": "kontakt"
+        }
+      }
+    ],
+    "columns": [
+      "Ihre Kunden fragen",
+      "Ihr Auftritt antwortet"
+    ]
+  },
+  "uebergang": {
+    "eyebrow": "Was wir für Sie tun",
+    "headline": [
+      {
+        "text": "Wir machen Ihren Online-Auftritt zum "
+      },
+      {
+        "text": "Aushängeschild",
+        "hl": true
+      },
+      {
+        "text": " Ihres Betriebs."
+      }
+    ],
+    "statement": "Ihre Kunden entscheiden online, bevor sie zu Ihnen kommen: bei Google, über Ihre Fotos, in Ihrer Karte. Wir setzen Ihr Angebot in Szene, bringen Informationen auf den Punkt und machen den Kontakt einfach.",
+    "pillars": [
+      {
+        "service": "Fotos & Kurzvideos",
+        "target": "fotos",
+        "title": "Wir zeigen, was Sie können.",
+        "text": "Echte Fotos und kurze Clips aus Ihrem Betrieb – vor Ort aufgenommen und fertig bearbeitet."
+      },
+      {
+        "service": "Google-Profil",
+        "target": "google",
+        "title": "Wir machen Sie auffindbar.",
+        "text": "Ein Google-Profil mit aktuellen Öffnungszeiten, passenden Kategorien und den richtigen Links."
+      },
+      {
+        "service": "Digitale Karte & Website",
+        "target": "karte",
+        "title": "Wir ordnen Ihr Angebot.",
+        "text": "Leistungen und Preise übersichtlich online – auf jedem Smartphone gut lesbar."
+      },
+      {
+        "service": "Kontakt & WhatsApp",
+        "target": "kontakt",
+        "title": "Wir machen Kontakt einfach.",
+        "text": "Anrufen, per WhatsApp schreiben oder einen Termin anfragen – mit einem Tippen."
+      }
+    ],
+    "closing": "Alles aus einer Hand, persönlich betreut – für Betriebe in Dorsten und Umgebung.",
+    "cta": {
+      "label": "Beispiele ansehen",
+      "href": "#beispiele"
+    },
+    "_hinweis": "Langtext 19.10.2026 von NAHLIO-Entwurf; der erste Teil der Aussage und die Ueberschrift stammen aus wir cool.docx. Vor Veroeffentlichung freigeben lassen."
+  },
+  "beispiele": {
+    "disclaimer": "Konzeptbeispiele zeigen mögliche Verbesserungen. Sie sind keine dokumentierten Kundenergebnisse.",
+    "prev": "Vorheriges Beispiel",
+    "next": "Nächstes Beispiel",
+    "slides_label": "Beispiel auswählen",
+    "slides": [
+      {
+        "key": "kontakt",
+        "label": "KONTAKT & WHATSAPP",
+        "headline": "Aus einer Frage wird eine Anfrage.",
+        "paragraph": "Preise klären, Termine anfragen oder direkt mit Ihnen schreiben — alles in WhatsApp.",
+        "bullets": [
+          "Termin anfragen",
+          "Preise & Leistungen ansehen",
+          "Direkt mit Ihnen schreiben"
+        ],
+        "closing": "Auf Wunsch mit automatischen Antworten.",
+        "links": [
+          {
+            "label": "Vorführung neu starten",
+            "action": "replay"
+          }
+        ],
+        "image": {
+          "file": "bsp-kontakt-whatsapp.webp",
+          "w": 727,
+          "h": 1320,
+          "alt": "Konzeptbeispiel: WhatsApp-Chat eines Barbershops mit Auswahl für Termin, Preise und Nachricht"
+        },
+        "auto_ms": 17000
+      },
+      {
+        "key": "google",
+        "label": "GOOGLE-PROFIL",
+        "headline": "Bei Google gefunden. Auf den ersten Blick verstanden.",
+        "paragraph": "Wir optimieren Ihr Profil — für mehr lokale Sichtbarkeit, einen überzeugenden ersten Eindruck und direkte Kontaktwege.",
+        "bullets": [
+          "Leistungen & Kategorien präzisieren",
+          "Website, Menü & Kontakt direkt verlinken",
+          "Öffnungszeiten & Kontaktdaten aktualisieren"
+        ],
+        "links": [
+          {
+            "label": "Vorher · Nachher",
+            "action": "toggle"
+          }
+        ],
+        "image": {
+          "file": "bsp-google-profil.webp",
+          "w": 1047,
+          "h": 1365,
+          "alt": "Konzeptbeispiel: Google-Profil eines Restaurants mit Fotos, Bewertung, Öffnungszeiten und Kontaktwegen"
+        }
+      },
+      {
+        "key": "fotos",
+        "label": "FOTOS & KURZVIDEOS",
+        "headline": "Ihr Betrieb. Echt im Bild.",
+        "paragraph": "Wir fotografieren und filmen bei Ihnen vor Ort — Räume, Angebote und Ihre Arbeit im Detail.",
+        "bullets": [
+          "15–20 bearbeitete Fotos",
+          "Kurzclips à 15 Sekunden",
+          "Für Google, Website & Social Media"
+        ],
+        "links": [],
+        "image": {
+          "file": "bsp-fotos-kurzvideos.webp",
+          "w": 957,
+          "h": 1400,
+          "alt": "Konzeptbeispiel: Fotograf bei der Arbeit in Restaurant, Werkstatt und Friseursalon"
+        }
+      },
+      {
+        "key": "karte",
+        "label": "DIGITALE KARTE",
+        "headline": "Ihr Angebot. Auf einen Blick.",
+        "paragraph": "Wir erstellen digitale Speisekarten, Preislisten und Leistungskataloge — damit Kunden schnell finden, was zu ihnen passt.",
+        "bullets": [
+          "Übersichtlich nach Kategorien",
+          "Auf dem Smartphone leicht lesbar",
+          "Leistungen und Preise direkt vergleichen"
+        ],
+        "links": [
+          {
+            "label": "Website-Beispiel ansehen",
+            "action": "goto",
+            "target": "website"
+          }
+        ],
+        "image": {
+          "file": "bsp-digitale-karte.webp",
+          "w": 1066,
+          "h": 1340,
+          "alt": "Konzeptbeispiel: digitale Speisekarte eines Cafés auf zwei Smartphones"
+        }
+      },
+      {
+        "key": "website",
+        "label": "ONE-PAGE-WEBSITE",
+        "headline": "Ihr Betrieb. Alles auf einer Seite.",
+        "paragraph": "Wir gestalten Ihren Webauftritt — mit Bildern, Angeboten und direkten Kontaktwegen. Ihre digitale Menü-, Preis- oder Servicekarte ist integriert.",
+        "bullets": [
+          "Individuelles Design für Ihren Betrieb",
+          "Klar strukturiert auf Smartphone & Desktop",
+          "Anrufen, schreiben oder einen Termin anfragen"
+        ],
+        "links": [
+          {
+            "label": "Digitale Karte ansehen",
+            "action": "goto",
+            "target": "karte"
+          }
+        ],
+        "image": {
+          "file": "bsp-one-page-website.webp",
+          "w": 1470,
+          "h": 998,
+          "alt": "Konzeptbeispiel: One-Page-Website einer Kfz-Werkstatt auf Desktop und Smartphone"
+        }
+      }
+    ],
+    "label": "Beispiele"
+  },
+  "leistungen": {
+    "headline": "Die passende Lösung für Ihren Betrieb.",
+    "refresh": {
+      "label": "REFRESH",
+      "headline": "Ihr Online-Auftritt. Frisch und klar.",
+      "features": [
+        "Google-Profil optimieren",
+        "Neue Fotos & Kurzvideos",
+        "Digitale Speisekarte, Preisliste oder Leistungskatalog",
+        "Direkte Kontaktwege per WhatsApp"
+      ],
+      "cta": "REFRESH anfragen"
+    },
+    "digital": {
+      "label": "DIGITAL",
+      "badge": "Mit One-Page-Website",
+      "headline": "Alles aus REFRESH.",
+      "features": [
+        "Moderne One-Page-Website",
+        "Menü, Preise oder Leistungen direkt integriert",
+        "Übersichtliches Design für Smartphone & Desktop"
+      ],
+      "cta": "DIGITAL anfragen"
+    },
+    "care": {
+      "label": "CARE",
+      "headline": "Damit Ihr Auftritt aktuell bleibt.",
+      "description": "Aktuelle Informationen, funktionierende Links und kleine Anpassungen — im vereinbarten Umfang.",
+      "supporting": "Optional nach Ihrem Projekt.",
+      "cta": "Betreuung besprechen"
+    },
+    "enquiry": {
+      "headline": "Sie brauchen eine individuelle Lösung?",
+      "description": "Wir stimmen die Leistungen auf Ihren Betrieb ab.",
+      "cta": "Individuell anfragen",
+      "href": "#kontakt"
+    },
+    "note": "Umfang und Kosten klären wir vor dem Start.",
+    "tax_note": "Alle Preise [[UMSATZSTEUERHINWEIS]].",
+    "_tax_note": "Vor Veroeffentlichung ersetzen, z. B. 'zzgl. 19 % MwSt.' (Regelbesteuerung) oder '– gemäß § 19 UStG wird keine Umsatzsteuer berechnet.' (Kleinunternehmer)."
+  },
+  "process": {
+    "headline_lines": [
+      "Sie führen Ihren Betrieb.",
+      "Wir kümmern uns um die Umsetzung."
+    ],
+    "steps": [
+      {
+        "num": "01",
+        "title": "Kennenlernen",
+        "body": "Wir schauen auf Ihren Online-Auftritt und besprechen, was Sie verbessern möchten."
+      },
+      {
+        "num": "02",
+        "title": "Abstimmen",
+        "body": "Sie erhalten ein klares Angebot mit Leistungen, Kosten und Zeitplan."
+      },
+      {
+        "num": "03",
+        "title": "Umsetzen",
+        "body": "Wir erstellen die Inhalte. Sie geben sie vor der Veröffentlichung frei."
+      },
+      {
+        "num": "04",
+        "title": "Übergeben",
+        "body": "Sie erhalten die Ergebnisse und eine kurze Einführung. Ihre Konten bleiben bei Ihnen."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FRAGEN & ANTWORTEN",
+    "headline": "Gut zu wissen, bevor wir starten.",
+    "items": [
+      {
+        "q": "Brauche ich eine neue Website?",
+        "a": "Nicht unbedingt. Wir prüfen zuerst, ob gezielte Verbesserungen Ihres bestehenden Auftritts ausreichen. Eine neue Website empfehlen wir nur, wenn sie zu Ihrer Situation passt."
+      },
+      {
+        "q": "Sind Fotos und Kurzvideos enthalten?",
+        "a": "Ja. REFRESH und DIGITAL umfassen 15–20 bearbeitete Fotos sowie kurze Videoclips von jeweils 15 Sekunden. Motive, Aufnahmeumfang und Anzahl der Clips werden im Angebot festgehalten."
+      },
+      {
+        "q": "Kann ich nur eine digitale Speisekarte oder Preisliste bestellen?",
+        "a": "Ja. Eine digitale Menü-, Preis- oder Servicekarte kann als eigenständige Lösung erstellt werden. Bei DIGITAL wird sie direkt in den One-Page-Auftritt integriert."
+      },
+      {
+        "q": "Ist ein WhatsApp-Bot enthalten?",
+        "a": "Nicht automatisch. Ein WhatsApp-Bot ist eine optionale Ergänzung. Wir klären zuerst, ob er für Ihren Betrieb sinnvoll ist, und weisen Einrichtung sowie laufende Kosten im Angebot aus."
+      },
+      {
+        "q": "Welche zusätzlichen Kosten können entstehen?",
+        "a": "Je nach Lösung können Kosten für Domain, Hosting, Lizenzen oder automatisierte Dienste entstehen. Auch zusätzliche Leistungen außerhalb des Paketumfangs werden vor Ihrer Beauftragung benannt."
+      },
+      {
+        "q": "Wie lange dauert die Umsetzung?",
+        "a": "Das hängt vom Umfang, den vorhandenen Inhalten, dem Aufnahmetermin und den benötigten Freigaben ab. Sie erhalten vor Projektstart einen abgestimmten Zeitplan."
+      },
+      {
+        "q": "Wem gehören Google-Profil, Website und Domain?",
+        "a": "Ihre zentralen Konten und Zugänge bleiben bei Ihnen. NAHLIO erhält die benötigten Zugriffsrechte. Die Übergabe, Nutzungsrechte und weitere Nutzung der erstellten Inhalte werden im Angebot beziehungsweise Vertrag festgehalten."
+      },
+      {
+        "q": "Ist CARE verpflichtend?",
+        "a": "Nein. CARE ist optional. Sie können Ihren Auftritt nach der Übergabe selbst pflegen oder die vereinbarte Unterstützung nutzen."
+      }
+    ]
+  },
+  "kurzcheck": {
+    "headline": "Machen wir mehr aus Ihrem Online-Auftritt.",
+    "text": "In einem persönlichen Gespräch klären wir, welche Verbesserungen zu Ihrem Betrieb passen.",
+    "form": {
+      "endpoint": "[[FORMULAR-ENDPUNKT]]",
+      "_endpoint_hinweis": "Ziel-URL des Formular-Handlers eintragen. Solange der Platzhalter steht, sendet das Formular nichts und weist sichtbar darauf hin.",
+      "name": {
+        "label": "Ihr Name",
+        "name": "name",
+        "autocomplete": "name"
+      },
+      "betrieb": {
+        "label": "Betrieb / Unternehmen",
+        "name": "betrieb",
+        "autocomplete": "organization"
+      },
+      "contact_hint": "E-Mail oder WhatsApp-Nummer — eine Angabe genügt.",
+      "email": {
+        "label": "E-Mail-Adresse",
+        "name": "email",
+        "autocomplete": "email"
+      },
+      "whatsapp": {
+        "label": "WhatsApp-Nummer",
+        "name": "whatsapp",
+        "autocomplete": "tel"
+      },
+      "consent": "Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung dieser Anfrage gespeichert und verwendet werden.",
+      "submit": "Anfrage senden",
+      "required_note": "Pflichtfelder. Zusätzlich ist eine Kontaktangabe erforderlich.",
+      "privacy_before": "Informationen zur Verarbeitung Ihrer Angaben finden Sie in unserer ",
+      "privacy_link": "Datenschutzerklärung",
+      "privacy_after": ".",
+      "privacy_href": "datenschutz.html",
+      "success": "Vielen Dank! Wir melden uns, um die nächsten Schritte mit Ihnen zu besprechen.",
+      "error": "Das hat nicht funktioniert. Bitte versuchen Sie es erneut oder nutzen Sie die direkten Kontaktwege.",
+      "unavailable": "Das Formular ist noch nicht mit einem Empfänger verbunden. Bitte nutzen Sie so lange die direkten Kontaktwege.",
+      "errors": {
+        "name": "Bitte geben Sie Ihren Namen an.",
+        "betrieb": "Bitte geben Sie den Namen Ihres Betriebs an.",
+        "contact": "Bitte geben Sie eine E-Mail-Adresse oder WhatsApp-Nummer an.",
+        "email": "Bitte prüfen Sie Ihre E-Mail-Adresse.",
+        "whatsapp": "Bitte prüfen Sie Ihre WhatsApp-Nummer.",
+        "consent": "Bitte bestätigen Sie diesen Punkt.",
+        "summary": "Bitte prüfen Sie die markierten Felder.",
+        "sending": "Anfrage wird gesendet …"
+      }
+    },
+    "direct": {
+      "wa": "Per WhatsApp schreiben",
+      "mail": "E-Mail schreiben"
+    }
+  },
+  "footer": {
+    "title": "NAHLIO",
+    "claim": "Digitale Präsenz für lokale Betriebe in Dorsten und Umgebung.",
+    "claim2": "Google-Profil, Bilder, Website und Kontakt — klar verbunden.",
+    "links": [
+      {
+        "label": "Beispiele",
+        "href": "#beispiele"
+      },
+      {
+        "label": "Leistungen & Preise",
+        "href": "#preise"
+      },
+      {
+        "label": "Ablauf",
+        "href": "#ablauf"
+      },
+      {
+        "label": "FAQ",
+        "href": "#fragen"
+      },
+      {
+        "label": "Kontakt",
+        "href": "#kontakt"
+      }
+    ],
+    "legal_links": [
+      {
+        "label": "Impressum",
+        "href": "/impressum.html"
+      },
+      {
+        "label": "Datenschutzerklärung",
+        "href": "/datenschutz.html"
+      }
+    ],
+    "nav_label": "Fußzeilen-Navigation",
+    "copyright": "NAHLIO"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "_hinweis": "Zwei Pakete plus CARE. Texte wortgetreu aus der Word-Datei. Preise 19.10.2026 vom Nutzer vorgegeben (REFRESH ab 499 €, DIGITAL ab 999 €, CARE 75 € im Monat) und auf der Seite sichtbar.",
+  "items": [
+    {
+      "id": "refresh",
+      "name": "REFRESH",
+      "tagline": "Google, Bilder und digitale Karte — ohne neue Unternehmenswebsite.",
+      "price_prefix": "ab",
+      "price": "499 €",
+      "price_note": "einmalig",
+      "description": "Für Betriebe, die ihren Online-Auftritt aktualisieren, ihr Angebot klarer zeigen und Kontaktwege vereinfachen möchten.",
+      "includes": "Enthalten:",
+      "features": [
+        "Google-Unternehmensprofil optimieren.",
+        "Leistungen, Informationen und Öffnungszeiten strukturieren.",
+        "Frischen visuellen Content vor Ort erstellen: 15–20 bearbeitete Fotos und Kurzclips von jeweils 15 Sekunden.",
+        "Eine digitale Speisekarte, Preisliste oder einen Leistungskatalog erstellen.",
+        "Passende Kontakt- und Bewertungswege verbessern.",
+        "QR-Codes für wichtige Informationen und Aktionen einrichten."
+      ],
+      "cta": {
+        "label": "REFRESH anfragen",
+        "href": "#kontakt"
+      }
+    },
+    {
+      "id": "digital",
+      "name": "DIGITAL",
+      "tagline": "Alles aus REFRESH — ergänzt um eine One-Page-Website.",
+      "price_prefix": "ab",
+      "price": "999 €",
+      "price_note": "einmalig",
+      "description": "Für Betriebe, die zusätzlich eine Website benötigen, auf der Kunden Angebot, Bilder und Kontaktmöglichkeiten zusammen finden.",
+      "includes": "Enthalten ist der Umfang aus REFRESH, ergänzt durch:",
+      "features": [
+        "Eine moderne One-Page-Website.",
+        "Eine direkt integrierte digitale Menü-, Preis- oder Servicekarte.",
+        "Eine übersichtliche mobile Darstellung.",
+        "Passende Anruf-, WhatsApp-, Anfrage- oder Buchungswege.",
+        "Erfassung vereinbarter Website-Aktionen, beispielsweise Klicks auf Kontaktbuttons.",
+        "Eine verständliche Übergabe der fertigen Ergebnisse."
+      ],
+      "cta": {
+        "label": "DIGITAL anfragen",
+        "href": "#kontakt"
+      }
+    }
+  ],
+  "care": {
+    "id": "care",
+    "eyebrow": "Optional nach Ihrem Projekt: CARE",
+    "name": "CARE",
+    "price": "75 €",
+    "price_note": "/ Monat",
+    "description": "Damit Ihr Auftritt aktuell bleibt, wenn sich Öffnungszeiten, Angebote oder Inhalte ändern.",
+    "features": [
+      "Kleine Aktualisierungen im vereinbarten Umfang.",
+      "Prüfung wichtiger Informationen, Links und Kontaktwege.",
+      "Ein kurzer Überblick über durchgeführte Änderungen."
+    ],
+    "note": "CARE ist keine unbegrenzte Betreuung. Umfang, Bearbeitungszeiten und Vertragsbedingungen werden vor Beginn festgelegt.",
+    "cta": {
+      "label": "Betreuung besprechen",
+      "href": "#kontakt"
+    }
+  }
+}
