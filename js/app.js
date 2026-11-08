@@ -1981,7 +1981,7 @@ var NAHLIO = (function () {
    den Feldern (mit E-Mail und WhatsApp), der Knopf bleibt gesperrt und es wird nichts gesendet.
    Paketwahl: Radios "paket" (refresh | digital | unsure) und Kaestchen "care" sind der einzige
    Zustand; Paket-Knoepfe und Adresse (?paket=, ?care=1) waehlen aus, der Besucher kann jederzeit
-   aendern. Daraus folgen "Ihre Anfrage zu ..." und der WhatsApp-Entwurf.
+   aendern. Daraus folgt "Ihre Anfrage zu ...". WhatsApp-Knoepfe haben einen festen Link (Hallo Artem).
    ========================================================================== */
 (function () {
   "use strict";
@@ -2068,17 +2068,17 @@ var NAHLIO = (function () {
      Kaestchen "care". Ein kleiner, fester Kreislauf:
        readUrl()  Adresse -> Zustand (nur erlaubte Werte, sonst "unsure" / ohne CARE)
        apply()    Zustand -> Formularelemente
-       render()   Formularelemente -> "Ihre Anfrage zu ...", WhatsApp-Entwurf (alle Links mit data-wa-base)
+       render()   Formularelemente -> "Ihre Anfrage zu ..."
+                  (WhatsApp: Wunsch 08.11. alle Knoepfe mit demselben festen Link wa.me/491603804949?text=Hallo%20Artem
+                  direkt im HTML, unabhaengig von Paket und CARE; hier wird nichts mehr daran geaendert)
        writeUrl() Formularelemente -> Adresse (replace bei Aenderungen im Formular, push bei Paket-Knoepfen)
      Zurueck/Vor (popstate) liest die Adresse, schreibt aber keinen neuen Verlaufseintrag. Andere Eingaben
      (Name, Nachricht ...) bleiben immer unberuehrt. */
   var radios = form.querySelectorAll("input[type=radio][name=paket]");
   var care = form.querySelector("[data-form-care]");
   var ctxLine = form.querySelector("[data-form-context]");
-  var waLinks = Array.prototype.slice.call(document.querySelectorAll("a[data-wa-base]"));
-  var names = {}, texts = {};
+  var names = {};
   try { names = JSON.parse(form.getAttribute("data-packages") || "{}"); } catch (e) { names = {}; }
-  try { texts = JSON.parse((waLinks[0] && waLinks[0].getAttribute("data-wa-texts")) || "{}"); } catch (e) { texts = {}; }
   /* Erlaubt sind nur die vereinbarten Werte (data-packages), nicht, was gerade im DOM steht. */
   function allowed(v) { return typeof v === "string" && Object.prototype.hasOwnProperty.call(names, v); }
   function current() {
@@ -2099,9 +2099,6 @@ var NAHLIO = (function () {
   function render() {
     var st = stateNow(), named = st.pkg !== "unsure" && names[st.pkg];
     if (ctxLine) ctxLine.textContent = named ? (ctxLine.getAttribute("data-label") || "") + " " + names[st.pkg] : "";
-    var text = named ? (st.care ? texts.paket_care : texts.paket) : (st.care ? texts.care : texts.base);
-    text = (text || texts.base || "").replace("{paket}", named || "");
-    waLinks.forEach(function (a) { a.href = a.getAttribute("data-wa-base") + (text ? "?text=" + encodeURIComponent(text) : ""); });
   }
   function urlFor(st, hash) {
     var u = new URL(window.location.href);
