@@ -14,15 +14,6 @@
     linear-gradient(180deg, var(--white) 0%, var(--soft) 45%, color-mix(in srgb, var(--mist) 75%, var(--white)) 100%);
 }
 
-/* Leistungen (dunkel): tuerkiser Schein in der Mitte, tiefe Raender */
-.lv {
-  background:
-    radial-gradient(62% 52% at 50% 58%, color-mix(in srgb, var(--brand) 13%, transparent), transparent 72%),
-    radial-gradient(42% 40% at 6% 6%, color-mix(in srgb, var(--graphite) 95%, transparent), transparent 70%),
-    radial-gradient(140% 110% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.38) 100%),
-    var(--ink);
-}
-
 /* Preise (Mist): Licht von oben, Tuerkis unten rechts, weicher Rand */
 .plans::before {
   background:
