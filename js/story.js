@@ -1,22 +1,34 @@
 /* ==========================================================================
-   NAHLIO — Scroll-Geschichten (Wunsch 05.11.), Stil in css/story.css
+   NAHLIO — Scroll-Geschichten, Stil in css/story.css
    1. Kundenweg (.ks): Der Scrollweg der Sektion ist in 11 Stufen geteilt. Jede Stufe setzt eine Klasse
-      (.is-s0 ... .is-s10, aufsteigend). Die Bewegung selbst laeuft mit Zeit (CSS-Uebergaenge), damit sie
-      ruhig aussieht; zurueckscrollen nimmt sie wieder weg. Getippt werden die Suche (ab Stufe 1) und die
-      Bewertung (ab Stufe 8).
-   2. Fragen (.bq): Der Titel loest sich mit dem Scrollen auf (--t von 0 bis 1, direkt an den Scrollweg
-      gekoppelt), danach steht jeweils eine der drei Fragen vorn im Kreis.
-   Ohne Skript stehen beide Sektionen als normale Inhalte da (siehe story.css).
+      (.is-s0 ... .is-s10, aufsteigend). Die Bewegung selbst laeuft mit Zeit (CSS-Uebergaenge). Getippt werden
+      die Suche (ab Stufe 1) und die Bewertung (ab Stufe 9).
+      Wunsch 08.11.: Wer einmal ganz durch ist, muss es nicht noch einmal ansehen. Ist die Sektion oben aus dem
+      Bild, faltet sie sich zu einer ruhigen Zusammenfassung (.is-done: alle Schritte, Handy im Endzustand,
+      kein Festhalten); die Scrollposition wird dabei so verschoben, dass auf dem Bildschirm nichts springt.
+   2. Scroll-Hinweis (.sg, Wunsch 08.11.): rechts eine Maus mit laufendem Rad (am Handy ein Wisch-Zeichen) und
+      eine kleine Leiste mit dem Fortschritt, solange die Geschichte steht, damit niemand denkt, die Seite haenge.
+      Auch ganz oben im Hero, wenn noch nicht gescrollt wurde.
+   3. Uebergang (.ue, Wunsch 08.11.): "Ihr Online-Auftritt als Aushaengeschild ..." steht elegant in der Mitte.
+      Beim Weiterscrollen loest er sich auf und die Flaeche wird dunkel: daraus kommen die Leistungen.
+      (--t direkt am Scrollweg, kein Zeitablauf.)
+   Ohne Skript stehen alle Sektionen als normale Inhalte da (siehe story.css).
    ========================================================================== */
 (function () {
   "use strict";
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var coarse = window.matchMedia("(pointer: coarse)").matches;
   var each = function (list, fn) { Array.prototype.forEach.call(list, fn); };
   var jobs = [];
   var queued = false;
   function frame() { queued = false; jobs.forEach(function (fn) { fn(); }); }
   function request() { if (!queued) { queued = true; window.requestAnimationFrame(frame); } }
+  function jumpBy(dy) {
+    if (!dy) return;
+    try { window.scrollTo({ top: window.pageYOffset + dy, left: 0, behavior: "instant" }); }
+    catch (e) { window.scrollTo(0, window.pageYOffset + dy); }
+  }
 
   /* Fortschritt innerhalb einer hohen Sektion mit stehender Buehne: 0 = Buehne erreicht den oberen Rand,
      1 = Buehne loest sich wieder. */
@@ -25,7 +37,37 @@
     return { y: -r.top, span: span > 1 ? span : 1 };
   }
 
+  /* --- Scroll-Hinweis rechts ------------------------------------------------------------------- */
+  var guide = null;
+  function makeGuide() {
+    guide = document.createElement("div");
+    guide.className = "sg" + (coarse ? " sg--touch" : "");
+    guide.setAttribute("aria-hidden", "true");
+    guide.innerHTML = (coarse
+      ? '<span class="sg__swipe"><svg viewBox="0 0 24 24"><path d="M12 19V5m-5.5 5.5L12 5l5.5 5.5"/></svg></span>'
+      : '<span class="sg__mouse"><i></i></span>') +
+      '<span class="sg__txt">' + (coarse ? "Wischen" : "Scrollen") + '</span><span class="sg__bar"><i></i></span>';
+    document.body.appendChild(guide);
+  }
+  function showGuide(on, p) {
+    if (!guide) return;
+    guide.classList.toggle("is-on", !!on);
+    guide.classList.toggle("has-progress", p !== undefined);
+    if (p !== undefined) guide.style.setProperty("--sgp", p.toFixed(3));
+  }
+  if (!reduce) makeGuide();
+
+  /* Im Hero: nach kurzer Zeit ohne Scrollen zeigt der Hinweis, dass es nach unten weitergeht */
+  var heroHint = 0, scrolledOnce = window.pageYOffset > 40;
+  if (guide && !scrolledOnce) heroHint = window.setTimeout(function () { if (!scrolledOnce) showGuide(true); }, 2400);
+  window.addEventListener("scroll", function () {
+    if (scrolledOnce || window.pageYOffset < 40) return;
+    scrolledOnce = true;
+    window.clearTimeout(heroHint);
+  }, { passive: true });
+
   /* --- 1. Kundenweg --------------------------------------------------------------------------- */
+  var finishKs = null;
   var ks = document.querySelector("[data-ks]");
   if (ks) (function () {
     var track = ks.querySelector(".ks__track");
@@ -37,7 +79,7 @@
       typers.push({ el: el, wrap: el.parentNode, text: el.getAttribute("data-ks-type"), timer: 0 });
     });
     var TYPE_AT = [1, 9];                               /* Suche ab Stufe 1, Bewertung ab Stufe 9 */
-    var cur = -1;
+    var cur = -1, done = false, idle = 0, pauseHint = 0;
 
     function type(t, on, j) {
       window.clearTimeout(t.timer);
@@ -48,7 +90,7 @@
         return;
       }
       t.wrap.classList.add("has-text");
-      if (reduce) { t.el.textContent = t.text; if (j === 1) ks.classList.add("is-review-typed"); return; }
+      if (reduce || done) { t.el.textContent = t.text; if (j === 1) ks.classList.add("is-review-typed"); return; }
       var i = 0, speed = t.text.length > 40 ? 16 : 52;
       (function next() {
         i++;
@@ -77,106 +119,93 @@
       });
     }
 
+    /* Zusammenfalten, wenn die Geschichte einmal durch und oben aus dem Bild ist. Gemessen wird an der
+       folgenden Sektion: sie bleibt auf dem Bildschirm genau dort, wo sie war. */
+    finishKs = function () {
+      if (done) return;
+      var anchor = document.querySelector("[data-ue]") || ks.parentNode.nextElementSibling;
+      var before = anchor ? anchor.getBoundingClientRect().top : 0;
+      done = true;
+      typers.forEach(function (t) { window.clearTimeout(t.timer); });
+      window.clearTimeout(pauseHint);
+      setState(N - 1);
+      typers.forEach(function (t, j) { type(t, true, j); });
+      ks.classList.add("is-done");
+      each(steps, function (li) { li.setAttribute("aria-current", "false"); });
+      var after = anchor ? anchor.getBoundingClientRect().top : 0;
+      jumpBy(after - before);
+      showGuide(false);
+      if (window.NAHLIO && NAHLIO.recalc) NAHLIO.recalc();
+      maskLine();
+      request();
+    };
+
     function update() {
-      var p = progress(track), len = p.span / (N - 1);
+      if (done) return;
+      var p = progress(track), len = p.span / (N - 1), vh = window.innerHeight;
       var k = Math.floor((p.y + len * 0.5) / len);
       setState(k < 0 ? 0 : k > N - 1 ? N - 1 : k);
+      /* Hinweis, solange die Geschichte steht (und kurz davor) */
+      var pinned = p.y > -vh * 0.15 && p.y < p.span - vh * 0.05;
+      if (guide) {
+        var prog = Math.max(0, Math.min(1, p.y / p.span));
+        if (pinned) { scrolledOnce = true; window.clearTimeout(heroHint); }
+        window.clearTimeout(pauseHint);
+        /* Am Handy liegt der Hinweis ueber dem Inhalt: er erscheint nur, wenn jemand mitten in der
+           Geschichte innehaelt (genau dann koennte man meinen, die Seite haenge). */
+        if (pinned && coarse) {
+          showGuide(false, prog);
+          pauseHint = window.setTimeout(function () { showGuide(true, prog); }, 1100);
+        } else if (pinned) showGuide(true, prog);
+        else if (scrolledOnce) showGuide(false);
+      }
+      /* ganz durch und weg: nach einer kurzen Scrollpause zusammenfalten (keine laufende Anker-Fahrt stoeren) */
+      window.clearTimeout(idle);
+      if (p.y > p.span + vh * 0.6) idle = window.setTimeout(function () {
+        var q = progress(track);
+        if (q.y > q.span + window.innerHeight * 0.6) finishKs();
+      }, 180);
     }
 
     ks.classList.add("is-live");
     jobs.push(update);
   })();
 
-  /* --- 2. Fragen in Quadraten ----------------------------------------------------------------- */
-  var bq = document.querySelector("[data-bq]");
-  if (bq) (function () {
-    var track = bq.querySelector(".bq__track");
-    var cards = bq.querySelectorAll(".bq__card"), dots = bq.querySelectorAll(".bq__count i");
-    var sqs = Array.prototype.map.call(cards, function (c) { return c.querySelector(".bq__sq"); });
-    var lastT = -1, front = -1, orbit = null, lastK = [];
-    var TITLE = 0.22;                                   /* Anteil des Scrollwegs, in dem sich der Titel aufloest */
-    var SHRINK = 0.34;                                  /* so viel kleiner wird ein Quadrat bis zum Wechsel */
-
-    function setK(i, k) {
-      if (Math.abs((lastK[i] || 1) - k) < 0.001 && lastK[i] !== undefined) return;
-      lastK[i] = k;
-      sqs[i].style.setProperty("--k", k.toFixed(4));
-    }
-    function setFront(f, replay) {
-      if (f === front && !replay) return;
-      var changed = f !== front;
-      front = f;
-      bq.setAttribute("data-front", String(f));
-      each(cards, function (c, i) {
-        c.classList.toggle("is-front", i === f);
-        c.classList.toggle("is-past", i < f);
-        c.classList.toggle("is-next", i > f);
-        c.setAttribute("aria-hidden", i === f ? "false" : "true");
-        var a = c.querySelector("a");
-        if (a) a.tabIndex = i === f ? 0 : -1;
-        if (i > f) setK(i, 1);
-        if (i < f) setK(i, 1 - SHRINK);
-      });
-      each(dots, function (d, i) { d.classList.toggle("is-on", i === f); });
-      /* die alte Szene im Quadrat spielt jedes Mal neu, wenn es nach vorn kommt */
-      if ((changed || replay) && orbit && window.NAHLIO && NAHLIO.qaShow) NAHLIO.qaShow(cards[f]);
-    }
-
-    /* Gang: flache Flaechen in Tiefe d (0 = vorn, so gross wie die Buehne) bis FR (hinten, kleiner als das
-       Quadrat). Vorn haben sie die Form des Fensters, nach hinten werden sie quadratisch: so entsteht ein Gang,
-       an dessen Ende das Quadrat steht. Beim Scrollen kommen sie naeher und beginnen hinten von neuem; vorn und
-       hinten blenden sie aus, damit nichts springt. Nur transform und opacity. */
-    var frames = bq.querySelectorAll(".bq__tunnel i"), FR = frames.length, lastPhase = -1;
-    var stage = bq.querySelector(".bq__stage"), dims = null;
-    function measure() {
-      var S = frames.length ? frames[0].offsetWidth : 0;
-      dims = S ? { S: S, W: stage.clientWidth * 1.08, H: stage.clientHeight * 1.12 } : null;
-      lastPhase = -1;
-    }
-    function tunnel(prog) {
-      if (!dims) measure();
-      if (!dims) return;
-      var ph = reduce ? 0.5 : (prog * 3.2) % 1;
-      if (Math.abs(ph - lastPhase) < 0.0015) return;
-      lastPhase = ph;
-      var far = dims.S * 0.55;
-      each(frames, function (fr, i) {
-        var d = i + 1 - ph, f = Math.pow(0.6, d);
-        var w = far + (dims.W - far) * f, h = far + (dims.H - far) * f;
-        var o = Math.min(1, d / 0.9) * Math.max(0, 1 - d / FR) * 0.075;   /* flache Tonstufen, innen dunkler */
-        fr.style.transform = "scale(" + (w / dims.S).toFixed(4) + "," + (h / dims.S).toFixed(4) + ")";
-        fr.style.opacity = o.toFixed(3);
-      });
-    }
-    window.addEventListener("resize", measure);
-
+  /* --- 3. Uebergang: Ueberschrift in der Mitte, loest sich auf, die Flaeche wird dunkel ----------- */
+  var ue = document.querySelector("[data-ue]");
+  if (ue) (function () {
+    var track = ue.querySelector(".ue__track"), lastT = -1;
+    function smooth(x) { x = x < 0 ? 0 : x > 1 ? 1 : x; return x * x * (3 - 2 * x); }
     function update() {
       var p = progress(track);
-      tunnel(Math.max(-0.2, Math.min(1.2, p.y / p.span)));
-      var t = (p.y - p.span * 0.03) / (p.span * TITLE);
+      var t = (p.y - p.span * 0.12) / (p.span * 0.7);
       t = t < 0 ? 0 : t > 1 ? 1 : t;
-      if (Math.abs(t - lastT) > 0.002) { lastT = t; bq.style.setProperty("--t", t.toFixed(3)); }
-      var on = t > 0.62, turnedOn = on && orbit === false;
-      if (on !== orbit) { orbit = on; bq.classList.toggle("is-orbit", on); }
-      var seg = p.span * (1 - TITLE - 0.03) / 3;
-      var pos = (p.y - p.span * (TITLE + 0.03)) / seg;
-      var f = Math.floor(pos);
-      f = !on || f < 0 ? 0 : f > 2 ? 2 : f;
-      setFront(f, turnedOn);
-      /* kleiner werden: kurz voll stehen lassen, dann bis zum Wechsel schrumpfen */
-      var u = on ? (pos - f - 0.12) / 0.88 : 0;
-      u = u < 0 ? 0 : u > 1 ? 1 : u;
-      setK(f, 1 - SHRINK * (u * u * (3 - 2 * u)));
+      if (Math.abs(t - lastT) < 0.002) return;
+      lastT = t;
+      ue.style.setProperty("--t", t.toFixed(3));
+      var d = smooth((t - 0.3) / 0.7);
+      ue.style.setProperty("--d", d.toFixed(3));
+      /* ist die Flaeche ueberwiegend dunkel, wird auch die Navigation dunkel */
+      var theme = d > 0.5 ? "dark" : "light";
+      if (ue.getAttribute("data-nav-theme") !== theme) {
+        ue.setAttribute("data-nav-theme", theme);
+        window.dispatchEvent(new Event("nahlio:navtheme"));
+      }
     }
-
-    bq.classList.add("is-live");
+    ue.classList.add("is-live");
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es) {
+        if (es.some(function (e) { return e.isIntersecting; })) { ue.classList.add("is-in"); io.disconnect(); }
+      }, { threshold: 0.35 });
+      io.observe(ue.querySelector(".ue__stage"));
+    } else ue.classList.add("is-in");
     jobs.push(update);
   })();
 
-  /* --- Seitenlinie: In den beiden stehenden Sektionen laeuft sie nicht hinter Text und Handy durch. Sie blendet
-     kurz davor weich aus und danach wieder ein (Maske auf der Linienebene, in Seitenkoordinaten). ------------ */
+  /* --- Seitenlinie: In den stehenden Sektionen laeuft sie nicht hinter Text und Bildern durch. Sie blendet
+     kurz davor weich aus und danach wieder ein (Maske auf der Linienebene, in Seitenkoordinaten). ---------- */
   var line = document.querySelector("[data-pageline]");
-  var hideIn = [document.querySelector(".ks__track"), document.querySelector(".bq__track")].filter(Boolean);
+  var hideIn = [document.querySelector(".ks__track"), document.querySelector(".ue__track")].filter(Boolean);
   var lastMask = "";
   function maskLine() {
     if (!line || !hideIn.length) return;

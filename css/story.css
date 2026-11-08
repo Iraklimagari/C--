@@ -364,100 +364,80 @@ html:not(.js) .ks__bar { display: none; }
   .ks *, .ks *::before, .ks *::after { transition-duration: 1ms !important; transition-delay: 0ms !important; animation-duration: 1ms !important; animation-delay: 0ms !important; }
 }
 
-/* ---------- 2. Fragen in Quadraten (Wunsch 05.11., zweite Fassung) ---------------------------------
-   Erst der Titel gross in der Mitte, er loest sich beim Scrollen auf. Dann je Frage ein grosses Quadrat mit der
-   alten Szene (Laden mit Tuer, Preisschild, getippte Nachricht; journey.css, 35-qa.js spielt sie bei jedem
-   Nach-vorn-Kommen neu ab). Beim Weiterscrollen wird das Quadrat kleiner (direkt am Scrollweg, --k), dann
-   wechselt es: das alte tritt nach oben zurueck, das naechste kommt von unten. */
-.bq { padding-block: 0; --t: 0; }
-.bq__track { position: relative; height: calc(100svh + 330svh); }
-.bq__stage { position: sticky; top: 0; height: 100svh; overflow: clip; }
-.bq__title {
-  position: absolute; z-index: 4; left: 50%; top: calc(50% + var(--nav-h) / 2); width: min(94vw, 12.5ch);
-  margin: 0; text-align: center;
-  font-family: var(--font-serif, Georgia, serif); font-weight: 440;
-  font-size: clamp(46px, min(8.8vw, 14svh), 168px); line-height: 0.98; letter-spacing: -0.032em; color: var(--ink); text-wrap: balance;
-  transform: translate(-50%, -50%) translateY(calc(var(--t) * -7svh)) scale(calc(1 + var(--t) * 0.16));
-  opacity: calc(1 - var(--t) * 1.3);
-  filter: blur(calc(var(--t) * 14px));
-  will-change: transform, opacity, filter;
-  pointer-events: none;
-}
-.bq.is-orbit .bq__title { visibility: hidden; }
-
-/* Raum (Wunsch 05.11., zweite Fassung): kein Blau, keine Linien, keine Verlaeufe. Die Tiefe kommt aus flachen,
-   ineinander liegenden Quadraten in Tonstufen (Tinte mit wenig Deckkraft, eckig): je weiter innen, desto dunkler,
-   wie ein Blick in einen Gang. Beim Scrollen kommen sie auf einen zu (story.js: transform und opacity je Quadrat). */
-.bq__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--white); }
-.bq__tunnel { position: absolute; left: 50%; top: calc(50% + var(--nav-h) / 2); width: 0; height: 0; }
-.bq__tunnel i {
-  --S: min(62svh, 620px, 88vw);
-  position: absolute; left: calc(var(--S) / -2); top: calc(var(--S) / -2); width: var(--S); height: var(--S);
-  background: var(--ink); opacity: 0; will-change: transform, opacity;
-}
-.bq__title, .bq__deck, .bq__count { z-index: 2; }
-.bq__title { z-index: 4; }
-
-.bq__deck { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
-.bq .bq__card {
-  --S: min(62svh, 620px, 88vw);
-  position: absolute; left: 50%; top: calc(50% + var(--nav-h) / 2); width: var(--S); height: var(--S);
-  margin: calc(var(--S) / -2) 0 0 calc(var(--S) / -2); padding: 0; display: block; border: 0;
-  transition: transform 820ms var(--ks-move), opacity 520ms ease;
-}
-.bq .qa + .qa::before { content: none; }
-.bq.is-live .bq__card { opacity: 0; transform: translateY(16svh) scale(0.92); z-index: 2; }
-.bq.is-live.is-orbit .bq__card.is-front { opacity: 1; transform: none; z-index: 3; }
-.bq.is-live.is-orbit .bq__card.is-past { opacity: 0; transform: translateY(-12svh) scale(0.84); z-index: 1; }
-.bq__sq {
-  position: relative; width: 100%; height: 100%;
-  display: grid; place-content: center; justify-items: center; text-align: center; padding: 10%;
-  background: var(--ink); color: var(--white);
-  transform: scale(var(--k, 1));
-}
-.bq__scene { display: grid; justify-items: center; gap: clamp(18px, 3svh, 32px); min-width: 0; }
-
-/* Die alten Szenen, groesser fuer das Quadrat, hell auf Tinte. Preisschild und Nachrichtenblase behalten ihre
-   eigenen hellen Flaechen (dunkle Schrift darauf). */
-.bq .qa__q { justify-content: center; min-height: 0; gap: 18px; }
-.bq .qa__title, .bq .qa__tag-front { font-size: clamp(28px, 2.4svh + 13px, 40px); }
-.bq .qa--angebot .qa__title { color: var(--white); }
-.bq .qa__a { justify-items: center; text-align: center; font-size: clamp(17px, 0.9svh + 9px, 20px); }
-.bq .qa__body { max-width: 26ch; margin-inline: auto; color: var(--mist-70); font-weight: 400; }
-.bq .qa__link { justify-self: center; font-size: 16px; color: var(--brand); }
-.bq .qa__link:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 0; }
-.bq .sh-ground { stroke: var(--brand); }
-.bq .qa__msg { box-shadow: none; }
-.bq .qa__shop { width: 64px; }
-.bq .qa-anim .qa--angebot .qa__shop { width: 150px; }
-.bq .qa-anim .qa--angebot.is-play .qa__shop { animation-name: bq-shrink; }
-@keyframes bq-shrink { from { width: 150px; } to { width: 64px; } }
-
-.bq__count { position: absolute; left: 50%; bottom: max(22px, 3.5svh); display: flex; gap: 8px; translate: -50% 0; opacity: 0; transition: opacity 500ms ease; }
-.bq.is-orbit .bq__count { opacity: 1; }
-.bq__count i { width: 10px; height: 10px; background: color-mix(in srgb, var(--ink) 14%, var(--white)); transition: background-color 300ms ease; }
-.bq__count i.is-on { background: var(--ink); }
-
-@media (max-width: 47.99em) {
-  .bq__track { height: calc(100svh + 290svh); }
-  .bq__title { font-size: clamp(38px, 11vw, 56px); width: 92vw; }
-  .bq .bq__card { --S: min(90vw, 62svh); }
-  .bq__sq { padding: 9%; }
-  .bq .qa__title, .bq .qa__tag-front { font-size: clamp(22px, 6.2vw, 28px); }
-  .bq .qa__a { font-size: 16px; }
-  .bq .qa__q { gap: 12px; }
-  .bq .qa__shop { width: 48px; }
-  .bq .qa-anim .qa--angebot .qa__shop { width: 104px; }
-  @keyframes bq-shrink { from { width: 104px; } to { width: 48px; } }
+/* ---------- Kundenweg einmal gesehen: ruhige Zusammenfassung (Wunsch 08.11.) ------------------------ */
+.ks.is-done .ks__track { height: auto; }
+.ks.is-done .ks__stage { position: relative; height: auto; padding-block: calc(var(--nav-h) + 48px) 72px; }
+.ks.is-done .ks__step { grid-area: auto; opacity: 1; transform: none; margin-bottom: 20px; }
+.ks.is-done .ks__step-text { font-size: clamp(16px, 0.3vw + 13.5px, 18px); }
+.ks.is-done .ks__bar { display: none; }
+.ks.is-done *, .ks.is-done *::before, .ks.is-done *::after { transition: none !important; animation: none !important; }
+@media (max-width: 63.99em) {
+  .ks.is-done .ks__in { height: auto; }
+  .ks.is-done .ks-phone { height: min(640px, 150vw); }
 }
 
-html:not(.js) .bq__track { height: auto; }
-html:not(.js) .bq__stage { position: relative; height: auto; overflow: visible; padding: 96px var(--gutter); display: grid; gap: 40px; justify-items: center; }
-html:not(.js) .bq__title { position: static; transform: none; filter: none; opacity: 1; width: auto; }
-html:not(.js) .bq__count, html:not(.js) .bq__tunnel { display: none; }
-html:not(.js) .bq__deck { position: static; display: grid; gap: 28px; justify-items: center; }
-html:not(.js) .bq .bq__card { position: relative; left: auto; top: auto; margin: 0; }
+/* ---------- Scroll-Hinweis rechts (Wunsch 08.11.) ------------------------------------------------- */
+.sg {
+  --sgp: 0;
+  position: fixed; z-index: 60; right: clamp(14px, 2vw, 32px); top: 50%;
+  display: grid; justify-items: center; gap: 10px; padding: 14px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 82%, transparent); color: var(--white);
+  opacity: 0; transform: translate(12px, -50%); pointer-events: none;
+  transition: opacity 360ms ease, transform 480ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.sg.is-on { opacity: 1; transform: translate(0, -50%); }
+.sg__mouse { position: relative; width: 22px; height: 34px; border: 2px solid currentColor; border-radius: 12px; }
+.sg__mouse i { position: absolute; left: 50%; top: 6px; width: 4px; height: 7px; margin-left: -2px; border-radius: 2px; background: var(--brand);
+               animation: sg-wheel 1.6s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+@keyframes sg-wheel { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(11px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
+.sg__swipe { display: grid; place-items: center; width: 30px; height: 30px; }
+.sg__swipe svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+                 animation: sg-swipe 1.6s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+@keyframes sg-swipe { 0% { transform: translateY(6px); opacity: 0; } 30% { opacity: 1; } 80% { transform: translateY(-6px); opacity: 0; } 100% { opacity: 0; } }
+.sg__txt { font-size: 12px; font-weight: 600; letter-spacing: 0.02em; writing-mode: vertical-rl; transform: rotate(180deg); }
+.sg__bar { display: none; position: relative; width: 4px; height: 72px; border-radius: 2px; background: color-mix(in srgb, var(--white) 22%, transparent); overflow: hidden; }
+.sg.has-progress .sg__bar { display: block; }
+.sg__bar i { position: absolute; inset: 0; background: var(--brand); transform: scaleY(var(--sgp)); transform-origin: 50% 0; }
+@media (max-width: 47.99em) { .sg { right: 10px; padding: 12px 8px; } .sg__bar { height: 56px; } }
+/* Handy: unten rechts statt in der Mitte, damit er nicht auf dem Text liegt */
+.sg--touch { top: auto; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(12px); }
+.sg--touch.is-on { transform: none; }
+@media (prefers-reduced-motion: reduce) { .sg { display: none; } }
+
+/* ---------- Uebergang: Ueberschrift in der Mitte, loest sich auf (Wunsch 08.11.) --------------------- */
+.ue { --t: 0; --d: 0; padding: 0; }
+.ue::before { display: none; }
+.ue__track { position: relative; height: 210svh; }
+.ue__stage {
+  position: sticky; top: 0; height: 100svh; overflow: clip;
+  display: grid; place-items: center; padding: var(--nav-h) var(--gutter) 0;
+  background:
+    radial-gradient(56% 52% at 50% 50%, #ffffff 0%, color-mix(in srgb, #ffffff 70%, transparent) 46%, transparent 78%),
+    radial-gradient(42% 48% at 88% 16%, color-mix(in srgb, var(--brand) 14%, transparent), transparent 72%),
+    radial-gradient(46% 52% at 8% 92%, color-mix(in srgb, var(--brand-deep) 10%, transparent), transparent 74%),
+    linear-gradient(180deg, var(--soft) 0%, var(--mist) 100%);
+}
+.ue__stage::after { content: ""; position: absolute; inset: 0; background: var(--ink); opacity: var(--d); pointer-events: none; }
+.ue__in {
+  position: relative; z-index: 1; display: grid; justify-items: center; gap: clamp(18px, 3svh, 30px); text-align: center; max-width: 60rem;
+  transform: translateY(calc(var(--t) * -6svh)) scale(calc(1 + var(--t) * 0.06));
+  opacity: calc(1 - var(--t) * 1.25); filter: blur(calc(var(--t) * 10px));
+}
+.ue .ue__title { margin: 0; max-width: 16ch; font-family: var(--font-serif); font-weight: 440;
+                 font-size: clamp(38px, min(5.4vw, 9svh), 96px); line-height: 1.02; letter-spacing: -0.026em; color: var(--ink); text-wrap: balance; }
+.ue .ue__text { margin: 0; max-width: 44ch; font-size: clamp(17px, 0.5vw + 12.5px, 21px); line-height: 1.55; color: var(--ink); opacity: calc(1 - var(--t) * 2); }
+.ue__rule { display: block; width: 64px; height: 4px; background: var(--brand); transform: scaleX(calc(1 - var(--t))); }
+/* Auftritt beim ersten Erscheinen: Wort fuer Wort weich heraus */
+.ue.is-live .ue__title, .ue.is-live .ue__text, .ue.is-live .ue__rule { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+.ue.is-live.is-in .ue__title, .ue.is-live.is-in .ue__text, .ue.is-live.is-in .ue__rule {
+  opacity: 1; transform: none; filter: none;
+  transition: opacity 700ms ease, transform 900ms cubic-bezier(0.23, 1, 0.32, 1), filter 700ms ease;
+}
+.ue.is-live.is-in .ue__rule { transition-delay: 120ms; transform: scaleX(calc(1 - var(--t))); }
+.ue.is-live.is-in .ue__text { transition-delay: 240ms; opacity: calc(1 - var(--t) * 2); }
+html:not(.js) .ue__track { height: auto; }
+html:not(.js) .ue__stage { position: relative; height: auto; padding-block: 120px; }
 @media (prefers-reduced-motion: reduce) {
-  .bq__title { filter: none; transform: translate(-50%, -50%); }
-  .bq .bq__card { transition: opacity 300ms ease; }
+  .ue__in { transform: none; filter: none; }
+  .ue.is-live .ue__title, .ue.is-live .ue__text, .ue.is-live .ue__rule { opacity: 1; transform: none; filter: none; }
 }

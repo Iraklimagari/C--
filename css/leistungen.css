@@ -1,0 +1,132 @@
+/* ==========================================================================
+   NAHLIO — "So gestalten wir Ihren Online-Auftritt." nach der Skizze des Inhabers (08.11.)
+   - In Ruhe fuellt die aktive Leistung die ganze Seitenbreite: ein Vorher-Nachher-Vergleich, links "Nachher",
+     rechts "Vorher", die Mitte laesst sich ziehen (Maus, Finger, Pfeiltasten).
+   - Beim Wechsel werden die Karten klein und stehen gebogen nebeneinander (wie auf einer Rolle, die Nachbarn
+     schauen links und rechts hervor), die Rolle dreht zur naechsten Leistung, dann waechst diese wieder auf die
+     ganze Seite. Danach wischt "Nachher" ueber "Vorher" bis zur Mitte.
+   - Beim ersten Erscheinen wird ein tuerkiser Kreis zur Karte ("transcends to").
+   Nur transform, opacity, filter und clip-path bewegen sich. Weniger Bewegung: Wechsel ohne Bogen.
+   ========================================================================== */
+.lv {
+  --curve: 0.6;                                   /* Groesse der Karten im Bogen */
+  --rot: 34deg;                                   /* Drehung der Nachbarn */
+  --gap: 3vw;
+  --step: calc(100vw * var(--curve) + var(--gap));
+  --lv-move: cubic-bezier(0.77, 0, 0.175, 1);
+  --lv-out: cubic-bezier(0.23, 1, 0.32, 1);
+  /* passt genau auf den Bildschirm unter der Navigation (Anker #beispiele landet buendig darunter) */
+  display: flex; flex-direction: column; min-height: calc(100svh - var(--nav-h));
+  padding-block: clamp(18px, 3svh, 36px) clamp(14px, 2.2svh, 26px);
+  overflow: clip; color: var(--white);
+}
+.lv__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px 40px; width: 100%;
+            max-width: calc(1280px + 2 * var(--gutter)); margin-bottom: clamp(16px, 2.4svh, 30px); }
+.lv__title { margin: 0; color: var(--white); font-family: var(--font-serif); font-weight: 440;
+             font-size: clamp(32px, 2.8vw + 10px, 56px); line-height: 1.04; letter-spacing: -0.022em; max-width: 18ch; }
+.lv__tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.lv__tab { min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 15px; font-weight: 600;
+           color: var(--mist-70); background: color-mix(in srgb, var(--white) 9%, transparent);
+           transition: background-color 200ms ease, color 200ms ease; }
+.lv__tab:hover { background: color-mix(in srgb, var(--white) 17%, transparent); color: var(--white); }
+.lv__tab[aria-current="true"] { background: var(--white); color: var(--ink); }
+.lv__tab:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+
+/* ---------- Buehne: die aktive Karte fuellt die Seite --------------------------------------------- */
+.lv__stage { position: relative; flex: 1 1 auto; min-height: 380px; perspective: 1800px; perspective-origin: 50% 50%; }
+.lv__track { position: absolute; inset: 0; transform-style: preserve-3d; }
+.lv__card {
+  --o: 0; --a: max(var(--o), calc(-1 * var(--o))); --sc: 1;
+  position: absolute; inset: 0; overflow: hidden; background: var(--graphite);
+  transform: translateX(calc(var(--o) * var(--step))) rotateY(calc(var(--o) * var(--rot) * -1)) scale(var(--sc));
+  transform-origin: 50% 50%;
+  z-index: calc(10 - var(--a));
+  transition: transform 640ms var(--lv-move), opacity 380ms ease, filter 380ms ease;
+}
+.lv__card:not(.is-active) { opacity: 0; pointer-events: none; }
+.lv__card.is-instant { transition: none; }
+/* im Bogen: alle klein, die Nachbarn sichtbar und dunkler */
+.lv.is-curve .lv__card { --sc: var(--curve); }
+.lv.is-curve .lv__card.is-side { opacity: 1; filter: brightness(0.55) saturate(0.85); }
+.lv.is-curve .lv__card.is-active { filter: none; }
+
+.lv__cmp { --pos: 50%; position: absolute; inset: 0; overflow: hidden; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.lv__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; pointer-events: none; }
+.lv__after { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.lv__card.is-sweep .lv__after { transition: clip-path 1100ms var(--lv-move); }
+.lv__card.is-sweep .lv__divider { transition: left 1100ms var(--lv-move), opacity 300ms ease; }
+.lv__tag { position: absolute; top: 18px; padding: 7px 13px; font-size: 14px; font-weight: 600; line-height: 1.2;
+           color: var(--white); background: color-mix(in srgb, var(--ink) 74%, transparent); transition: opacity 300ms ease; }
+.lv__tag--after { left: max(18px, 2vw); }
+.lv__tag--before { right: max(18px, 2vw); }
+.lv__divider { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 0; pointer-events: none; transition: opacity 300ms ease; }
+.lv__divider::before { content: ""; position: absolute; top: 0; bottom: 0; left: -1.5px; width: 3px; background: var(--white); }
+.lv__divider i { position: absolute; top: 50%; left: 0; display: flex; align-items: center; justify-content: center; gap: 2px;
+                 width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%; background: var(--white); color: var(--ink);
+                 transition: transform 160ms var(--lv-out); }
+.lv__divider svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.lv__cmp.is-drag .lv__divider i { transform: scale(0.94); }
+.lv:not(.is-curve) .lv__card.is-active .lv__cmp { cursor: ew-resize; }
+.lv.is-curve .lv__divider, .lv.is-curve .lv__tag { opacity: 0; }
+.lv__range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; pointer-events: none; }
+.lv__cmp:has(.lv__range:focus-visible) { outline: 3px solid var(--brand); outline-offset: -6px; }
+
+/* Text zur Leistung: unten links auf der ruhigen Bildseite */
+.lv__copy {
+  position: absolute; left: max(18px, 2vw); bottom: max(18px, 4%); z-index: 2; max-width: min(34rem, 38vw);
+  padding: 20px 22px 22px; background: color-mix(in srgb, var(--ink) 84%, transparent); color: var(--white);
+  opacity: 0; transform: translateY(14px); transition: opacity 260ms ease, transform 420ms var(--lv-out);
+}
+.lv:not(.is-curve) .lv__card.is-active .lv__copy { opacity: 1; transform: none; transition-delay: 220ms; }
+.lv__name { margin: 0; font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--brand); }
+.lv__h { margin: 6px 0 0; font-family: var(--font-serif); font-weight: 440; font-size: clamp(22px, 1.1vw + 12px, 32px); line-height: 1.1; letter-spacing: -0.016em; }
+.lv__p { margin: 10px 0 0; font-size: 16px; line-height: 1.5; color: var(--mist-70); }
+
+/* Runde Pfeile an den Seiten */
+.lv__arrow { position: absolute; top: 50%; z-index: 30; display: grid; place-items: center; width: 58px; height: 58px; margin-top: -29px; border-radius: 50%;
+             background: var(--white); color: var(--ink); transition: background-color 200ms ease, color 200ms ease, transform 160ms var(--lv-out); }
+.lv__arrow svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.lv__arrow--prev { left: max(14px, 1.6vw); }
+.lv__arrow--next { right: max(14px, 1.6vw); }
+.lv__arrow:hover { background: var(--brand); color: var(--ink); }
+.lv__arrow:active { transform: scale(0.94); }
+.lv__arrow:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+.lv__note { width: 100%; margin-top: clamp(10px, 1.6svh, 16px); font-size: 14px; color: var(--mist-62); }
+
+/* Kreis wird zur Karte (erstes Erscheinen) */
+.lv__orb { position: absolute; left: 50%; top: 50%; z-index: 40; width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 50%;
+           background: var(--brand); opacity: 0; transform: scale(0.4); pointer-events: none; }
+.lv.is-pre .lv__card.is-active { clip-path: circle(0px at 50% 50%); }
+.lv.is-pre .lv__arrow { opacity: 0; }
+.lv.is-intro .lv__orb { animation: lv-orb 1200ms var(--lv-move) both; }
+.lv.is-intro .lv__card.is-active { animation: lv-open 1100ms var(--lv-move) 420ms both; }
+.lv.is-intro .lv__arrow { transition: opacity 400ms ease 1200ms; }
+@keyframes lv-orb { 0% { opacity: 0; transform: scale(0.4); } 30% { opacity: 1; transform: scale(1); } 60% { opacity: 1; transform: scale(1.1); } 100% { opacity: 0; transform: scale(3); } }
+@keyframes lv-open { from { clip-path: circle(36px at 50% 50%); } to { clip-path: circle(75% at 50% 50%); } }
+
+/* ---------- Handy: Bild 4:5 (mittlerer Ausschnitt), Text darunter -------------------------------- */
+@media (max-width: 47.99em) {
+  .lv { --curve: 0.74; --rot: 26deg; --gap: 4vw; }
+  .lv { min-height: 0; }
+  .lv__stage { flex: none; min-height: 0; height: calc(118vw + 200px); }
+  .lv__cmp { bottom: auto; height: 118vw; }
+  .lv__copy { position: absolute; left: 0; right: 0; top: 118vw; bottom: 0; max-width: none; padding: 18px var(--gutter) 20px; background: var(--graphite); }
+  .lv__arrow { top: calc(118vw - 66px); margin-top: 0; width: 50px; height: 50px; }
+  .lv__divider i { width: 50px; height: 50px; margin: -25px 0 0 -25px; }
+  .lv__tag { top: 12px; font-size: 13px; padding: 5px 10px; }
+  .lv__tabs { gap: 6px; }
+  .lv__tab { min-height: 40px; padding: 0 14px; font-size: 14px; }
+}
+
+/* ---------- Ohne Skript / weniger Bewegung -------------------------------------------------------- */
+html:not(.js) .lv__stage { flex: none; height: auto; min-height: 0; perspective: none; }
+html:not(.js) .lv__track { position: static; display: grid; gap: 28px; }
+html:not(.js) .lv__card { position: relative; inset: auto; transform: none; opacity: 1; aspect-ratio: 16 / 9; }
+html:not(.js) .lv__arrow, html:not(.js) .lv__divider, html:not(.js) .lv__tabs { display: none; }
+html:not(.js) .lv__copy { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .lv__card { transition: opacity 200ms ease; }
+  .lv.is-intro .lv__orb, .lv.is-intro .lv__card.is-active { animation: none; }
+  .lv.is-pre .lv__card.is-active { clip-path: none; }
+  .lv__card.is-sweep .lv__after, .lv__card.is-sweep .lv__divider { transition: none; }
+}

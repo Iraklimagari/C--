@@ -1,0 +1,67 @@
+/* ==========================================================================
+   NAHLIO — Raumgefuehl (Wunsch 08.11.): jede Seite bekommt einen Farbgrund mit leichter Schattierung in den
+   Markenfarben (Weiss, Soft, Mist, Tuerkis, Tinte): weiche Lichtflaechen und ein dunklerer Rand, damit die
+   Flaechen Tiefe haben. Kontraste bleiben (Text liegt auf hellen Mitten bzw. auf Tinte).
+   Der Hero bleibt unveraendert.
+   ========================================================================== */
+
+/* So finden Kunden zu Ihnen: helles Licht hinter dem Handy, kuehler Rand */
+.ks__stage {
+  background:
+    radial-gradient(46% 56% at 72% 52%, color-mix(in srgb, var(--brand) 14%, transparent), transparent 72%),
+    radial-gradient(38% 46% at 10% 90%, color-mix(in srgb, var(--brand-deep) 9%, transparent), transparent 74%),
+    radial-gradient(130% 110% at 45% 45%, transparent 56%, color-mix(in srgb, var(--ink) 7%, transparent) 100%),
+    linear-gradient(180deg, var(--white) 0%, var(--soft) 45%, color-mix(in srgb, var(--mist) 75%, var(--white)) 100%);
+}
+
+/* Leistungen (dunkel): tuerkiser Schein in der Mitte, tiefe Raender */
+.lv {
+  background:
+    radial-gradient(62% 52% at 50% 58%, color-mix(in srgb, var(--brand) 13%, transparent), transparent 72%),
+    radial-gradient(42% 40% at 6% 6%, color-mix(in srgb, var(--graphite) 95%, transparent), transparent 70%),
+    radial-gradient(140% 110% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.38) 100%),
+    var(--ink);
+}
+
+/* Der Uebergang wird zur selben dunklen Flaeche: so tauchen die Leistungen ohne Kante daraus auf */
+.ue__stage::after {
+  background:
+    radial-gradient(62% 52% at 50% 58%, color-mix(in srgb, var(--brand) 13%, transparent), transparent 72%),
+    radial-gradient(42% 40% at 6% 6%, color-mix(in srgb, var(--graphite) 95%, transparent), transparent 70%),
+    radial-gradient(140% 110% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.38) 100%),
+    var(--ink);
+}
+
+/* Preise (Mist): Licht von oben, Tuerkis unten rechts, weicher Rand */
+.plans::before {
+  background:
+    radial-gradient(56% 42% at 50% 0%, rgba(255, 255, 255, 0.9), transparent 72%),
+    radial-gradient(40% 50% at 100% 88%, color-mix(in srgb, var(--brand) 15%, transparent), transparent 72%),
+    radial-gradient(130% 110% at 50% 45%, transparent 56%, color-mix(in srgb, var(--brand-deep) 11%, transparent) 100%),
+    var(--mist);
+}
+
+/* Ablauf (hell): Tuerkis von links, Mist unten rechts */
+.process::before {
+  background:
+    radial-gradient(48% 60% at 0% 28%, color-mix(in srgb, var(--brand) 11%, transparent), transparent 70%),
+    radial-gradient(46% 52% at 100% 100%, color-mix(in srgb, var(--mist) 95%, transparent), transparent 72%),
+    linear-gradient(180deg, var(--white), var(--soft));
+}
+
+/* Fragen & Antworten (Mist): Licht in der Mitte, tiefes Tuerkis unten links */
+.faq-sec::before {
+  background:
+    radial-gradient(52% 56% at 50% 38%, rgba(255, 255, 255, 0.8), transparent 72%),
+    radial-gradient(40% 50% at 0% 100%, color-mix(in srgb, var(--brand-deep) 11%, transparent), transparent 70%),
+    radial-gradient(130% 110% at 50% 45%, transparent 58%, color-mix(in srgb, var(--ink) 6%, transparent) 100%),
+    var(--mist);
+}
+
+/* Kontakt (dunkel): Tuerkis oben links und unten rechts */
+.cta::before {
+  background:
+    radial-gradient(52% 62% at 0% 0%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
+    radial-gradient(46% 56% at 100% 100%, color-mix(in srgb, var(--brand-deep) 17%, transparent), transparent 72%),
+    var(--ink);
+}
