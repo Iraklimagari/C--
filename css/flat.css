@@ -73,3 +73,50 @@
 /* ---------- Fusszeile ------------------------------------------------------------------------------ */
 .footer__navlist li { border-top: 0; padding-top: 0; }
 .footer__bottom { border-top: 0; }
+
+/* ---------- Leistungen am Handy: alles auf einen Bildschirm (Wunsch 09.11.) -------------------------------
+   Die Karte ist so hoch wie der Bildschirm unter der Navigation. Reiter, Ueberschrift, Absatz, Bild und Punkte
+   stehen gleichzeitig da, ohne Hoch- und Runterscrollen. Das Bild nimmt den Platz, der uebrig bleibt (mindestens
+   190 px); Text etwas kleiner, Abstaende enger. Pfeile liegen oben rechts im Bild, die Punkte entfallen am Handy
+   (die Reiter zeigen, wo man ist). Tablet und Computer bleiben unveraendert. */
+@media (max-width: 47.99em) {
+  .sc__card { grid-template-rows: auto 1fr; gap: 8px; padding: 8px 10px 10px;
+              min-height: calc(100svh - var(--nav-h) - 8px); }        /* sehr niedrige Handys: die Karte wird hoeher */
+  .sc__tab { min-height: 40px; padding: 6px 12px; font-size: 15px; }
+  .sc__tab::after { bottom: 4px; }
+  .sc__panel { grid-template-rows: auto minmax(190px, 1fr) auto; row-gap: 10px; }
+  .sc__h { font-size: 20px; line-height: 1.15; }
+  .sc__p { margin-top: 5px; font-size: 14.5px; line-height: 1.45; }
+  .sc__media { position: relative; grid-template-rows: minmax(0, 1fr); align-content: stretch; min-height: 0; }
+  .sc__stage { aspect-ratio: auto; height: 100%; min-height: 190px; }
+  .sc__scenes { inset: 42px 10px 8px; }
+  .sc__controls { position: absolute; z-index: 4; top: 6px; right: 6px; gap: 6px; }
+  .sc__dots { display: none; }
+  .sc__arrow { width: 34px; height: 34px; position: relative; }
+  .sc__arrow::before { content: ""; position: absolute; inset: -5px; }       /* Trefferflaeche 44 px */
+  .sc__arrow svg { width: 17px; height: 17px; }
+  .sc__list { gap: 4px; }
+  .sc__list li { padding-block: 1px; gap: 10px; font-size: 14.5px; line-height: 1.4; }
+  .sc__list svg { width: 17px; height: 17px; margin-top: calc((1.4em - 17px) / 2); }
+  .sc__closing { margin-top: 5px; font-size: 14px; line-height: 1.4; }
+  .sc__links { margin-top: 8px; }
+  .sc__link { min-height: 36px; padding: 0.3rem 1rem; font-size: 14px; }
+  .sc__seg { min-height: 32px; min-width: 88px; font-size: 14px; }
+  .sc__gnotes { margin-top: 5px; font-size: 12.5px; line-height: 1.4; }
+}
+/* Bilder am Handy groesser (Wunsch 09.11.): Die Telefone fuellen die Bildflaeche in der Breite besser und duerfen
+   unten (WhatsApp: oben) angeschnitten sein, wie bei der Speisekarte. Ein weicher Verlauf am Rand der Flaeche,
+   die Website (quer) bleibt ganz. */
+@media (max-width: 47.99em) {
+  .sc__scene .vis { place-items: start center; }
+  .sc__scene .vis > .sz { width: min(100cqw, calc(100cqh * var(--arn) * var(--zz, 1))); }
+  .sc__scene[data-key="google"] { --zz: 1.75; }
+  .sc__scene[data-key="karte"] { --zz: 1.5; }
+  .sc__scene[data-key="kontakt"] { --zz: 2.2; }
+  .sc__scene[data-key="kontakt"] .vis { grid-template-rows: 100%; place-items: end center; }   /* der Chat steht unten im Telefon */
+  .sc__scene[data-key="fotos"] { --zz: 1.45; }
+  .sc__scene[data-key="website"] .vis { place-items: center; }
+  .sc__stage::before, .sc__stage::after { content: ""; position: absolute; z-index: 2; left: 0; right: 0; pointer-events: none; }
+  .sc__stage::before { top: 0; height: 46px; background: linear-gradient(var(--sc-stage) 55%, transparent); }
+  .sc__stage::after { bottom: 0; height: 30px; background: linear-gradient(transparent, var(--sc-stage)); }
+}
