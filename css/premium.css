@@ -104,7 +104,29 @@ h1, h2,
 }
 .hero--mark .hero__hl { font-style: italic; }           /* Farbe unveraendert (styles.css: --brand-deep): die Betonung */
 .hero--mark .hero__sub { margin-top: clamp(20px, 3.2svh, 36px); margin-bottom: auto; max-width: min(40vw, 31em); font-size: clamp(18px, 1.1vw + 6px, 24px); line-height: 1.5; }   /* endet vor der Marke */
-.hero--mark .hero__actions { justify-content: flex-start; margin-top: clamp(22px, 3.6svh, 40px); }
+/* Knoepfe (Wunsch 09.11.): "Leistungen ansehen" (voll, Markenfarbe) und "Kontakt aufnehmen" (Kontur). Beim Zeigen
+   heben sie sich leicht mit weichem Schein, wie die Knoepfe der Navigation. Die Leerflaeche unter dem Text liegt
+   jetzt unter den Knoepfen, damit der Block mittig bleibt. */
+.hero--mark .hero__sub { margin-bottom: 0; }
+.hero--mark .hero__actions { justify-content: flex-start; gap: 12px 14px; margin-top: clamp(24px, 3.8svh, 42px); margin-bottom: auto; }
+.hero--mark .hero__btn {
+  min-height: 52px; padding: 0 1.6rem; border-radius: 999px; font-size: clamp(16px, 0.3vw + 13px, 18px);
+  transition: background-color 280ms var(--ease-out), border-color 280ms var(--ease-out), color 280ms var(--ease-out),
+              transform 280ms var(--ease-out), box-shadow 280ms var(--ease-out);
+}
+.hero--mark .hero__btn--main { --btn-bg: var(--brand-deep); --btn-bd: var(--brand-deep); --btn-fg: var(--white); }
+.hero--mark .hero__btn--line { --btn-bg: color-mix(in srgb, var(--white) 90%, transparent); --btn-bd: color-mix(in srgb, var(--ink) 30%, transparent); --btn-fg: var(--ink); }   /* hell hinterlegt: am Handy liegt sie ueber der Marke */
+.hero--mark .hero__btn:hover, .hero--mark .hero__btn:focus-visible { transform: translateY(-2px); }
+.hero--mark .hero__btn--main:hover, .hero--mark .hero__btn--main:focus-visible {
+  background: var(--brand-deep); border-color: var(--brand-deep); color: var(--white);
+  box-shadow: 0 0.6rem 1.6rem color-mix(in srgb, var(--brand) 45%, transparent);
+}
+.hero--mark .hero__btn--line:hover, .hero--mark .hero__btn--line:focus-visible {
+  background: var(--ink); border-color: var(--ink); color: var(--white);
+  box-shadow: 0 0.6rem 1.6rem color-mix(in srgb, var(--ink) 28%, transparent);
+}
+.hero--mark .hero__btn:active { transform: scale(0.97); }
+@media (max-width: 47.99em) { .hero--mark .hero__btn { min-height: 48px; padding: 0 1.25rem; font-size: 16px; } }
 .hero--mark .hero__cta { transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 160ms var(--ease-enter); }
 .hero--mark .hero__cta:active { transform: scale(0.97); }
 @media (hover: none) { .hero--mark .hero__more:hover svg { transform: none; } }
@@ -144,10 +166,13 @@ html.js.motion-ok .hero.hero--mark .hero__title.is-split .hw {
   animation-delay: calc(140ms + var(--i, 0) * 55ms);
 }
 html.js.motion-ok .hero.hero--mark .hero__copy .hero__sub { animation: hero-up 900ms var(--ease-enter) 760ms both; }
+html.js.motion-ok .hero.hero--mark .hero__copy .hero__actions { animation: hero-up 900ms var(--ease-enter) 900ms both; }
 @media (prefers-reduced-motion: reduce) {
   html.js .hero.hero--mark .hero__title.is-split .hw,
   html.js .hero.hero--mark .hero__copy .hero__eyebrow,
-  html.js .hero.hero--mark .hero__copy .hero__sub { animation: hero-fade 400ms ease both; animation-delay: 0ms; }
+  html.js .hero.hero--mark .hero__copy .hero__sub,
+  html.js .hero.hero--mark .hero__copy .hero__actions { animation: hero-fade 400ms ease both; animation-delay: 0ms; }
+  .hero--mark .hero__btn:hover, .hero--mark .hero__btn:focus-visible { transform: none; }
 }
 
 /* Logo oben links (Wunsch 08.11.): Im Hero steht nur der Schriftzug "NAHLIO" (die grosse Marke ist dort das

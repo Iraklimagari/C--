@@ -114,4 +114,4 @@ sz-fleisch, sz-lachs, sz-dessert, sz-terrasse (Unsplash, siehe oben).
 
 | Datei | Original | Verwendung |
 | --- | --- | --- |
-| website-archi-1200.webp, website-archi-720.webp | Bildschirmfoto einer Website („ARCHI“), vom Inhaber bereitgestellt (08.11.2026), ohne Geräterahmen | Leistung „Website“ |
+| website-archi-1200.webp, website-archi-720.webp | Bildschirmfoto einer Website („ARCHI“), vom Inhaber bereitgestellt (08.11.2026); nur der obere Teil (Navigation und Hero), Texte am 09.11.2026 ins Deutsche übertragen (englische Schrift aus dem Foto entfernt, deutsche Texte neu gesetzt) | Leistung „Website“ |

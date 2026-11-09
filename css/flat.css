@@ -68,7 +68,7 @@
 .radio input:checked + span { background: var(--brand); color: var(--ink); }
 .field input[type="text"], .field input[type="url"], .field input[type="email"], .field textarea { border-radius: 0; }
 .cta .btn--wa { --btn-bd: transparent; --btn-bg: color-mix(in srgb, var(--white) 9%, transparent); }
-.btn--wa:hover, .btn--wa:focus-visible { box-shadow: none; }
+/* (Wunsch 09.11.: der WhatsApp-Knopf "springt" beim Zeigen wieder: Schein und Anheben aus styles.css gelten.) */
 
 /* ---------- Fusszeile ------------------------------------------------------------------------------ */
 .footer__navlist li { border-top: 0; padding-top: 0; }
