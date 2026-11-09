@@ -120,6 +120,9 @@ function init(root) {
   }
   dot.style.transformBox = "fill-box"; dot.style.transformOrigin = "center";
   dot.style.opacity = "0"; fillEl.style.opacity = "0";
+  /* Startzustand steht: erst jetzt darf die Zeichenflaeche sichtbar werden (vorher blitzte beim Laden die fertige
+     2D-Marke auf, Wunsch 09.11.; premium.css) */
+  root.classList.add("is-ready");
   /* ein Weg ab dem Startpunkt: a bis zum Knoten, danach b und c gleichzeitig (gleiches Tempo, kein Halt) */
   const DIST = lens.a + Math.max(lens.b, lens.c);
   /* anfangs beschleunigen, dann gleichmaessig bis zum Ende (kein Abbremsen vor dem Wechsel nach 3D) */

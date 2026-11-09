@@ -186,6 +186,13 @@ html.hero-in-view .nav__logo .logo__type, html.hero-in-view .nav__logo .logo__do
 /* Uebergabepunkt an die Seitenlinie (25-line.js): unten in der Buehne */
 .hero__exit { position: absolute; left: 88%; bottom: 0; width: 0; height: 0; }
 
+/* Beim Laden kein Aufblitzen der fertigen 2D-Marke (Wunsch 09.11.): Die Zeichenflaeche bleibt verborgen, bis
+   hero-mark.js den Startzustand gesetzt hat (.is-ready). Sicherheit: Kommt das Skript nicht, erscheint nach 4 s die
+   ruhige Marke. */
+html.js .hero__mark:not(.is-ready) .hero__ink { visibility: hidden; }
+html.js .hero__mark:not(.is-ready):not(.is-static) .hero__static { animation: mark-fallback 1ms linear 4s forwards; }
+@keyframes mark-fallback { to { visibility: visible; } }
+
 /* Ohne Skript: die fertige Marke, ruhig. Mit Skript zeigt hero-mark.js erst die Linie. */
 html.js .hero__static { visibility: hidden; }
 html:not(.js) .hero__ink, html:not(.js) .hero__gl { display: none; }
