@@ -72,6 +72,14 @@
 
 /* ---------- Fusszeile ------------------------------------------------------------------------------ */
 .footer__navlist li { border-top: 0; padding-top: 0; }
+/* Unter "Leistungen" die fuenf Leistungen als Links (Wunsch 09.11.); jeder oeffnet die passende Leistung im
+   Abschnitt Leistungen (wie im Menue; von Impressum/Datenschutz ueber ?leistung=). */
+.footer__navlist .footer__sub { display: grid; gap: 0; margin: -4px 0 0; padding: 0; list-style: none; }
+.footer__navlist .footer__sub li { display: block; padding: 0; border: 0; }
+.footer__navlist .footer__sub a { display: inline-flex; align-items: center; min-height: 34px; gap: 0;
+                                  font-size: 15px; font-weight: 500; color: var(--mist-70); text-decoration: none;
+                                  transition: color 160ms var(--ease-out); }
+.footer__navlist .footer__sub a:hover, .footer__navlist .footer__sub a:focus-visible { color: var(--soft); text-decoration: underline; text-underline-offset: 0.22em; }
 .footer__bottom { border-top: 0; }
 
 /* ---------- Leistungen am Handy: alles auf einen Bildschirm (Wunsch 09.11.) -------------------------------
