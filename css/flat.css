@@ -6,13 +6,13 @@
    - keine kleinen Grossbuchstaben-Labels und keine Nummern (01, 02 ...): die Paketnamen stehen jetzt in der
      Ueberschrift, die Reihenfolge der Schritte zeigt ihre Lage;
    - Knoepfe bleiben voll rund wie in der Navigation (einmal entschieden), zweite Knoepfe gefuellt statt umrandet;
-   - Farben und Schriften bleiben: Tinte, Weiss, Mist, Tuerkis; Newsreader fuer Titel, Geist fuer Text.
+   - Farben und Schriften bleiben: Tinte, Weiss, Mist, Tuerkis; Manrope fuer Titel und Text (09.11.).
    Der Hero bleibt unveraendert.
    ========================================================================== */
 
 /* ---------- Unsere Antwort ------------------------------------------------------------------------- */
 .uebergang__card { border-top: 0; padding-top: 0; }
-.uebergang__title { font-family: var(--font-serif); font-weight: 440; letter-spacing: -0.02em; }
+.uebergang__title { font-family: var(--font-serif); font-weight: var(--w-head, 700); letter-spacing: -0.02em; }
 
 /* ---------- Beispiele (dunkel) --------------------------------------------------------------------- */
 .sc__card { border: 0; border-radius: 0; }
@@ -36,7 +36,7 @@
 }
 .plan--refresh .plan__h { color: var(--ink); }
 .plan--digital .plan__h { color: var(--white); }
-.plan__lead { margin-top: -4px; font-family: var(--font-serif); font-weight: 440; font-size: clamp(20px, 0.8vw + 14px, 26px); line-height: 1.15; letter-spacing: -0.012em; }
+.plan__lead { margin-top: -4px; font-family: var(--font-serif); font-weight: var(--w-head, 700); font-size: clamp(20px, 0.8vw + 14px, 26px); line-height: 1.15; letter-spacing: -0.012em; }
 /* Paketname jetzt die Ueberschrift (Zeile 2 des gemeinsamen Rasters), der Satz darunter (Zeile 3) */
 @media (min-width: 52em) { .plan__h { grid-row: 2; } .plan__lead { grid-row: 3; } }
 .care { background: var(--white); }
@@ -49,10 +49,10 @@
 /* ---------- Ablauf: vier Schritte als Liste in grosser Schrift (statt Symbol-Karten) --------------- */
 .step, .step:last-child { grid-template-columns: minmax(0, 1fr); border-top: 0; padding-block: 0; }
 .steps { row-gap: 32px; column-gap: clamp(28px, 3vw, 56px); }
-.step__title { font-family: var(--font-serif); font-weight: 440; font-size: clamp(28px, 1.5vw + 14px, 40px); line-height: 1.04; letter-spacing: -0.022em; }
+.step__title { font-family: var(--font-serif); font-weight: var(--w-head, 700); font-size: clamp(28px, 1.5vw + 14px, 40px); line-height: 1.04; letter-spacing: -0.022em; }
 .step__p { margin-top: 12px; color: var(--ink); font-size: clamp(16px, 0.25vw + 15px, 18px); }
 @media (min-width: 40em) { .step:nth-child(n+3) { margin-top: 0; } .steps { row-gap: 40px; } }
-.process__title { font-family: var(--font-serif); font-weight: 440; letter-spacing: -0.02em; }
+.process__title { font-family: var(--font-serif); font-weight: var(--w-head, 700); letter-spacing: -0.02em; }
 
 /* ---------- Fragen & Antworten --------------------------------------------------------------------- */
 .faq { gap: 8px; }

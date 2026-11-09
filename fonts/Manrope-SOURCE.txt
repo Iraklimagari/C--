@@ -1,4 +1,4 @@
-Manrope, Google Fonts. Variable normal 400-700, Latin subset.
-CSS: https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap
-WOFF2: https://fonts.gstatic.com/s/manrope/v20/xn7gYHE41ni1AdIRggexSg.woff2
+Manrope, Google Fonts (ueber Fontsource @fontsource-variable/manrope 5.3.0, gleiche Dateien).
+Variabel 200-800, normal; Subsets latin (manrope-latin-variable.woff2) und latin-ext (manrope-latin-ext-variable.woff2).
+Seit 09.11. die Schrift der ganzen Website (Ueberschriften und Text).
 License: https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/OFL.txt

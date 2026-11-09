@@ -1,2 +1,0 @@
-Newsreader (Production Type), SIL Open Font License 1.1.
-Quelle: npm @fontsource-variable/newsreader 5.3.0 (Google Fonts), Achsen wght 200-800, opsz 6-72.

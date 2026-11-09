@@ -236,11 +236,17 @@ function init(root) {
       return { x0: Math.max(W * 0.03, copyR - left + Math.max(28, W * 0.035)), x1: W - Math.max(24, window.innerWidth * 0.022),
                y0: H * 0.04, y1: H * 0.96, right: true };
     }
-    /* Handy und Tablet: die Marke endet ueber den Knoepfen (die stehen unten im Hero, Wunsch 09.11.) */
-    const act = document.querySelector(".hero--mark .hero__actions");
-    let y1 = H * 0.98;
-    if (act && act.offsetHeight) y1 = Math.min(y1, act.getBoundingClientRect().top - root.getBoundingClientRect().top - Math.max(12, H * 0.02));
-    return { x0: W * 0.03, x1: W * 0.97, y0: H * 0.28, y1, right: false };
+    /* Handy und Tablet (Wunsch 09.11.): die Marke steht zwischen Ueberschrift und Unterzeile, kein Text liegt auf
+       ihr. Gemessen wird das Layout (offsetTop), nicht der Bildschirm: die Unterzeile faehrt beim Auftakt noch ein. */
+    const copy = document.querySelector(".hero--mark .hero__copy");
+    const ttl = copy && copy.querySelector(".hero__title"), sub = copy && copy.querySelector(".hero__sub");
+    let y0 = H * 0.28, y1 = H * 0.98;
+    if (ttl && sub && sub.offsetHeight) {
+      const top = copy.getBoundingClientRect().top - root.getBoundingClientRect().top, gap = Math.max(10, H * 0.015);
+      y0 = top + ttl.offsetTop + ttl.offsetHeight + gap;
+      y1 = top + sub.offsetTop - gap;
+    }
+    return { x0: W * 0.03, x1: W * 0.97, y0, y1, right: false };
   }
   function screenBox() {
     inner.scale.setScalar(s);
