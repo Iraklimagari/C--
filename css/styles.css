@@ -1249,7 +1249,7 @@ html.js.motion-ok .customer-path__stage:not(.is-in) .customer-path__connector { 
 /* Neustart: Verlauf kurz ausblenden (statt sichtbar zurueckzuspulen); Ruecksetzen ohne Uebergang. */
 .wa__chat { transition: opacity 220ms ease; }
 .wa.is-resetting .wa__chat { opacity: 0; }
-.wa.is-instant .wa__row, .wa.is-instant .wa__tap { transition: none; }
+.wa.is-instant .wa__row { transition: none; }
 .wa__rin { min-height: 0; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; padding: 0 0.1em 0.14em; }
 .wa__row--out .wa__rin { align-items: flex-end; }
 .wa.is-js .wa__row.is-off { grid-template-rows: 0fr; margin-top: 0; opacity: 0; }
@@ -1262,42 +1262,11 @@ html.js.motion-ok .customer-path__stage:not(.is-in) .customer-path__connector { 
 .wa__msg--wide { width: 90%; max-width: none; }
 .wa__time-s { float: right; display: inline-flex; align-items: center; gap: 0.25em; margin: 0.5em 0 -0.12em 0.7em; font-size: 0.64em; line-height: 1; white-space: nowrap; color: #667781; }
 .sz .ic--ticks { width: 1.3em; height: 0.8em; stroke: #53bdeb; stroke-width: 1.7; }
-.wa__hint { margin-top: 0.12em !important; font-size: 0.8em; color: #667781; }
-
 .wa__btns { display: grid; gap: 0; width: 86%; margin-top: 0.24em; overflow: hidden; border-radius: 0.76em; box-shadow: 0 0.06em 0.09em rgba(11, 20, 26, 0.14); }
-.wa__btn { display: block; width: 100%; padding: 0.6em 0.4em; border: 0; border-bottom: 1px solid rgba(11, 20, 26, 0.07); border-radius: 0; background: #fff; color: #008069;
-           font-size: 0.8em; font-weight: 500; box-shadow: none; cursor: pointer;
-           transition: background-color 200ms ease; }
+.wa__btn { display: block; width: 100%; padding: 0.6em 0.4em; border-bottom: 1px solid rgba(11, 20, 26, 0.07); background: #fff; color: #008069;
+           font-size: 0.8em; font-weight: 500; text-align: center; transition: background-color 200ms ease; }
 .wa__btn:last-child { border-bottom: 0; }
-.wa__days { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.32em; margin: 0.5em 0 0.1em; }
-.wa__day { display: grid; justify-items: center; gap: 0.06em; padding: 0.42em 0.2em 0.38em; border: 0; border-radius: 0.62em;
-           background: #f0f2f5; color: #111b21; cursor: pointer;
-           transition: background-color 260ms ease, color 260ms ease; }
-.wa__day small { font-size: 0.62em; font-weight: 700; color: #667781; text-transform: uppercase; letter-spacing: 0.05em; transition: color 260ms ease; }
-.wa__day b { font-size: 1.12em; line-height: 1.1; font-weight: 700; font-variant-numeric: tabular-nums; }
-.wa__day em { font-style: normal; font-size: 0.58em; color: #667781; transition: color 260ms ease; }
-.wa__day.is-full { cursor: default; opacity: 0.55; }
-.wa__day.is-full b { text-decoration: line-through; text-decoration-thickness: 0.08em; }
-.wa__day.is-sel { background: #00a884; color: #fff; }
-.wa__day.is-sel small, .wa__day.is-sel em { color: rgba(255, 255, 255, 0.86); }
-.wa__times { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.32em; margin: 0.5em 0 0.1em; }
-.wa__time { padding: 0.5em 0.3em; border-radius: 2em; border: 0.07em solid #d1d7db; background: #fff; color: #008069; font-size: 0.86em; font-weight: 700;
-            font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color 260ms ease, color 260ms ease, border-color 260ms ease; }
-.wa__time.is-sel { background: #00a884; border-color: #00a884; color: #fff; }
 .wa__btn.is-press { background: #e7f6f1; }
-@media (hover: hover) {
-  .wa[data-wa-live] .wa__day:not(.is-full):not(.is-sel):hover, .wa[data-wa-live] .wa__time:not(.is-sel):hover, .wa[data-wa-live] .wa__btn:hover { background: #e7f6f1; }
-}
-
-.wa__conf { display: flex; gap: 0.6em; align-items: flex-start; padding: 0.2em 0 0.55em; }
-.wa__conf-ic { width: 2.1em; height: 2.1em; flex: none; border-radius: 50%; display: grid; place-items: center; background: #00a884; color: #fff; }
-.sz .wa__conf-ic .ic { width: 1.2em; height: 1.2em; stroke-width: 2.7; }
-.wa__conf > div { display: grid; gap: 0.1em; }
-.wa__conf b { font-size: 1.02em; }
-.wa__conf span { font-size: 0.82em; color: #3b4a54; }
-.wa__conf-btn { clear: both; display: flex; justify-content: center; align-items: center; gap: 0.4em; margin: 0 -0.62em; padding: 0.55em 0.6em 0.25em;
-                border-top: 0.06em solid #e3e7ea; color: #008069; font-weight: 600; font-size: 0.84em; }
-.sz .wa__conf-btn .ic { width: 1.15em; height: 1.15em; }
 
 .wa__typing { grid-template-rows: 0fr; margin-top: 0; opacity: 0; }
 .wa.is-typing .wa__typing { grid-template-rows: 1fr; margin-top: 0.42em; opacity: 1; }
@@ -1312,20 +1281,56 @@ html.js.motion-ok .wa__typing i:nth-child(3) { animation-delay: 0.32s; }
 .wa__input .ic { width: 1.4em; height: 1.4em; }
 .wa__field { flex: 1; padding: 0.42em 0.8em; border-radius: 1.2em; background: #fff; border: 0.06em solid #e2e2e2; font-size: 0.8em; color: #8696a0; }
 
-/* A fixed-size fingertip. JS owns translation; only its inner contact surface pulses. */
-.wa__tap {
-  position: absolute; z-index: 9; left: 0; top: 0; width: 2.7em; height: 2.7em;
-  margin: -1.35em 0 0 -1.35em; pointer-events: none; opacity: 0;
-  transition: opacity 160ms ease;
-}
-.wa__tap.is-on { opacity: 1; }
-.wa__touch {
-  display: block; width: 100%; height: 100%; border-radius: 50%;
-  background: rgba(11, 17, 20, 0.18); border: 0.14em solid rgba(255, 255, 255, 0.88);
-  box-shadow: 0 0.22em 0.65em rgba(0, 0, 0, 0.2); opacity: 0.85;
-  transition: transform 100ms ease, opacity 100ms ease;
-}
-.wa__tap.is-down .wa__touch { transform: scale(0.9); opacity: 0.64; }
+/* Nur zum Ansehen (Wunsch 09.11.): im Chat ist nichts antippbar, niemand kann etwas aendern; Wischen ueber das
+   Bild gehoert weiter der Buehne (wechselt die Leistung). */
+.wa[data-wa-live] { pointer-events: none; -webkit-user-select: none; user-select: none; }
+.wa__msg p + p { margin-top: 0.12em; }
+.wa__ok p:first-child { margin-bottom: 0.25em; }
+/* Knopf unter der Nachricht, der das Formular oeffnet (WhatsApp-Formular) */
+.wa__flow { clear: both; display: flex; justify-content: center; align-items: center; gap: 0.4em; margin: 0.45em -0.82em -0.48em; padding: 0.6em;
+            border-top: 0.06em solid #e3e7ea; border-radius: 0 0 0.88em 0.88em; color: #008069; font-weight: 600; font-size: 0.92em; transition: background-color 200ms ease; }
+.wa__flow.is-press { background: #e7f6f1; }
+.sz .wa__flow .ic { width: 1.15em; height: 1.15em; }
+
+/* Formular "Termin buchen": schiebt sich von unten herein und fuellt sich von selbst (45-wa.js setzt die Klassen). */
+.wa__dim { position: absolute; inset: 0; z-index: 4; background: rgba(11, 20, 26, 0.42); opacity: 0; transition: opacity 300ms ease; }
+.wa.is-sheet .wa__dim { opacity: 1; }
+.wa__sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; flex-direction: column; background: #fff; color: #111b21;
+             border-radius: 1.1em 1.1em 0 0; box-shadow: 0 -0.4em 1.4em rgba(0, 0, 0, 0.18);
+             transform: translateY(105%); transition: transform 380ms cubic-bezier(0.32, 0.72, 0, 1); }
+.wa.is-sheet .wa__sheet { transform: none; }
+.wa.is-instant .wa__sheet, .wa.is-instant .wa__dim, .wa.is-instant .wa__toast { transition: none; }
+.wa__sh-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.6em; padding: 0.8em 0.9em 0.7em; border-bottom: 0.06em solid #e9edef; }
+.wa__sh-head b { text-align: center; font-size: 0.92em; font-weight: 600; }
+.sz .wa__sh-head .ic { width: 1.25em; height: 1.25em; }
+.wa__form { display: grid; gap: 0.65em; padding: 0.8em 0.95em 0.45em; }
+.wa__fl { display: block; font-size: 0.7em; font-weight: 600; color: #54656f; }
+.wa__opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.35em; margin-top: 0.4em; }
+.wa__opt { padding: 0.48em 0.3em; border-radius: 2em; border: 0.07em solid #d1d7db; background: #fff; color: #111b21; font-size: 0.74em; font-weight: 600;
+           text-align: center; white-space: nowrap; transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease; }
+.wa__opt--any { grid-column: 1 / -1; }
+.wa.is-f1 .wa__opt--pick { background: #00a884; border-color: #00a884; color: #fff; }
+.wa__fi { position: relative; display: grid; gap: 0.08em; padding: 0.42em 2.1em 0.45em 0.75em; border: 0.07em solid #c7ccd1; border-radius: 0.6em;
+          transition: border-color 220ms ease; }
+.sz .wa__fi .ic { position: absolute; right: 0.6em; top: 50%; width: 1.1em; height: 1.1em; margin-top: -0.55em; color: #54656f; }
+.wa__fv { display: grid; min-height: 1.35em; font-size: 0.86em; }
+.wa__fv em, .wa__fv b { grid-area: 1 / 1; font-style: normal; font-weight: 500; white-space: nowrap; transition: opacity 180ms ease; }
+.wa__fv em { color: #8696a0; }
+.wa__fv b { color: #111b21; opacity: 0; }
+.wa.is-f2 .wa__fi[data-f="2"] b, .wa.is-f3 .wa__fi[data-f="3"] b, .wa.is-f4 .wa__fi[data-f="4"] b { opacity: 1; }
+.wa.is-f2 .wa__fi[data-f="2"] em, .wa.is-f3 .wa__fi[data-f="3"] em, .wa.is-f4 .wa__fi[data-f="4"] em { opacity: 0; }
+.wa.is-f2 .wa__fi[data-f="2"], .wa.is-f3 .wa__fi[data-f="3"], .wa.is-f4 .wa__fi[data-f="4"] { border-color: #00a884; }
+.wa__sh-foot { display: grid; gap: 0.45em; padding: 0.45em 0.95em 1.5em; }
+.wa__send { display: block; padding: 0.72em; border-radius: 2em; background: #e9edef; color: #8696a0; font-size: 0.86em; font-weight: 700; text-align: center;
+            transition: background-color 220ms ease, color 220ms ease, transform 140ms ease; }
+.wa.is-ready .wa__send { background: #00a884; color: #fff; }
+.wa.is-sent .wa__send { background: #008f6f; transform: scale(0.97); }
+.wa__managed { font-size: 0.6em; color: #667781; text-align: center; }
+/* nach "Im Kalender speichern" */
+.wa__toast { position: absolute; left: 50%; bottom: 4.4em; z-index: 6; padding: 0.5em 0.95em; border-radius: 1.2em; background: rgba(11, 20, 26, 0.86); color: #fff;
+             font-size: 0.74em; font-weight: 600; white-space: nowrap; opacity: 0; transform: translate(-50%, 0.6em);
+             transition: opacity 260ms ease, transform 320ms cubic-bezier(0.23, 1, 0.32, 1); }
+.wa.is-saved .wa__toast { opacity: 1; transform: translate(-50%, 0); }
 
 /* ==========================================================================
    Google-Profil (Vorher / Nachher in den Beispielen)

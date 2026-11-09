@@ -25,7 +25,6 @@
 .sc__arrow:hover, .sc__link:hover { background: color-mix(in srgb, var(--brand) 22%, transparent); }
 .sc__list li, .sc__list li:last-child { border: 0; }
 .sc__list { display: grid; gap: 10px; }
-.wa__tap { display: none !important; }                      /* kein Finger-Kreis (Wunsch 05.11.) */
 
 /* ---------- Preise --------------------------------------------------------------------------------- */
 .plan, .plan--digital, .care { border: 0; border-radius: 0; }
@@ -120,7 +119,7 @@
   .sc__scene .vis > .sz { width: min(100cqw, calc(100cqh * var(--arn) * var(--zz, 1))); }
   .sc__scene[data-key="google"] { --zz: 1.75; }
   .sc__scene[data-key="karte"] { --zz: 1.5; }
-  .sc__scene[data-key="kontakt"] { --zz: 2.2; }
+  .sc__scene[data-key="kontakt"] { --zz: 2; }
   .sc__scene[data-key="kontakt"] .vis { grid-template-rows: 100%; place-items: end center; }   /* der Chat steht unten im Telefon */
   .sc__scene[data-key="fotos"] { --zz: 1.45; }
   .sc__scene[data-key="website"] .vis { place-items: center; }

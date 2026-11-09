@@ -1670,255 +1670,109 @@ var NAHLIO = (function () {
 
 /* ==== 45-wa.js ==== */
 /* ==========================================================================
-   NAHLIO — WhatsApp: Termin buchen (Darstellung "Kontakt & WhatsApp")
-   Alle Darstellungen [data-wa] zeigen die naechsten sechs Oeffnungstage (Mo-Sa,
-   ab morgen) — gerechnet im Browser, damit die Woche immer stimmt.
-   Live-Vorfuehrung nur in den Beispielen ([data-wa-live]) und ohne Reduced
-   Motion: Ein Finger tippt "Termin buchen", waehlt einen Tag und eine Uhrzeit,
-   der Termin wird bestaetigt; dann beginnt sie von vorn (der Verlauf blendet dafuer
-   kurz aus, statt sichtbar zurueckzuspulen). Der Finger steuert ein Ziel erst an,
-   wenn dessen Lage feststeht (neue Nachrichten schieben den Verlauf), und der
-   naechste Schritt wartet, bis er angekommen ist. Sie laeuft nur, solange das
-   Beispiel aktiv und im Bild ist; es laeuft immer nur ein Ablauf. Wer selbst tippt,
-   uebernimmt (Tage und Zeiten sind anklickbar).
+   NAHLIO — WhatsApp in den Beispielen ("WhatsApp", Salon Mara), Wunsch 09.11.
+   Ablauf nach Vorgabe des Inhabers: "Hallo 👋" -> Begruessung mit Knoepfen -> "📅 Termin buchen" ->
+   "Sehr gern 😊" -> WhatsApp-Formular (Mitarbeiter, Wunschtag, Uhrzeit, Name; fuellt sich in gut 2,5 s von
+   selbst, ohne langsames Tippen) -> "📅 Termin buchen" -> "Termin bestaetigt ✅" -> "📅 Im Kalender speichern".
+   Nur zum Ansehen: nichts ist antippbar, niemand kann etwas aendern (keine Knoepfe, keine Klick-Behandlung;
+   CSS nimmt dem Chat die Zeigerereignisse, Wischen ueber das Bild wechselt weiter die Leistung). Laeuft nur,
+   solange das Beispiel aktiv und im Bild ist, und beginnt dann von vorn. Reduced Motion und ohne Skript: der
+   fertige Verlauf steht still da.
    Ereignisse: nahlio:slide (Beispiel gewechselt), nahlio:wa-replay (neu starten).
    ========================================================================== */
 (function () {
   "use strict";
+  var wa = document.querySelector("[data-wa-live]");
+  if (!wa) return;
+  var rows = Array.prototype.slice.call(wa.querySelectorAll(".wa__row[data-step]"));
+  var frame = wa.closest("[data-slide]");
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var nameEl = wa.querySelector("[data-wa-name]"), NAME = nameEl ? nameEl.getAttribute("data-wa-name") : "";
+  var STATES = ["is-typing", "is-sheet", "is-f1", "is-f2", "is-f3", "is-f4", "is-ready", "is-sent", "is-saved"];
+  var tok = 0, timers = [], active = false, visible = false;
 
-  var WD = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
-  var WDL = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
-  var MON = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
-
-  function all(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
-  function openDays(n) {
-    var out = [], d = new Date();
-    d.setHours(12, 0, 0, 0);
-    while (out.length < n) {
-      d.setDate(d.getDate() + 1);
-      if (d.getDay() !== 0) out.push(new Date(d.getTime()));
-    }
-    return out;
+  function clear() { tok++; timers.forEach(function (id) { window.clearTimeout(id); }); timers = []; }
+  function at(ms, fn) { var my = tok; timers.push(window.setTimeout(function () { if (my === tok) fn(); }, ms)); }
+  function show(n) { rows.forEach(function (r) { r.classList.toggle("is-off", +r.getAttribute("data-step") > n); }); }
+  function set(cls, on) { wa.classList.toggle(cls, !!on); }
+  function press(sel) {
+    var el = wa.querySelector(sel);
+    if (!el) return;
+    el.classList.add("is-press");
+    at(280, function () { el.classList.remove("is-press"); });
   }
-  function longDay(d) { return WDL[d.getDay()] + ", " + d.getDate() + ". " + MON[d.getMonth()]; }
+  function reset() {
+    clear();
+    wa.classList.add("is-instant");
+    STATES.forEach(function (c) { wa.classList.remove(c); });
+    Array.prototype.forEach.call(wa.querySelectorAll(".is-press"), function (el) { el.classList.remove("is-press"); });
+    if (nameEl) nameEl.textContent = "";
+    show(0);
+    void wa.offsetWidth;
+    wa.classList.remove("is-instant");
+  }
+  function demo() {
+    reset();
+    [
+      [500, function () { show(1); }],                                   /* Hallo 👋 */
+      [1000, function () { set("is-typing", true); }],
+      [1700, function () { set("is-typing", false); show(2); }],         /* Begruessung mit Knoepfen */
+      [2900, function () { press('[data-wa-pick="book"]'); }],
+      [3150, function () { show(3); }],                                   /* 📅 Termin buchen */
+      [3550, function () { set("is-typing", true); }],
+      [4150, function () { set("is-typing", false); show(4); }],         /* Sehr gern 😊 */
+      [5000, function () { press('[data-wa-pick="flow"]'); }],
+      [5200, function () { set("is-sheet", true); }],                     /* Formular oeffnet sich */
+      [5700, function () { set("is-f1", true); }],                        /* Mara */
+      [6150, function () { set("is-f2", true); }],                        /* Freitag, 13. November */
+      [6600, function () { set("is-f3", true); }],                        /* 14:30 Uhr */
+      [7050, function () { set("is-f4", true); }],                        /* Anna Müller (schnell) */
+      [7500, function () { set("is-ready", true); }],
+      [7800, function () { set("is-sent", true); }],                      /* 📅 Termin buchen */
+      [8050, function () { set("is-sheet", false); }],
+      [8400, function () { set("is-typing", true); }],
+      [9000, function () { set("is-typing", false); show(5); }],         /* Termin bestaetigt ✅ */
+      [10200, function () { press('[data-wa-pick="cal"]'); }],
+      [10350, function () { set("is-saved", true); }],                    /* 📅 Im Kalender gespeichert */
+      [14200, restart]
+    ].forEach(function (s) { at(s[0], s[1]); });
+    if (nameEl) for (var k = 1; k <= NAME.length; k++) (function (n) {
+      at(7050 + n * 28, function () { nameEl.textContent = NAME.slice(0, n); });
+    })(k);
+  }
+  function restart() {
+    clear();
+    wa.classList.add("is-resetting");
+    at(260, function () { wa.classList.remove("is-resetting"); if (active) demo(); });
+  }
 
-  all("[data-wa]").forEach(function (wa) {
-    var days = openDays(6);
-    var FULL = +wa.getAttribute("data-full") || 0;
-    var PICK = +wa.getAttribute("data-pick") || 0;
-    var TPICK = +wa.getAttribute("data-tpick") || 0;
-    var dayBtns = all("[data-wa-day]", wa);
-    var timeBtns = all("[data-wa-time]", wa);
-    var selDay = PICK, selTime = TPICK;
-
-    dayBtns.forEach(function (b, i) {
-      var d = days[i];
-      if (!d) return;
-      b.querySelector("small").textContent = WD[d.getDay()];
-      b.querySelector("b").textContent = String(d.getDate());
-      if (i !== FULL) b.querySelector("em").textContent = MON[d.getMonth()].slice(0, 3) + ".";
-    });
-
-    function setText(sel, txt) { all(sel, wa).forEach(function (e) { e.textContent = txt; }); }
-    function labels() {
-      var d = days[selDay] || days[0];
-      var tm = timeBtns[selTime] ? timeBtns[selTime].getAttribute("data-wa-time") : "";
-      setText("[data-wa-day-label]", longDay(d));
-      setText("[data-wa-day-short]", WDL[d.getDay()]);
-      setText("[data-wa-time-label]", tm);
-      setText("[data-wa-conf]", longDay(d) + " · " + tm + " Uhr");
+  function isActive() { return !frame || frame.classList.contains("is-active"); }
+  function check() {
+    if (reduced.matches) {
+      active = false; clear();
+      STATES.forEach(function (c) { wa.classList.remove(c); });
+      if (nameEl) nameEl.textContent = NAME;
+      wa.classList.remove("is-js", "is-resetting");
+      return;
     }
-    labels();
-
-    if (!wa.hasAttribute("data-wa-live")) return;
-
-    var rows = all(".wa__row[data-step]", wa), tap = wa.querySelector("[data-wa-tap]");
-    var book = wa.querySelector("[data-wa-book]"), frame = wa.closest("[data-slide]");
-    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    var step = 0, tok = 0, active = false, visible = false;
-    var timers = new Set(), pending = new Set(), raf = 0, motion = null;
-    var finger = { x: 0, y: 0 }, lastTarget = null, size = "";
-
-    function show(n) {
-      step = n;
-      rows.forEach(function (r) { r.classList.toggle("is-off", +r.getAttribute("data-step") > n); });
-    }
-    function typing(on) { wa.classList.toggle("is-typing", !!on); }
-    function mark(list, i) { list.forEach(function (b, k) { b.classList.toggle("is-sel", k === i); }); }
-    function draw() { tap.style.transform = "translate3d(" + finger.x.toFixed(3) + "px," + finger.y.toFixed(3) + "px,0)"; }
-    function pos(el) {
-      var a = wa.getBoundingClientRect(), b = el.getBoundingClientRect();
-      return { x: (b.left + b.width / 2 - a.left) / (a.width / wa.clientWidth || 1),
-        y: (b.top + b.height / 2 - a.top) / (a.height / wa.clientHeight || 1) };
-    }
-    function duration(a, b) { return Math.max(300, Math.min(450, 300 + Math.hypot(b.x - a.x, b.y - a.y) * 0.65)); }
-    function later(fn, ms) {
-      var my = tok, id = window.setTimeout(function () {
-        timers.delete(id); if (my === tok) fn();
-      }, ms);
-      timers.add(id);
-    }
-    function release() {
-      tap.classList.remove("is-down");
-      all(".is-press", wa).forEach(function (el) { el.classList.remove("is-press"); });
-    }
-    function hideTap() { tap.classList.remove("is-on"); }
-    function stopMovement() {
-      window.cancelAnimationFrame(raf); raf = 0;
-      if (motion) { var old = motion; motion = null; old.finish(false); }
-    }
-    function cancel() {
-      tok++;
-      timers.forEach(function (id) { window.clearTimeout(id); }); timers.clear();
-      stopMovement();
-      Array.from(pending).forEach(function (finish) { finish(false); });
-      release();
-    }
-
-    // Exactly one trajectory. A changed responsive target rebases from the last
-    // rendered position, so neither layout changes nor cancellation can teleport it.
-    function moveTo(el) {
-      stopMovement(); lastTarget = el;
-      if (!el || !active || reduced.matches) return Promise.resolve(false);
-      var my = tok;
-      return new Promise(function (resolve) {
-        var done = false;
-        function finish(ok) { if (done) return; done = true; pending.delete(finish); resolve(ok); }
-        pending.add(finish);
-        var target = pos(el);
-        motion = { from: { x: finger.x, y: finger.y }, to: target, target: el,
-          start: performance.now(), duration: duration(finger, target), finish: finish };
-        tap.classList.add("is-on");
-        function tick(now) {
-          raf = 0;
-          if (my !== tok || !motion || !active || reduced.matches) { stopMovement(); return; }
-          var m = motion, next = pos(m.target);
-          if (Math.hypot(next.x - m.to.x, next.y - m.to.y) > 0.5) {
-            m.from = { x: finger.x, y: finger.y }; m.to = next;
-            m.start = now; m.duration = duration(finger, next);
-          }
-          var t = Math.max(0, Math.min(1, (now - m.start) / m.duration));
-          var ease = 1 - Math.pow(1 - t, 3);
-          finger.x = m.from.x + (m.to.x - m.from.x) * ease;
-          finger.y = m.from.y + (m.to.y - m.from.y) * ease;
-          draw();
-          if (t < 1) raf = window.requestAnimationFrame(tick);
-          else { motion = null; m.finish(true); }
-        }
-        raf = window.requestAnimationFrame(tick);
-      });
-    }
-    function touch(el, response) {
-      return new Promise(function (resolve) {
-        var done = false;
-        function finish(ok) { if (done) return; done = true; pending.delete(finish); resolve(ok); }
-        pending.add(finish);
-        tap.classList.add("is-down"); if (el) el.classList.add("is-press");
-        later(function () {
-          response(); release();
-          later(function () { finish(true); }, 110);
-        }, 90);
-      });
-    }
-    function run(seq) {
-      cancel();
-      var my = tok, i = 0;
-      function next() {
-        if (my !== tok || !active || i >= seq.length) return;
-        var action = seq[i++];
-        later(function () {
-          var result = action[1]();
-          if (result && typeof result.then === "function") result.then(function (ok) { if (ok !== false && my === tok) next(); });
-          else next();
-        }, action[0]);
-      }
-      next();
-    }
-    function reset() {
-      cancel(); wa.classList.add("is-instant");
-      hideTap(); typing(false); lastTarget = null;
-      selDay = PICK; selTime = TPICK; mark(dayBtns, -1); mark(timeBtns, -1); labels(); show(0);
-      finger.x = wa.clientWidth / 2; finger.y = wa.clientHeight + tap.offsetHeight;
-      draw(); void wa.offsetWidth; wa.classList.remove("is-instant");
-    }
-    function restart() {
-      cancel(); hideTap(); typing(false); wa.classList.add("is-resetting");
-      later(function () {
-        reset(); wa.classList.remove("is-resetting"); if (active) demo();
-      }, 240);
-    }
-    function demo() {
-      var day = dayBtns[PICK], time = timeBtns[TPICK];
-      run([
-        [650, function () { return moveTo(book); }],
-        [0, function () { return touch(book, function () { show(1); }); }],
-        [420, function () { typing(true); }],
-        [900, function () { typing(false); show(2); }],
-        [700, function () { return moveTo(day); }],
-        [0, function () { return touch(day, function () { selDay = PICK; mark(dayBtns, PICK); labels(); show(3); }); }],
-        [420, function () { typing(true); }],
-        [850, function () { typing(false); show(4); }],
-        [700, function () { return moveTo(time); }],
-        [0, function () { return touch(time, function () { selTime = TPICK; mark(timeBtns, TPICK); labels(); show(5); }); }],
-        [420, function () { typing(true); hideTap(); }],
-        [950, function () { typing(false); show(6); }],
-        [6200, function () { if (active) restart(); }]
-      ]);
-    }
-    function poke() { document.dispatchEvent(new CustomEvent("nahlio:wa-interact")); }
-    function user(seq) { hideTap(); typing(false); run(seq); poke(); }
-    wa.addEventListener("click", function (e) {
-      var b = e.target.closest ? e.target.closest("button") : null;
-      if (!b || !wa.contains(b)) return;
-      // Any visitor action takes ownership, including already-selected controls.
-      cancel(); hideTap(); typing(false); poke();
-      if (b.hasAttribute("data-wa-book")) {
-        if (step >= 1) return;
-        user([[0, function () { show(1); }], [380, function () { typing(true); }], [800, function () { typing(false); show(2); }]]);
-      } else if (b.hasAttribute("data-wa-day")) {
-        if (b.classList.contains("is-full") || step < 2) return;
-        selDay = +b.getAttribute("data-wa-day"); mark(dayBtns, selDay); labels();
-        if (step < 3) user([[260, function () { show(3); }], [380, function () { typing(true); }], [800, function () { typing(false); show(4); }]]);
-      } else if (b.hasAttribute("data-wa-time")) {
-        if (step < 4) return;
-        selTime = timeBtns.indexOf(b); mark(timeBtns, selTime); labels();
-        if (step < 5) user([[260, function () { show(5); }], [380, function () { typing(true); }], [850, function () { typing(false); show(6); }]]);
-      }
-    });
-
-    function isActive() { return !frame || frame.classList.contains("is-active"); }
-    function check() {
-      if (reduced.matches) {
-        active = false; cancel(); hideTap(); typing(false);
-        wa.classList.remove("is-js", "is-resetting"); return;
-      }
-      if (!wa.classList.contains("is-js")) { wa.classList.add("is-js"); reset(); }
-      var on = isActive() && visible && !document.hidden;
-      if (on && !active) { active = true; reset(); wa.classList.remove("is-resetting"); demo(); poke(); }
-      else if (!on && active) { active = false; cancel(); hideTap(); typing(false); wa.classList.remove("is-resetting"); }
-    }
-    document.addEventListener("nahlio:slide", check);
-    document.addEventListener("visibilitychange", check);
-    NAHLIO.onMedia(reduced, check);
-    document.addEventListener("nahlio:wa-replay", function () {
-      if (!isActive() || !visible || reduced.matches || document.hidden) return;
-      active = true; restart(); poke();
-    });
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting && entries[0].intersectionRatio >= 0.35; check();
-      }, { threshold: [0, 0.35] }).observe(wa);
-    } else visible = true;
-    function resized() {
-      var next = wa.clientWidth + "x" + wa.clientHeight;
-      if (next === size) return;
-      size = next;
-      if (!motion && active && lastTarget && tap.classList.contains("is-on")) moveTo(lastTarget);
-    }
-    if (window.ResizeObserver) new ResizeObserver(resized).observe(wa);
-    NAHLIO.onRecalc(resized);
-    check();
+    if (!wa.classList.contains("is-js")) { wa.classList.add("is-js"); reset(); }
+    var on = isActive() && visible && !document.hidden;
+    if (on && !active) { active = true; wa.classList.remove("is-resetting"); demo(); }
+    else if (!on && active) { active = false; wa.classList.remove("is-resetting"); reset(); }
+  }
+  document.addEventListener("nahlio:slide", check);
+  document.addEventListener("visibilitychange", check);
+  NAHLIO.onMedia(reduced, check);
+  document.addEventListener("nahlio:wa-replay", function () {
+    if (!isActive() || !visible || reduced.matches || document.hidden) return;
+    active = true; restart();
   });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting && entries[0].intersectionRatio >= 0.35; check();
+    }, { threshold: [0, 0.35] }).observe(wa);
+  } else visible = true;
+  check();
 })();
 
 /* ==== 50-faq.js ==== */
