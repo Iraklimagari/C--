@@ -236,7 +236,11 @@ function init(root) {
       return { x0: Math.max(W * 0.03, copyR - left + Math.max(28, W * 0.035)), x1: W - Math.max(24, window.innerWidth * 0.022),
                y0: H * 0.04, y1: H * 0.96, right: true };
     }
-    return { x0: W * 0.03, x1: W * 0.97, y0: H * 0.28, y1: H * 0.98, right: false };
+    /* Handy und Tablet: die Marke endet ueber den Knoepfen (die stehen unten im Hero, Wunsch 09.11.) */
+    const act = document.querySelector(".hero--mark .hero__actions");
+    let y1 = H * 0.98;
+    if (act && act.offsetHeight) y1 = Math.min(y1, act.getBoundingClientRect().top - root.getBoundingClientRect().top - Math.max(12, H * 0.02));
+    return { x0: W * 0.03, x1: W * 0.97, y0: H * 0.28, y1, right: false };
   }
   function screenBox() {
     inner.scale.setScalar(s);

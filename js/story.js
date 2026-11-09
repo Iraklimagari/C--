@@ -58,7 +58,8 @@
 
   /* Im Hero: nach kurzer Zeit ohne Scrollen zeigt der Hinweis, dass es nach unten weitergeht */
   var heroHint = 0, scrolledOnce = window.pageYOffset > 40;
-  if (guide && !scrolledOnce) heroHint = window.setTimeout(function () { if (!scrolledOnce) showGuide(true); }, 2400);
+  /* am Handy nicht: unten rechts laege der Hinweis auf den Knoepfen des Hero (Wunsch 09.11.); dort bleibt er der Geschichte */
+  if (guide && !scrolledOnce && !coarse) heroHint = window.setTimeout(function () { if (!scrolledOnce) showGuide(true); }, 2400);
   window.addEventListener("scroll", function () {
     if (scrolledOnce || window.pageYOffset < 40) return;
     scrolledOnce = true;
