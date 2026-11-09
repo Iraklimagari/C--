@@ -250,10 +250,16 @@
   background-color: #efeae2;                     /* WhatsApp-Chatgrund, flach */
 }
 .ks-w__day { align-self: center; padding: 0.3em 0.85em; border-radius: 0.6em; background: #fff; color: #54656f; font-size: 0.64em; font-weight: 600; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06); }
-.ks-w__msg { position: relative; max-width: 82%; padding: 0.45em 0.65em 0.4em; border-radius: 0.75em; font-size: 0.76em; line-height: 1.38;
+.ks-w__msg { position: relative; max-width: 82%; padding: 0.42em 0.62em 0.38em; border-radius: 0.62em; font-size: 0.76em; line-height: 1.38;
              background: #fff; box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13); }
-.ks-w__msg--out { align-self: flex-end; background: #d9fdd3; border-top-right-radius: 0.2em; }
-.ks-w__msg--in { border-top-left-radius: 0.2em; }
+.ks-w__msg--out { align-self: flex-end; background: #d9fdd3; border-top-right-radius: 0; }
+.ks-w__msg--in { border-top-left-radius: 0; }
+/* kleine Spitze wie bei WhatsApp (Wunsch 09.11.: Blasen wie im Original, so breit wie der Text) */
+.ks-w__msg--out::after, .ks-w__bot > .ks-w__msg--in:first-child::before {
+  content: ""; position: absolute; top: 0; width: 0.62em; height: 0.8em;
+}
+.ks-w__msg--out::after { right: -0.58em; background: #d9fdd3; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.ks-w__bot > .ks-w__msg--in:first-child::before { left: -0.58em; background: #fff; clip-path: polygon(0 0, 100% 0, 100% 100%); }
 .ks-w__t { float: right; display: inline-flex; align-items: center; gap: 0.25em; margin: 0.55em 0 -0.2em 0.7em; font-size: 0.74em; color: #667781; white-space: nowrap; }
 .ks-w__t svg { width: 1.3em; height: 0.75em; fill: none; stroke: #53bdeb; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .ks-w__input { flex: none; display: flex; align-items: center; gap: 0.75em; padding: 0.5em 0.85em 1.7em; background: #f6f6f6; color: #54656f; }
@@ -267,9 +273,10 @@
 .ks-w__row { flex: none; display: grid; grid-template-rows: 0fr; width: 100%; margin-top: 0; opacity: 0;
              transition: grid-template-rows 160ms ease, margin-top 160ms ease, opacity 120ms ease; }
 .ks-w__row > * { min-height: 0; overflow: hidden; padding: 0 0.1em 0.12em; }
-.ks-w__row--out > * { display: flex; flex-direction: column; align-items: flex-end; }
-.ks-w__row--out .ks-w__msg { max-width: 82%; }
-.ks-w__bot { display: grid; gap: 0.2em; width: 80%; }
+/* Kunde rechts, Assistent links; jede Blase so breit wie ihr Text (hoechstens 80 %), Knoepfe so breit wie die Blase */
+.ks-w__out { justify-self: end; width: fit-content; max-width: 80%; padding: 0 0.62em 0.12em 0; }
+.ks-w__out .ks-w__msg { display: block; max-width: none; }
+.ks-w__bot { display: grid; gap: 0.2em; justify-self: start; width: fit-content; max-width: 80%; padding: 0 0 0.12em 0.62em; }
 .ks-w__bot .ks-w__msg { max-width: none; }
 .ks-w__btns { display: grid; gap: 0.2em; }
 .ks-w__btn { display: block; padding: 0.55em 0.6em; border-radius: 0.6em; background: #fff; color: #008069; font-size: 0.74em; font-weight: 600; text-align: center;
