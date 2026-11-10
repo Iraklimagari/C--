@@ -182,17 +182,47 @@
   }
 
   /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
-     Beim ersten Erscheinen einmal abspielen (.is-play; Ablauf ganz in story.css). */
+     Beim ersten Erscheinen einmal abspielen (.is-play; Figur ganz in story.css). Die drei Fragen kreisen als reiner
+     Text auf einer leicht geneigten Bahn um den Kopf: hinten (obere Haelfte) hinter dem Kopf, kleiner und blasser,
+     vorn davor. Koordinaten wie die Zeichnung (viewBox 90 96 586 484). Bei Reduced Motion stehen sie still. */
   var fr = document.querySelector("[data-frage]");
-  if (fr) {
-    if (reduce || !("IntersectionObserver" in window)) fr.classList.add("is-play");
-    else {
-      var frIo = new IntersectionObserver(function (es) {
-        if (es[0].isIntersecting && es[0].intersectionRatio >= 0.3) { fr.classList.add("is-play"); frIo.disconnect(); }
-      }, { threshold: [0, 0.3] });
-      frIo.observe(fr.querySelector(".frage__scene"));
+  if (fr) (function () {
+    var scene = fr.querySelector(".frage__scene");
+    var qs = Array.prototype.slice.call(fr.querySelectorAll(".frage__q"));
+    var VX = 90, VY = 96, VW = 586, CX = 383, CY = 205, RX = 200, RY = 46, TILT = -8 * Math.PI / 180;
+    var PERIOD = 16000, A0 = [200, 320, 80].map(function (d) { return d * Math.PI / 180; });
+    var STILL = [195, 345, -90].map(function (d) { return d * Math.PI / 180; });
+    var IN_AT = 1100, IN_FOR = 700;
+    var raf = 0, seen = false, inView = false, t0 = 0;
+    function place(ms, still) {
+      var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.74 : RX;
+      var fade = still ? 1 : Math.max(0, Math.min(1, (ms - IN_AT) / IN_FOR));
+      var turn = still ? 0 : Math.max(0, ms - IN_AT) / PERIOD * 2 * Math.PI;
+      qs.forEach(function (q, i) {
+        var a = (still ? STILL[i] : A0[i]) + turn, s = Math.sin(a);
+        var ex = rx * Math.cos(a), ey = RY * s;
+        var x = CX + ex * Math.cos(TILT) - ey * Math.sin(TILT), y = CY + ex * Math.sin(TILT) + ey * Math.cos(TILT);
+        var front = still || s > 0;
+        q.style.transform = "translate3d(" + ((x - VX) * k).toFixed(1) + "px," + ((y - VY) * k).toFixed(1) + "px,0) translate(-50%,-50%) scale(" + (still ? 1 : 0.91 + 0.09 * s).toFixed(3) + ")";
+        q.style.zIndex = front ? "3" : "1";
+        q.style.opacity = ((still ? 1 : 0.8 + 0.2 * s) * fade).toFixed(3);
+      });
     }
-  }
+    function tick(now) {
+      raf = 0;
+      place(now - t0, false);
+      if (inView) raf = window.requestAnimationFrame(tick);
+    }
+    function run() { if (!raf && inView && seen && !reduce) raf = window.requestAnimationFrame(tick); }
+    window.addEventListener("resize", function () { if (reduce) place(0, true); else if (!raf && seen) place(performance.now() - t0, false); });
+    if (reduce || !("IntersectionObserver" in window)) { fr.classList.add("is-play"); place(0, true); return; }
+    place(0, false);
+    new IntersectionObserver(function (es) {
+      inView = es[0].isIntersecting;
+      if (inView && !seen && es[0].intersectionRatio >= 0.3) { seen = true; t0 = performance.now(); fr.classList.add("is-play"); }
+      run();
+    }, { threshold: [0, 0.3] }).observe(scene);
+  })();
 
   /* --- Seitenlinie: In den stehenden Sektionen laeuft sie nicht hinter Text und Bildern durch. Sie blendet
      kurz davor weich aus und danach wieder ein (Maske auf der Linienebene, in Seitenkoordinaten). ---------- */

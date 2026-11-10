@@ -1,7 +1,7 @@
 /* ==========================================================================
    NAHLIO — Premium-Auftritt (wird nach styles.css geladen)
-   1. Schrift: Manrope fuer Ueberschriften und Text (Wahl des Inhabers 09.11., Schriftvergleich Nr. 7);
-      die Schriftdatei steht in styles.css. Ueberschriften fett (700) mit enger Laufweite.
+   1. Schrift: Newsreader 440 (Serife, Wahl des Inhabers 03.11.) nur fuer die Ueberschriften;
+      alle anderen Texte bleiben in Geist (Wunsch 03.11., wieder seit 10.11.).
       Farben bleiben unveraendert (Wunsch: "dont play with colours").
    2. Hero: ein ruhiger Bildschirm ohne Bilder und ohne Wechsel. Text links,
       Bildmarke rechts: Die Linie schreibt die Marke in 2D, sie wird 3D, atmet
@@ -9,22 +9,60 @@
    ========================================================================== */
 
 /* --- 1. Schrift ----------------------------------------------------------- */
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/newsreader-latin-standard-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+                 U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/newsreader-latin-ext-standard-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+                 U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/newsreader-latin-standard-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+                 U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/newsreader-latin-ext-standard-italic.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+                 U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 :root {
-  --font-serif: var(--font-display);   /* Ueberschriften: Manrope (frueher Newsreader; der Name bleibt fuer die Regeln) */
-  --w-head: 700;                       /* Gewicht der grossen Ueberschriften */
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;   /* nur Ueberschriften */
+  --w-head: 440;                       /* Gewicht der Ueberschriften (Newsreader 440) */
   /* Eintritt / Bewegung (Emil Kowalski): starke Kurven, nur fuer neue Bewegung im Hero */
   --ease-enter: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
 }
 html { font-optical-sizing: auto; }
 
-/* Ueberschriften (h1, h2): Manrope 700 (Wahl des Inhabers, 09.11.). */
+/* Ueberschriften (h1, h2): Newsreader 440 (Wahl des Inhabers, 03.11.), optische Groesse automatisch.
+   Alles andere bleibt Geist. */
 h1, h2,
 .t-display, .t-h1, .t-h2, .hero__title, .sec-head__title, .customer-path__title, .blick__title, .uebergang__title,
 .sc__intro-title, .plans__title, .process__title, .faq-sec__title, .cta__title, .legal h2 {
   font-family: var(--font-serif);
   font-weight: var(--w-head);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.018em;
 }
 
 /* --- 2. Hero ---------------------------------------------------------------- */
@@ -62,7 +100,7 @@ h1, h2,
   font-weight: var(--w-head);
   font-size: var(--t);
   line-height: 1.03;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.018em;
   text-wrap: balance;
 }
 .hero--mark .hero__hl { font-style: italic; }           /* Farbe unveraendert (styles.css: --brand-deep): die Betonung */
