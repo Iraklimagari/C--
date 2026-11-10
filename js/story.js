@@ -182,41 +182,17 @@
   }
 
   /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
-     Beim ersten Erscheinen einmal abspielen (.is-play; Ablauf in story.css). Die Fragen kreisen auf einer leicht
-     geneigten Ellipse um den Kopf: vorn (untere Haelfte) etwas groesser und vor der Figur, hinten kleiner und
-     dahinter. Laeuft nur, solange die Szene im Bild ist; bei Reduced Motion stehen sie still. */
+     Beim ersten Erscheinen einmal abspielen (.is-play; Ablauf ganz in story.css). */
   var fr = document.querySelector("[data-frage]");
-  if (fr) (function () {
-    var scene = fr.querySelector(".frage__scene");
-    var chips = Array.prototype.slice.call(fr.querySelectorAll(".frage__chip"));
-    /* Bahn nach der Skizze: oben, links und rechts um den Kopf; unten laufen die Blasen hinter der Figur durch */
-    var VW = 900, CX = 440, CY = 318, RX = 300, RY = 225;
-    var PERIOD = 26000, A0 = -Math.PI / 2, ORBIT_AT = 2600;
-    var raf = 0, seen = false, inView = false, t0 = 0;
-    function place(ms) {
-      var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.86 : RX;
-      chips.forEach(function (c, i) {
-        var a = A0 + i * 2 * Math.PI / 3 + (ms / PERIOD) * 2 * Math.PI;
-        var x = CX + rx * Math.cos(a), y = CY + RY * Math.sin(a), low = Math.sin(a) > 0.62;
-        c.style.transform = "translate3d(" + (x * k).toFixed(1) + "px," + (y * k).toFixed(1) + "px,0) translate(-50%,-50%)";
-        c.style.zIndex = low ? "1" : "3";
-      });
+  if (fr) {
+    if (reduce || !("IntersectionObserver" in window)) fr.classList.add("is-play");
+    else {
+      var frIo = new IntersectionObserver(function (es) {
+        if (es[0].isIntersecting && es[0].intersectionRatio >= 0.3) { fr.classList.add("is-play"); frIo.disconnect(); }
+      }, { threshold: [0, 0.3] });
+      frIo.observe(fr.querySelector(".frage__scene"));
     }
-    function tick(now) {
-      raf = 0;
-      place(Math.max(0, now - t0 - ORBIT_AT));
-      if (inView && !reduce) raf = window.requestAnimationFrame(tick);
-    }
-    function run() { if (!raf && inView && seen && !reduce) raf = window.requestAnimationFrame(tick); }
-    place(0);
-    window.addEventListener("resize", function () { if (!raf) place(seen && !reduce ? performance.now() - t0 - ORBIT_AT : 0); });
-    if (reduce || !("IntersectionObserver" in window)) { fr.classList.add("is-play"); return; }
-    new IntersectionObserver(function (es) {
-      inView = es[0].isIntersecting;
-      if (inView && !seen && es[0].intersectionRatio >= 0.3) { seen = true; t0 = performance.now(); fr.classList.add("is-play"); }
-      run();
-    }, { threshold: [0, 0.3] }).observe(scene);
-  })();
+  }
 
   /* --- Seitenlinie: In den stehenden Sektionen laeuft sie nicht hinter Text und Bildern durch. Sie blendet
      kurz davor weich aus und danach wieder ein (Maske auf der Linienebene, in Seitenkoordinaten). ---------- */

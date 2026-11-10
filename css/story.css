@@ -555,75 +555,69 @@ html:not(.js) .ks__bar { display: none; }
     radial-gradient(40% 46% at 50% 30%, color-mix(in srgb, var(--brand) 9%, transparent), transparent 72%),
     linear-gradient(180deg, var(--soft) 0%, var(--white) 50%, var(--soft) 100%);
 }
-.frage__scene { position: relative; width: min(600px, 100%); aspect-ratio: 900 / 860; margin-inline: auto; }
-.frage__scene > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.frage__man { z-index: 2; }
-/* Figur in Tinte nach der Skizze: Koerper mit Oberarmen ein Stueck; Unterarme mit feiner heller Kante (4 px),
-   nur sie heben sich vom Koerper ab. */
-.frage__body, .frage__skull, .frage__hand { fill: var(--ink); }
-.frage__seam-fill { fill: var(--white); }
-.frage__seam, .frage__limb, .frage__fingers { fill: none; stroke-linecap: round; }
-.frage__seam { stroke: var(--white); stroke-width: 60; }
-.frage__fore .frage__seam-fill { fill: var(--white); }
-.frage__limb { stroke: var(--ink); stroke-width: 52; }
-.frage__fingers { stroke: var(--ink); stroke-width: 16; }
-.frage__seam--fingers { stroke-width: 24; }
-.frage__case { fill: #2a383f; }
-.frage__off { fill: #3a4b53; }
-.frage__phone, .frage__screen, .frage__glow, .frage__lit { opacity: 0; }        /* Endbild: Handy weggesteckt */
-.frage__fore { transform-box: view-box; transform-origin: 345px 722px; }
-.frage__head { transform-box: view-box; transform-origin: 440px 446px; transform: rotate(-5deg); }
-/* Fragen in Sprechblasen (Oval mit feiner Linie, wie in der Skizze); story.js laesst sie um den Kopf kreisen */
-.frage__chip { position: absolute; left: 0; top: 0; z-index: 3; will-change: transform; }
-.frage__chip > span {
-  display: grid; place-items: center; min-width: 8.6em; max-width: 11em; min-height: 3.6em; padding: 0.7em 1.35em; border-radius: 50%;
-  text-align: center; text-wrap: balance; background: var(--white); color: var(--ink);
-  border: 2px solid var(--ink); font-size: clamp(12px, 0.45vw + 10px, 16px); font-weight: 700; line-height: 1.22;
-}
-html:not(.js) .frage__chip:nth-of-type(1) { transform: translate(140%, 10%); }       /* ohne Skript: feste Plaetze */
-html:not(.js) .frage__chip:nth-of-type(2) { transform: translate(190%, 260%); }
-html:not(.js) .frage__chip:nth-of-type(3) { transform: translate(5%, 260%); }
+.frage__scene { position: relative; width: min(620px, 100%); margin-inline: auto; }
+.frage__art { display: block; width: 100%; height: auto; overflow: visible; }
+/* Figur nach dem Bild des Inhabers (10.11.). Arme: zuerst alle Kanten in Weiss (je 4 px breiter), darueber alle
+   Flaechen in Tinte, so gibt es keine hellen Gelenke; die feine Kante zeigt sich nur vor dem Koerper. */
+.frage__body, .frage__skull { fill: var(--ink); }
+.frage__lim, .frage__dig, .frage__grip-dig { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.frage__pass--line .frage__lim { stroke: var(--white); stroke-width: 64; }
+.frage__pass--line .frage__lim--fore { stroke-width: 58; }
+.frage__pass--line .frage__dig { stroke: var(--white); stroke-width: 26; }
+.frage__pass--line circle, .frage__pass--line ellipse, .frage__pass--line .frage__case { fill: var(--white); stroke: var(--white); stroke-width: 8; }
+.frage__pass--line .frage__cam { display: none; }
+.frage__pass--fill .frage__lim { stroke: var(--ink); stroke-width: 56; }
+.frage__pass--fill .frage__lim--fore { stroke-width: 50; }
+.frage__pass--fill .frage__dig, .frage__grip-dig { stroke: var(--ink); stroke-width: 18; }
+.frage__pass--fill circle, .frage__pass--fill ellipse, .frage__grip { fill: var(--ink); }
+.frage__case { fill: var(--ink); stroke: var(--white); stroke-width: 3; }
+.frage__cam { fill: #7b8a90; }
+.frage__fl { transform-box: view-box; transform-origin: 272px 474px; }
+.frage__fr { transform-box: view-box; transform-origin: 506px 474px; }
+.frage__face { opacity: 0; }
+/* Fragen im Kreis um die Figur (Schrift der Seite) */
+.frage__q { fill: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 30px; letter-spacing: -0.01em; }
+.frage__q--2 { font-size: 29px; }
+.frage__q--3 { font-size: 46px; font-weight: 800; }
+.frage__words, .frage__q { transform-box: view-box; transform-origin: 384px 352px; }
 /* Erklaerungen */
 .frage__list { display: grid; gap: clamp(10px, 0.6vw + 6px, 16px); width: min(36rem, 100%); margin: clamp(18px, 2vw + 6px, 36px) auto 0; padding: 0 var(--gutter); list-style: none; }
 .frage__list li { position: relative; padding-left: 1.4em; font-size: clamp(17px, 0.35vw + 15.5px, 20px); line-height: 1.5; color: var(--ink); text-wrap: pretty; }
 .frage__list li::before { content: ""; position: absolute; left: 0.2em; top: 0.62em; width: 0.42em; height: 0.42em; border-radius: 50%; background: var(--brand); }
 
 /* --- Auftritt (nur mit Skript und Bewegung; .is-play setzt story.js beim ersten Erscheinen) ---
-   Die Hand haelt das Handy vor dem Gesicht; 0,6 s Bildschirm an, Licht aufs Gesicht; 1,75 s aus, das Handy
-   verschwindet und die Hand geht ans Kinn (zwei Finger), der Blick hebt sich; ab 2,6 s kreisen die Fragen. */
+   Die Haende fuehren ins Endbild: 0,35 s die eine hebt das Handy vor die Brust, 1,1 s es geht an (warmes Licht auf
+   Koerper und kurz aufs Gesicht), 1,75 s die andere geht ans Kinn; ab 2,55 s erscheinen die Fragen im Kreis und
+   wiegen sich danach ganz leicht. */
 html.js.motion-ok .frage:not(.is-play) .frage__scene,
-html.js.motion-ok .frage:not(.is-play) .frage__list li { opacity: 0; }
-html.js.motion-ok .frage:not(.is-play) .frage__fore { transform: rotate(22deg); }
-html.js.motion-ok .frage:not(.is-play) .frage__head { transform: rotate(6deg); }
-html.js.motion-ok .frage:not(.is-play) .frage__fingers, html.js.motion-ok .frage:not(.is-play) .frage__seam--fingers { opacity: 0; }
-html.js.motion-ok .frage:not(.is-play) .frage__phone { opacity: 1; }
+html.js.motion-ok .frage:not(.is-play) .frage__list li,
+html.js.motion-ok .frage:not(.is-play) .frage__q,
+html.js.motion-ok .frage:not(.is-play) .frage__glow { opacity: 0; }
+html.js.motion-ok .frage:not(.is-play) .frage__fr { transform: rotate(-15deg); }
+html.js.motion-ok .frage:not(.is-play) .frage__fl { transform: rotate(55deg); }
 html.js.motion-ok .frage.is-play .frage__scene { animation: fr-in 520ms cubic-bezier(0.23, 1, 0.32, 1) both; }
-html.js.motion-ok .frage.is-play .frage__phone { animation: fr-phone 2150ms linear both; }
-html.js.motion-ok .frage.is-play .frage__screen,
-html.js.motion-ok .frage.is-play .frage__glow { animation: fr-on 1950ms linear both; }
-html.js.motion-ok .frage.is-play .frage__lit { animation: fr-lit 2050ms linear both; }
-html.js.motion-ok .frage.is-play .frage__fore { animation: fr-arm 700ms cubic-bezier(0.77, 0, 0.175, 1) 1900ms both; }
-html.js.motion-ok .frage.is-play .frage__fingers, html.js.motion-ok .frage.is-play .frage__seam--fingers { animation: fr-show 200ms ease-out 2350ms both; }
-html.js.motion-ok .frage.is-play .frage__head { animation: fr-tilt 700ms cubic-bezier(0.77, 0, 0.175, 1) 1950ms both; }
-html.js.motion-ok .frage.is-play .frage__chip > span { animation: fr-chip 340ms cubic-bezier(0.23, 1, 0.32, 1) both; }
-html.js.motion-ok .frage.is-play .frage__chip:nth-of-type(1) > span { animation-delay: 2650ms; }
-html.js.motion-ok .frage.is-play .frage__chip:nth-of-type(2) > span { animation-delay: 2730ms; }
-html.js.motion-ok .frage.is-play .frage__chip:nth-of-type(3) > span { animation-delay: 2810ms; }
+html.js.motion-ok .frage.is-play .frage__fr { animation: fr-raise 700ms cubic-bezier(0.77, 0, 0.175, 1) 350ms both; }
+html.js.motion-ok .frage.is-play .frage__glow { animation: fr-on 450ms cubic-bezier(0.23, 1, 0.32, 1) 1100ms both; }
+html.js.motion-ok .frage.is-play .frage__face { animation: fr-face 1700ms linear 1100ms both; }
+html.js.motion-ok .frage.is-play .frage__fl { animation: fr-think 750ms cubic-bezier(0.77, 0, 0.175, 1) 1750ms both; }
+html.js.motion-ok .frage.is-play .frage__q { animation: fr-word 520ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+html.js.motion-ok .frage.is-play .frage__q--1 { animation-delay: 2550ms; }
+html.js.motion-ok .frage.is-play .frage__q--2 { animation-delay: 2700ms; }
+html.js.motion-ok .frage.is-play .frage__q--3 { animation-delay: 2850ms; }
+html.js.motion-ok .frage.is-play .frage__words { animation: fr-sway 9s ease-in-out 3.4s infinite alternate; }
 html.js.motion-ok .frage.is-play .frage__list li { animation: fr-up 520ms cubic-bezier(0.23, 1, 0.32, 1) both; }
-html.js.motion-ok .frage.is-play .frage__list li:nth-child(1) { animation-delay: 2950ms; }
-html.js.motion-ok .frage.is-play .frage__list li:nth-child(2) { animation-delay: 3030ms; }
-html.js.motion-ok .frage.is-play .frage__list li:nth-child(3) { animation-delay: 3110ms; }
+html.js.motion-ok .frage.is-play .frage__list li:nth-child(1) { animation-delay: 3000ms; }
+html.js.motion-ok .frage.is-play .frage__list li:nth-child(2) { animation-delay: 3080ms; }
+html.js.motion-ok .frage.is-play .frage__list li:nth-child(3) { animation-delay: 3160ms; }
 @keyframes fr-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-/* Handy da, nach ~1,9 s weg (nach unten aus der Hand) */
-@keyframes fr-phone { 0%, 86% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(18px) scale(0.92); } }
-/* Bildschirm an bei 0,6 s (360 ms), aus ab 1,75 s */
-@keyframes fr-on { 0%, 31% { opacity: 0; } 49% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; } }
-@keyframes fr-lit { 0%, 30% { opacity: 0; } 50% { opacity: 0.9; } 85% { opacity: 0.9; } 100% { opacity: 0; } }
-@keyframes fr-arm { from { transform: rotate(22deg); } to { transform: none; } }
-@keyframes fr-tilt { from { transform: rotate(6deg); } to { transform: rotate(-5deg); } }
-@keyframes fr-show { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fr-chip { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: none; } }
+@keyframes fr-raise { from { transform: rotate(-15deg); } to { transform: none; } }
+@keyframes fr-think { from { transform: rotate(55deg); } to { transform: none; } }
+@keyframes fr-on { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fr-face { 0% { opacity: 0; } 22% { opacity: 1; } 55% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes fr-word { from { opacity: 0; transform: rotate(-7deg); } to { opacity: 1; transform: none; } }
+@keyframes fr-sway { from { transform: none; } to { transform: rotate(4deg); } }
 @keyframes fr-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   .frage__list li, .frage__scene { animation: none !important; opacity: 1 !important; }
 }
+.frage__inner { fill: none; stroke: var(--white); stroke-width: 4; stroke-linecap: round; }   /* Innenkante der Oberarme */

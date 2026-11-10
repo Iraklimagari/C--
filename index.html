@@ -22,7 +22,7 @@
 <link rel="preload" href="fonts/manrope-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/styles.css?v=m2">
 <link rel="stylesheet" href="css/premium.css?v=17">
-<link rel="stylesheet" href="css/story.css?v=21">
+<link rel="stylesheet" href="css/story.css?v=24">
 <link rel="stylesheet" href="css/flat.css?v=8">
 <link rel="stylesheet" href="css/szenen.css?v=1">
 <link rel="stylesheet" href="css/space.css?v=5">
@@ -363,38 +363,37 @@
 <section class="section frage" id="fragen-kunden" data-frage data-theme="white" data-nav-theme="light" aria-labelledby="frage-titel">
   <h2 class="visually-hidden" id="frage-titel">Was Ihre Kunden wissen möchten</h2>
   <div class="frage__scene" aria-hidden="true">
-    <span class="frage__chip"><span>Was bieten Sie an?</span></span>
-    <span class="frage__chip"><span>Was kostet das?</span></span>
-    <span class="frage__chip"><span>Wie kann ich Sie erreichen?</span></span>
-    <svg class="frage__man" viewBox="0 0 900 860" focusable="false">
+    <svg class="frage__art" viewBox="0 0 768 640" focusable="false">
       <defs>
-        <radialGradient id="frage-face" cx="530" cy="420" r="150" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c6f7fc" stop-opacity="0.95"/><stop offset="0.45" stop-color="#5fd9ea" stop-opacity="0.42"/><stop offset="1" stop-color="#01ABC3" stop-opacity="0"/></radialGradient>
-        <radialGradient id="frage-glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#9eeefa" stop-opacity="0.8"/><stop offset="1" stop-color="#01ABC3" stop-opacity="0"/></radialGradient>
-        <linearGradient id="frage-screen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecfdff"/><stop offset="1" stop-color="#5fd9ea"/></linearGradient>
-        <linearGradient id="frage-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.84" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-        <mask id="frage-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="900" height="860"><rect width="900" height="860" fill="url(#frage-fade)"/></mask>
+        <radialGradient id="frage-glow" cx="389" cy="425" r="112" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fffbef" stop-opacity="1"/><stop offset="0.38" stop-color="#f3e7c9" stop-opacity="0.7"/><stop offset="1" stop-color="#f3e7c9" stop-opacity="0"/></radialGradient>
+        <radialGradient id="frage-face" cx="388" cy="312" r="110" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff6df" stop-opacity="0.7"/><stop offset="1" stop-color="#fff6df" stop-opacity="0"/></radialGradient>
+        <path id="frage-arc-top" d="M352.6 53.6 A300 300 0 0 1 648.9 211.2"/>
+        <path id="frage-arc-left" d="M175.6 136.2 A300 300 0 0 0 168.2 560.4"/>
+        <path id="frage-arc-right" d="M515.5 621.6 A300 300 0 0 0 662.2 239.6"/>
+        <mask id="frage-elbows" maskUnits="userSpaceOnUse" x="0" y="0" width="768" height="640"><rect width="768" height="640" fill="#fff"/><circle cx="272" cy="474" r="40" fill="#000"/><circle cx="506" cy="474" r="40" fill="#000"/></mask>
       </defs>
-      <!-- nach der Skizze des Inhabers (10.11.): Kopf wie ein Ei direkt auf dem Koerper, eine Hand am Kinn,
-           der andere Arm quer ueber der Taille; feine helle Kanten nur an den Unterarmen -->
-      <g mask="url(#frage-mask)">
-        <path class="frage__body" d="M272 860 268 600c-2-80 22-130 72-144l60-6h80l64 6c50 14 60 64 56 144l-16 260z"/>
-        <path class="frage__seam" d="M586 712 334 742"/><path class="frage__limb" d="M586 712 334 742"/>
+      <!-- Endbild nach dem Bild des Inhabers (10.11.): eine Figur, Hand mit Daumen und Zeigefinger am Kinn, die andere
+           haelt das Handy vor der Brust, dessen Licht den Koerper erhellt; die drei Fragen laufen im Kreis um ihn herum.
+           Arme ohne helle Gelenke: erst alle Kanten (weiss), dann alle Flaechen (Tinte) darueber. -->
+      <path class="frage__body" d="M240 502V402c0-60 30-96 90-102h110c60 6 90 42 90 102v100z"/>
+      <circle class="frage__skull" cx="384" cy="213" r="86"/>
+      <circle class="frage__face" cx="384" cy="213" r="86" fill="url(#frage-face)"/>
+      <circle class="frage__glow" cx="389" cy="425" r="112" fill="url(#frage-glow)"/>
+      <g class="frage__pass frage__pass--fill"><path class="frage__lim" d="M270 352 272 474"/><path class="frage__lim" d="M500 352 506 474"/></g>
+      <path class="frage__inner" d="M299 362 300 446M479 362 478 446"/>
+      <g class="frage__pass frage__pass--line" mask="url(#frage-elbows)">  <!-- feine Kante nur an Unterarm und Hand, am Ellbogen ausgespart: keine Gelenke -->
+        <g class="frage__fl"><path class="frage__lim frage__lim--fore" d="M272 474 334 326"/><circle cx="338" cy="322" r="25"/><path class="frage__dig" d="M327 309 339 284M352 313 414 295"/></g>
+        <g class="frage__fr"><rect class="frage__case" x="362" y="380" width="54" height="90" rx="11" transform="rotate(-4 389 425)"/><circle class="frage__cam" cx="375" cy="394" r="4.5"/><path class="frage__lim frage__lim--fore" d="M506 474 436 442"/><ellipse cx="424" cy="444" rx="29" ry="23"/><path class="frage__dig" d="M410 428 404 410"/></g>
       </g>
-      <g class="frage__phone">
-        <circle class="frage__glow" cx="560" cy="452" r="112" fill="url(#frage-glow)"/>
-        <g transform="rotate(-18 562 456)"><rect class="frage__case" x="539" y="412" width="46" height="88" rx="9"/><rect class="frage__off" x="544" y="419" width="36" height="72" rx="5"/><rect class="frage__screen" x="544" y="419" width="36" height="72" rx="5" fill="url(#frage-screen)"/></g>
+      <g class="frage__pass frage__pass--fill">
+        <g class="frage__fl"><path class="frage__lim frage__lim--fore" d="M272 474 334 326"/><circle cx="338" cy="322" r="25"/><path class="frage__dig" d="M327 309 339 284M352 313 414 295"/></g>
+        <g class="frage__fr"><path class="frage__lim frage__lim--fore" d="M506 474 436 442"/><ellipse cx="424" cy="444" rx="29" ry="23"/><path class="frage__dig" d="M410 428 404 410"/></g>
       </g>
-      <g class="frage__head">
-        <ellipse class="frage__skull" cx="440" cy="330" rx="96" ry="114" transform="rotate(-8 440 330)"/>
-        <ellipse class="frage__lit" cx="440" cy="330" rx="96" ry="114" transform="rotate(-8 440 330)" fill="url(#frage-face)"/>
-      </g>
-      <g mask="url(#frage-mask)">  <!-- Unterarm vor dem Kopf: Hand und zwei Finger am Kinn sichtbar -->
-          <g class="frage__fore">
-          <path class="frage__seam" d="M345 722 470 470"/><ellipse class="frage__seam-fill" cx="482" cy="440" rx="34" ry="38" transform="rotate(-20 482 440)"/>
-          <path class="frage__seam frage__seam--fingers" d="M468 414 462 380M486 412 481 378"/>
-          <path class="frage__limb" d="M345 722 470 470"/><ellipse class="frage__hand" cx="482" cy="440" rx="30" ry="34" transform="rotate(-20 482 440)"/>
-          <path class="frage__fingers" d="M468 414 462 380M486 412 481 378"/>
-        </g>
+      <g class="frage__fr frage__phone"><rect class="frage__case" x="362" y="380" width="54" height="90" rx="11" transform="rotate(-4 389 425)"/><circle class="frage__cam" cx="375" cy="394" r="4.5"/><ellipse class="frage__grip" cx="424" cy="444" rx="29" ry="23"/><path class="frage__grip-dig" d="M410 428 404 410"/></g>
+      <g class="frage__words">
+        <text class="frage__q frage__q--1"><textPath href="#frage-arc-top" startOffset="50%" text-anchor="middle">Was bieten Sie an?</textPath></text>
+        <text class="frage__q frage__q--2"><textPath href="#frage-arc-left" startOffset="50%" text-anchor="middle">Wie kann ich Sie erreichen?</textPath></text>
+        <text class="frage__q frage__q--3"><textPath href="#frage-arc-right" startOffset="50%" text-anchor="middle">Was kostet das?</textPath></text>
       </g>
     </svg>
   </div>
@@ -616,6 +615,6 @@
 </footer>
 <script src="js/app.js?v=w1" defer></script>
 <script src="js/hero-mark.js?v=12" defer></script>
-<script src="js/story.js?v=19" defer></script>
+<script src="js/story.js?v=20" defer></script>
 </body>
 </html>
