@@ -12,6 +12,7 @@ EL,WLf=(280,488),(338,364); ER,WRf=(500,480),(440,456)
 def frame_of(E,Wf):
     L=math.dist(E,Wf); ux,uy=(Wf[0]-E[0])/L,(Wf[1]-E[1])/L; return L,(ux,uy)
 LL0,DL0=frame_of(EL,WLf); LR0,DR0=frame_of(ER,WRf)
+CW_L=None; CW_R=None
 def to_uv(p,E,L,d): vx,vy=p[0]-E[0],p[1]-E[1]; return ((vx*d[0]+vy*d[1])/L, -vx*d[1]+vy*d[0])
 def from_uv(u,v,E,L,d): return (E[0]+u*L*d[0]-v*d[1], E[1]+u*L*d[1]+v*d[0])
 def chaikin(pts, it=1):
@@ -21,13 +22,31 @@ def chaikin(pts, it=1):
             p,q=pts[i],pts[(i+1)%n]; out.append((0.75*p[0]+0.25*q[0],0.75*p[1]+0.25*q[1])); out.append((0.25*p[0]+0.75*q[0],0.25*p[1]+0.75*q[1]))
         pts=out
     return pts
-def pose_arm(pts, E, L0, d0, phi, Lnew, wrist, k, hand_from=0.86, anchor=0.2, widen=None):
+def profile(pts, E, L0, d0):
+    """Querschnitt der gezeichneten Unterarmkontur: Mitte und Breite je Stelle u"""
+    bins={}
+    for p in pts:
+        u,v=to_uv(p,E,L0,d0); b=round(max(0.0,min(1.0,u))*20)
+        lo,hi=bins.get(b,(1e9,-1e9)); bins[b]=(min(lo,v),max(hi,v))
+    def cw(u):
+        b=round(max(0.0,min(1.0,u))*20)
+        for d in range(0,21):
+            for bb in (b-d,b+d):
+                if bb in bins and bins[bb][1]>bins[bb][0]: lo,hi=bins[bb]; return ((lo+hi)/2, max(1.0,hi-lo))
+        return (0.0,1.0)
+    return cw
+def pose_arm(pts, E, L0, d0, phi, Lnew, wrist, k, hand_from=0.86, anchor=0.2, widen=None, norm=None):
     """gezeichnete Unterarm-/Handkontur entlang des Knochens neu setzen (Drehung, Verkuerzung, Handgelenk)"""
     dn=(math.cos(phi),math.sin(phi)); Wn=(E[0]+Lnew*dn[0],E[1]+Lnew*dn[1]); W0=(E[0]+L0*d0[0],E[1]+L0*d0[1])
     out=[]; us=[]
     for p in pts:
         u,v=to_uv(p,E,L0,d0); us.append(u)
         if widen: v*=widen(u)                                              # Unterarm so breit wie der andere
+        if norm:                                                           # Start: gleich breit, gerade Kanten (beide Arme gleich)
+            Wt,h,cw=norm
+            if h>0 and u<0.9:
+                cc,ww=cw(u); vn=(v/(widen(u) if widen else 1)-cc)/ww*Wt
+                v=v*(1-h)+vn*h
         pf=from_uv(u,v,E,Lnew,dn)                                         # Unterarm: verkuerzt entlang der Achse
         loc=rot(p,W0,-math.atan2(d0[1],d0[0])); lx,ly=loc[0]-W0[0],loc[1]-W0[1]
         ph=rot((Wn[0]+lx*k,Wn[1]+ly*k),Wn,phi+wrist)                      # Hand: am Handgelenk angehaengt
@@ -37,6 +56,8 @@ def pose_arm(pts, E, L0, d0, phi, Lnew, wrist, k, hand_from=0.86, anchor=0.2, wi
         out.append((q[0]*(1-s)+p[0]*s, q[1]*(1-s)+p[1]*s))
     return out, us, Wn
 def geo(f):
+    global CW_L, CW_R
+    if CW_L is None: CW_L=profile(LP,EL,LL0,DL0); CW_R=profile(RP,ER,LR0,DR0)
     ur=ease(span(f,2,32)); ul=ease(span(f,24,59))
     phiRf=math.atan2(DR0[1],DR0[0]); phiRf=phiRf if phiRf>0 else phiRf+2*math.pi
     phiR=lerp(math.radians(90),phiRf,ur); LR=lerp(150,LR0,ur)*(1-0.30*math.sin(math.pi*ur)); kR=1+0.10*math.sin(math.pi*ur)
@@ -48,10 +69,11 @@ def geo(f):
     # haengend (Start): der Unterarm fuehrt den Oberarm gerade weiter - so breit wie er, bis an den Koerper; beim
     # Anheben wird er schmaler und rueckt an seinen Platz
     hL=1-smoothstep(0.0,0.35,ul); hR=1-smoothstep(0.0,0.35,ur)
-    widenL=lambda u: (1.0+0.30*(1-smoothstep(0.72,0.98,u)))*(1+0.15*hL)   # links so breit wie rechts (~53 statt ~40)
-    larm,lus,WL=pose_arm(lp,EL,LL0,DL0,phiL,LL,wristL,kL,anchor=0.0,widen=widenL)
-    rarm,rus,WR=pose_arm(RP,ER,LR0,DR0,phiR,LR,0.0,kR,widen=lambda u: 1+0.36*hR)
-    larm=[(x-8.5*hL,y) for x,y in larm]; rarm=[(x-4.5*hR,y) for x,y in rarm]
+    widenL=lambda u: 1.0+0.30*(1-smoothstep(0.72,0.98,u))                 # links so breit wie rechts (~53 statt ~40)
+    W0=66                                                                   # haengend: beide Unterarme gleich breit, senkrecht
+    larm,lus,WL=pose_arm(lp,EL,LL0,DL0,phiL,LL,wristL,kL,anchor=0.0,widen=widenL,norm=(W0,hL,CW_L))
+    rarm,rus,WR=pose_arm(RP,ER,LR0,DR0,phiR,LR,0.0,kR,norm=(W0,hR,CW_R))
+    larm=[(x-8.0*hL,y) for x,y in larm]; rarm=[(x-4.0*hR,y) for x,y in rarm]
     # Handy und Kamera folgen der Telefonhand (wie die Handpunkte)
     def hand_r(p):
         W0=(ER[0]+LR0*DR0[0],ER[1]+LR0*DR0[1]); loc=rot(p,W0,-math.atan2(DR0[1],DR0[0])); lx,ly=loc[0]-W0[0],loc[1]-W0[1]
