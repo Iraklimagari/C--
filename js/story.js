@@ -190,7 +190,7 @@
     var scene = fr.querySelector(".frage__scene");
     var chips = Array.prototype.slice.call(fr.querySelectorAll(".frage__chip"));
     var VW = 640, CX = 320, CY = 100, RX = 230, RY = 46, TILT = -7 * Math.PI / 180;
-    var PERIOD = 20000, A0 = 2.35, ORBIT_AT = 3300;
+    var PERIOD = 20000, A0 = 2.35, ORBIT_AT = 2600;
     var raf = 0, seen = false, inView = false, t0 = 0;
     function place(ms) {
       var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.84 : RX;

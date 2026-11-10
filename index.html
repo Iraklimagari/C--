@@ -22,7 +22,7 @@
 <link rel="preload" href="fonts/manrope-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/styles.css?v=m2">
 <link rel="stylesheet" href="css/premium.css?v=17">
-<link rel="stylesheet" href="css/story.css?v=16">
+<link rel="stylesheet" href="css/story.css?v=18">
 <link rel="stylesheet" href="css/flat.css?v=8">
 <link rel="stylesheet" href="css/szenen.css?v=1">
 <link rel="stylesheet" href="css/space.css?v=5">
@@ -363,39 +363,39 @@
 <section class="section frage" id="fragen-kunden" data-frage data-theme="white" data-nav-theme="light" aria-labelledby="frage-titel">
   <h2 class="visually-hidden" id="frage-titel">Was Ihre Kunden wissen möchten</h2>
   <div class="frage__scene" aria-hidden="true">
-    <svg class="frage__ring frage__ring--back" viewBox="0 0 640 470" focusable="false"><path pathLength="1" d="M 90 100 A 230 46 0 0 1 550 100" transform="rotate(-7 320 100)"/></svg>
     <span class="frage__chip"><span>Was bieten Sie an?</span></span>
     <span class="frage__chip"><span>Was kostet das?</span></span>
     <span class="frage__chip"><span>Wie kann ich Sie erreichen?</span></span>
     <svg class="frage__man" viewBox="0 0 640 470" focusable="false">
       <defs>
-        <radialGradient id="frage-face" cx="366" cy="156" r="100" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#bff6fc" stop-opacity="0.95"/><stop offset="0.45" stop-color="#5fd9ea" stop-opacity="0.45"/><stop offset="1" stop-color="#01ABC3" stop-opacity="0"/></radialGradient>
-        <radialGradient id="frage-glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#9eeefa" stop-opacity="0.85"/><stop offset="1" stop-color="#01ABC3" stop-opacity="0"/></radialGradient>
-        <linearGradient id="frage-screen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9fdff"/><stop offset="1" stop-color="#5fd9ea"/></linearGradient>
-        <clipPath id="frage-head"><circle cx="320" cy="108" r="64"/></clipPath>
-        <linearGradient id="frage-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.82" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <radialGradient id="frage-face" cx="370" cy="160" r="104" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c6f7fc" stop-opacity="0.95"/><stop offset="0.45" stop-color="#5fd9ea" stop-opacity="0.42"/><stop offset="1" stop-color="#01ABC3" stop-opacity="0"/></radialGradient>
+        <radialGradient id="frage-glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#9eeefa" stop-opacity="0.8"/><stop offset="1" stop-color="#01ABC3" stop-opacity="0"/></radialGradient>
+        <linearGradient id="frage-screen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecfdff"/><stop offset="1" stop-color="#5fd9ea"/></linearGradient>
+        <linearGradient id="frage-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
         <mask id="frage-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="470"><rect width="640" height="470" fill="url(#frage-fade)"/></mask>
       </defs>
       <g mask="url(#frage-mask)">
-        <path class="frage__body" d="M236 470V258c0-34 24-58 58-60h52c34 2 58 26 58 60v212z"/>
-        <path class="frage__line" d="M266 240v96M374 240l-4 96"/>
-        <path class="frage__arm-out" d="M252 352h140"/><path class="frage__arm" d="M252 352h140"/>
-      </g>
-      <g class="frage__head">
-        <circle class="frage__skull" cx="320" cy="108" r="64"/>
-        <circle class="frage__lit" cx="320" cy="108" r="64" fill="url(#frage-face)"/>
+        <!-- Koerper mit Oberarmen in einem Stueck; nur die Unterarme haben eine feine helle Kante, wo sie vor dem Koerper liegen -->
+        <path class="frage__body" d="M226 470V332c-4-40 4-90 20-118 12-22 34-32 56-34h36c22 2 44 12 56 34 16 28 24 78 20 118v138z"/>
+        <g class="frage__seam">
+          <path d="M420 328 392 254"/>
+          <g class="frage__fore"><path d="M244 330 288 214"/><ellipse cx="294" cy="197" rx="20" ry="22"/><path class="frage__fingers" d="M288 182l5-16M300 184l7-16"/></g>
+        </g>
+        <g class="frage__limb">
+          <path d="M420 328 392 254"/>
+          <g class="frage__fore"><path d="M244 330 288 214"/><ellipse cx="294" cy="197" rx="17" ry="19"/><path class="frage__fingers" d="M288 182l5-16M300 184l7-16"/></g>
+        </g>
       </g>
       <g class="frage__phone">
-        <circle class="frage__glow" cx="388" cy="206" r="74" fill="url(#frage-glow)"/>
-        <g transform="rotate(-28 392 216)"><rect class="frage__case" x="375" y="184" width="34" height="64" rx="7"/><rect class="frage__screen" x="378.5" y="189" width="27" height="54" rx="4" fill="url(#frage-screen)"/></g>
+        <circle class="frage__glow" cx="374" cy="202" r="78" fill="url(#frage-glow)"/>
+        <g transform="rotate(-14 376 236)"><rect class="frage__case" x="356" y="168" width="38" height="70" rx="8"/><rect class="frage__off" x="360" y="173" width="30" height="60" rx="4.5"/><rect class="frage__screen" x="360" y="173" width="30" height="60" rx="4.5" fill="url(#frage-screen)"/></g>
+        <ellipse class="frage__fist" cx="386" cy="242" rx="17" ry="16"/>
       </g>
-      <g class="frage__fore">
-        <path class="frage__arm-out" d="M256 344 330 192"/><path class="frage__arm" d="M256 344 330 192"/>
-        <circle class="frage__fist-out" cx="334" cy="183" r="22"/><circle class="frage__fist" cx="334" cy="183" r="20"/>
-        <path class="frage__finger" d="M345 175 379 158"/>
+      <g class="frage__head">
+        <circle class="frage__skull" cx="320" cy="102" r="62"/>
+        <circle class="frage__lit" cx="320" cy="102" r="62" fill="url(#frage-face)"/>
       </g>
     </svg>
-    <svg class="frage__ring frage__ring--front" viewBox="0 0 640 470" focusable="false"><path pathLength="1" d="M 550 100 A 230 46 0 0 1 90 100" transform="rotate(-7 320 100)"/></svg>
   </div>
   <ul class="frage__list">
     <li><span class="visually-hidden">Was bieten Sie an? </span>Ihr Angebot auf einen Blick — mit Leistungen, Fotos und kurzen Beschreibungen.</li>
@@ -615,6 +615,6 @@
 </footer>
 <script src="js/app.js?v=w1" defer></script>
 <script src="js/hero-mark.js?v=12" defer></script>
-<script src="js/story.js?v=17" defer></script>
+<script src="js/story.js?v=18" defer></script>
 </body>
 </html>
