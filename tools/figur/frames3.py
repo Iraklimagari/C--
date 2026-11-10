@@ -21,38 +21,44 @@ def chaikin(pts, it=1):
             p,q=pts[i],pts[(i+1)%n]; out.append((0.75*p[0]+0.25*q[0],0.75*p[1]+0.25*q[1])); out.append((0.25*p[0]+0.75*q[0],0.25*p[1]+0.75*q[1]))
         pts=out
     return pts
-def pose_arm(pts, E, L0, d0, phi, Lnew, wrist, k, hand_from=0.86):
+def pose_arm(pts, E, L0, d0, phi, Lnew, wrist, k, hand_from=0.86, anchor=0.2, widen=None):
     """gezeichnete Unterarm-/Handkontur entlang des Knochens neu setzen (Drehung, Verkuerzung, Handgelenk)"""
     dn=(math.cos(phi),math.sin(phi)); Wn=(E[0]+Lnew*dn[0],E[1]+Lnew*dn[1]); W0=(E[0]+L0*d0[0],E[1]+L0*d0[1])
     out=[]; us=[]
     for p in pts:
         u,v=to_uv(p,E,L0,d0); us.append(u)
+        if widen: v*=widen(u)                                              # Unterarm so breit wie der andere
         pf=from_uv(u,v,E,Lnew,dn)                                         # Unterarm: verkuerzt entlang der Achse
         loc=rot(p,W0,-math.atan2(d0[1],d0[0])); lx,ly=loc[0]-W0[0],loc[1]-W0[1]
         ph=rot((Wn[0]+lx*k,Wn[1]+ly*k),Wn,phi+wrist)                      # Hand: am Handgelenk angehaengt
         w=smoothstep(hand_from,1.0,u)
         q=(pf[0]*(1-w)+ph[0]*w, pf[1]*(1-w)+ph[1]*w)
-        s=1-smoothstep(0.0,0.2,u)                                          # Ellbogenende bleibt im Oberarm verankert
+        s=(1-smoothstep(0.0,anchor,u)) if anchor>0 else 0.0               # Ellbogenende (nur rechts) im Oberarm verankert
         out.append((q[0]*(1-s)+p[0]*s, q[1]*(1-s)+p[1]*s))
     return out, us, Wn
 def geo(f):
     ur=ease(span(f,2,32)); ul=ease(span(f,24,59))
     phiRf=math.atan2(DR0[1],DR0[0]); phiRf=phiRf if phiRf>0 else phiRf+2*math.pi
-    phiR=lerp(math.radians(112),phiRf,ur); LR=lerp(150,LR0,ur)*(1-0.30*math.sin(math.pi*ur)); kR=1+0.10*math.sin(math.pi*ur)
+    phiR=lerp(math.radians(90),phiRf,ur); LR=lerp(150,LR0,ur)*(1-0.30*math.sin(math.pi*ur)); kR=1+0.10*math.sin(math.pi*ur)
     phiLf=math.atan2(DL0[1],DL0[0])
-    phiL=lerp(math.radians(68),phiLf,ul); LL=lerp(150,LL0,ul)*(1-0.28*math.sin(math.pi*ul)); kL=1+0.08*math.sin(math.pi*ul)
-    wristL=math.radians(-20)*math.sin(math.pi*ul)
+    phiL=lerp(math.radians(90),phiLf,ul); LL=lerp(150,LL0,ul)*(1-0.28*math.sin(math.pi*ul)); kL=1+0.08*math.sin(math.pi*ul)
+    wristL=0.0                                                    # Unterarm bleibt gerade wie in der Zeichnung
     curl=1-smoothstep(0.45,0.95,ul)
     lp=fold_left(LP,LT,curl)
-    larm,lus,WL=pose_arm(lp,EL,LL0,DL0,phiL,LL,wristL,kL)
-    rarm,rus,WR=pose_arm(RP,ER,LR0,DR0,phiR,LR,0.0,kR)
+    # haengend (Start): der Unterarm fuehrt den Oberarm gerade weiter - so breit wie er, bis an den Koerper; beim
+    # Anheben wird er schmaler und rueckt an seinen Platz
+    hL=1-smoothstep(0.0,0.35,ul); hR=1-smoothstep(0.0,0.35,ur)
+    widenL=lambda u: (1.0+0.30*(1-smoothstep(0.72,0.98,u)))*(1+0.15*hL)   # links so breit wie rechts (~53 statt ~40)
+    larm,lus,WL=pose_arm(lp,EL,LL0,DL0,phiL,LL,wristL,kL,anchor=0.0,widen=widenL)
+    rarm,rus,WR=pose_arm(RP,ER,LR0,DR0,phiR,LR,0.0,kR,widen=lambda u: 1+0.36*hR)
+    larm=[(x-8.5*hL,y) for x,y in larm]; rarm=[(x-4.5*hR,y) for x,y in rarm]
     # Handy und Kamera folgen der Telefonhand (wie die Handpunkte)
     def hand_r(p):
         W0=(ER[0]+LR0*DR0[0],ER[1]+LR0*DR0[1]); loc=rot(p,W0,-math.atan2(DR0[1],DR0[0])); lx,ly=loc[0]-W0[0],loc[1]-W0[1]
         return rot((WR[0]+lx*kR,WR[1]+ly*kR),WR,phiR)
     phone=[hand_r(p) for p in PHONE]; cam=hand_r((375,395))
     # Daumen-/Fingerpunkte der rechten Hand gehoeren zur Hand (ab u ~0.86)
-    return dict(larm=larm,lus=lus,rarm=rarm,rus=rus,phone=phone,cam=cam,WL=WL,WR=WR,
+    return dict(larm=larm,lus=lus,rarm=rarm,rus=rus,phone=phone,cam=cam,WL=WL,WR=WR,ul=ul,ur=ur,
                 glow=smoothstep(31,40,f), face=0 if f<33 else smoothstep(33,40,f)*(1-0.65*smoothstep(44,59,f)),
                 nod=math.sin(math.pi*span(f,26,58)))
 def runs(pts, mask, minlen=6):
@@ -100,15 +106,16 @@ def svg_frame(f):
         L2=(W[0]-E[0])**2+(W[1]-E[1])**2
         return pts,[((p[0]-E[0])*(W[0]-E[0])+(p[1]-E[1])*(W[1]-E[1]))/L2 for p in pts]
     lpts,lu=contour_u(L,EL,g['WL']); rpts,ru=contour_u(Rr,ER,g['WR'])
-    mR=[u>0.3 and backR.contains(Point(p)) and cutin.contains(Point(p)) for p,u in zip(rpts,ru)]
-    mL=[u>0.3 and backL.contains(Point(p)) and cutin.contains(Point(p)) for p,u in zip(lpts,lu)]
+    # helle Linien erst, wenn der Unterarm sich vom Koerper loest (haengend: keine Linie)
+    mR=[g['ur']>0.1 and u>0.3 and cutin.contains(Point(p)) for p,u in zip(rpts,ru)]
+    mL=[g['ul']>0.1 and u>0.3 and cutin.contains(Point(p)) for p,u in zip(lpts,lu)]
     handR=Rr.intersection(Polygon([(0,0),(0,0)]).buffer(0)) if False else None
     ph=g['phone']; pc=((ph[0][0]+ph[2][0])/2,(ph[0][1]+ph[2][1])/2); pang=math.degrees(math.atan2(ph[1][1]-ph[0][1],ph[1][0]-ph[0][0]))
     pw=math.dist(ph[0],ph[1]); phh=math.dist(ph[1],ph[2])
     # Teil der Telefonhand, der vor dem Handy liegt (u>0.86): ueber dem Handy noch einmal schwarz
     rhand=Polygon([p for p,u in zip(g['rarm'],g['rus'])]).buffer(0).intersection(PH.buffer(14)).intersection(CUT)
     return dict(body=path(body), trunk=path(trunk_vis,0), larm=path(L_draw.intersection(CUT)), rhand=path(rhand),
-                linesL=[taper(r) for r in runs(lpts,mL,8)], linesR=[taper(r) for r in runs(rpts,mR,8)],
+                linesL=[taper(r,3.6,0.12,0.12) for r in runs(lpts,mL,8)], linesR=[taper(r,3.6,0.12,0.12) for r in runs(rpts,mR,8)],
                 phone=(pc,pw,phh,pang), cam=g['cam'], head=(hx,hy,R), glow=g['glow'], face=g['face'])
 def to_svg(o, w=1172, h=968):
     (pc,pw,phh,pang)=o['phone']; hx,hy,R=o['head']
