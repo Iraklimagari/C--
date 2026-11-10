@@ -1,0 +1,168 @@
+{
+  "_hinweis": "Texte der Konzeptdarstellungen (Hero und Beispiele). Alles ausgedacht und sichtbar als Konzeptdarstellung gekennzeichnet — keine echten Betriebe, keine echten Bewertungen.",
+  "tag": "Konzeptdarstellung — Namen und Bewertungen sind fiktiv",
+  "szenen": {
+    "kontakt": {
+      "name": "Salon Mara",
+      "initials": "SM",
+      "status": "Geschäftskonto",
+      "today": "Heute",
+      "clock": "10:24",
+      "hello": "Hallo! Willkommen bei Salon Mara. Wie können wir Ihnen helfen?",
+      "buttons": [
+        "Termin buchen",
+        "Preise ansehen",
+        "Frage stellen"
+      ],
+      "ask_day": "Gern! Welcher Tag passt Ihnen?",
+      "days_hint": "Nächste freie Tage",
+      "full": "voll",
+      "ask_time": "Diese Zeiten sind frei am",
+      "times": [
+        "09:30",
+        "11:00",
+        "14:30",
+        "16:15"
+      ],
+      "time_reply": "Uhr, bitte.",
+      "confirm": "Termin bestätigt",
+      "service": "Haarschnitt · ca. 45 Minuten",
+      "calendar": "Im Kalender speichern",
+      "input": "Nachricht",
+      "typing": "schreibt …"
+    },
+    "google": {
+      "search": "café frühstück dorsten",
+      "name": "Café Morgenstund",
+      "rating": "4,7",
+      "count": "(129)",
+      "category": "Café · €€ · Frühstück & Kuchen",
+      "open": "Geöffnet",
+      "closes": "Schließt um 18:00",
+      "actions": [
+        "Route",
+        "Anrufen",
+        "Website",
+        "Speisekarte"
+      ],
+      "tabs": [
+        "Übersicht",
+        "Speisekarte",
+        "Rezensionen",
+        "Fotos"
+      ],
+      "hours": "Heute 8:00–18:00 Uhr",
+      "place": "Altstadt, Dorsten",
+      "web": "Website & Speisekarte",
+      "card_title": "Öffnungszeiten",
+      "card_badge": "aktuell",
+      "card_line": "Heute 8:00–18:00 Uhr",
+      "before": "Vorher",
+      "after": "Nachher",
+      "before_rating": "Noch keine Rezensionen",
+      "before_open": "Öffnungszeiten hinzufügen",
+      "before_photos": "Noch keine Fotos"
+    },
+    "fotos": {
+      "rec": "REC",
+      "rec_time": "00:12",
+      "clip": "Kurzclip",
+      "clip_time": "0:12 / 0:15",
+      "caption": "Frisch gebrüht. Jeden Morgen.",
+      "chips": [
+        "15–20 bearbeitete Fotos",
+        "Kurzclips à 15 Sekunden"
+      ]
+    },
+    "karte": {
+      "brand": "Uferhaus",
+      "brand_sub": "Restaurant am Kanal",
+      "title": "Speisekarte",
+      "tabs": [
+        "Empfehlungen",
+        "Mittagstisch",
+        "Hauptgerichte",
+        "Desserts",
+        "Getränke"
+      ],
+      "section": "Empfehlungen des Hauses",
+      "items": [
+        {
+          "name": "Zanderfilet",
+          "desc": "Safransauce, Gemüse, Kartoffeln",
+          "price": "19,50 €",
+          "photo": "sz-fisch.webp"
+        },
+        {
+          "name": "Lachs vom Grill",
+          "desc": "Garnelen, Blattspinat, Zitrone",
+          "price": "21,90 €",
+          "photo": "sz-lachs.webp"
+        },
+        {
+          "name": "Kalbsrücken",
+          "desc": "Möhren, Jus, Kartoffelcreme",
+          "price": "24,50 €",
+          "photo": "sz-fleisch.webp"
+        },
+        {
+          "name": "Sorbet & Beeren",
+          "desc": "Mango, Zitrone, Knusper",
+          "price": "8,90 €",
+          "photo": "sz-dessert.webp"
+        }
+      ],
+      "allergens": "Allergene & Zusatzstoffe",
+      "cta": "Tisch reservieren",
+      "card_title": "Karte aktualisiert",
+      "card_line": "Neue Preise sind sofort online.",
+      "search": "Gericht suchen",
+      "open": "Heute geöffnet bis 22:00 Uhr",
+      "lunch": {
+        "t": "Mittagstisch",
+        "s": "Mo–Fr ab 11:30 Uhr · wechselnde Tagesgerichte",
+        "photo": "sz-terrasse.webp"
+      }
+    },
+    "website": {
+      "brand": "Uferhaus",
+      "brand_sub": "Restaurant am Kanal",
+      "nav": [
+        "Speisekarte",
+        "Mittagstisch",
+        "Feiern",
+        "Kontakt"
+      ],
+      "cta": "Tisch reservieren",
+      "eyebrow": "Dorsten · Am Kanal",
+      "headline": [
+        "Gutes Essen.",
+        "Direkt am Kanal."
+      ],
+      "sub": "Regionale Küche – mittags und abends, bei schönem Wetter auf der Terrasse.",
+      "menu": "Speisekarte",
+      "cards": [
+        {
+          "t": "Mittagstisch",
+          "s": "Mo–Fr ab 11:30 Uhr",
+          "photo": "sz-fisch.webp"
+        },
+        {
+          "t": "Abendkarte",
+          "s": "Saisonal und regional",
+          "photo": "sz-fleisch.webp"
+        },
+        {
+          "t": "Feiern & Gruppen",
+          "s": "Bis 40 Personen",
+          "photo": "sz-dessert.webp"
+        }
+      ],
+      "hours_t": "Öffnungszeiten",
+      "hours": [
+        "Di–Fr 11:30–22:00",
+        "Sa–So 12:00–22:00"
+      ]
+    }
+  }
+}

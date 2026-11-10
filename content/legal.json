@@ -1,0 +1,50 @@
+{
+  "_hinweis": "GERUEST, KEIN RECHTSTEXT. Die finalen Inhalte fuer Impressum und Datenschutzerklaerung liefert der Auftraggeber beziehungsweise eine qualifizierte Stelle. Diese Datei stellt nur sicher, dass beide Seiten von Anfang an existieren, verlinkt und erreichbar sind.",
+
+  "warning": {
+    "title": "Rechtstext noch nicht final",
+    "body": "Diese Seite ist ein Geruest. Der verbindliche Text wird vom Auftraggeber oder einer qualifizierten Stelle geliefert und muss vor Veröffentlichung eingesetzt werden."
+  },
+
+  "impressum": {
+    "title": "Impressum",
+    "meta_title": "Impressum — NAHLIO",
+    "meta_description": "Impressum von NAHLIO.",
+    "blocks": [
+      { "h": "Angaben gemäß § 5 DDG",
+        "p": ["[[FIRMIERUNG LT. IMPRESSUM]]", "[[STRASSE UND HAUSNUMMER]]", "[[PLZ]] Dorsten"] },
+      { "h": "Vertreten durch",
+        "p": ["[[VERTRETUNGSBERECHTIGTE PERSON]]"] },
+      { "h": "Kontakt",
+        "p": ["Telefon: [[TELEFON]]", "E-Mail: [[E-MAIL]]"] },
+      { "h": "Umsatzsteuer-Identifikationsnummer",
+        "p": ["[[USt-IdNr. ODER HINWEIS AUF KLEINUNTERNEHMERREGELUNG]]"] },
+      { "h": "Redaktionell verantwortlich",
+        "p": ["[[VERANTWORTLICHE PERSON UND ANSCHRIFT]]"] },
+      { "h": "Verbraucherstreitbeilegung",
+        "p": ["[[HINWEIS ZUR TEILNAHME AN STREITBEILEGUNGSVERFAHREN]]"] },
+      { "h": "Bildnachweise",
+        "p": ["Logo und Bildmarke: NAHLIO.", "Projektabbildungen: [[BILDNACHWEIS PROJEKTBILDER]]", "Schriften: Inter, SIL Open Font License 1.1, lokal gehostet; auf Apple-Geräten die Systemschrift des Geräts."] }
+    ]
+  },
+
+  "datenschutz": {
+    "title": "Datenschutzerklärung",
+    "meta_title": "Datenschutzerklärung — NAHLIO",
+    "meta_description": "Datenschutzerklärung von NAHLIO.",
+    "blocks": [
+      { "h": "Verantwortliche Stelle",
+        "p": ["[[FIRMIERUNG LT. IMPRESSUM]], [[STRASSE UND HAUSNUMMER]], [[PLZ]] Dorsten", "E-Mail: [[E-MAIL]]"] },
+      { "h": "Was diese Website technisch tut",
+        "p": ["Diese Website lädt keine Schriften von Drittanbieter-Servern. Inter wird lokal ausgeliefert; auf Apple-Geräten wird die Systemschrift des Geräts verwendet.", "Es sind keine Analyse-, Marketing- oder Tracking-Skripte eingebunden. Es werden keine Cookies zu Analyse- oder Marketingzwecken gesetzt.", "Es sind keine Karten-, Video- oder Social-Media-Einbettungen vorhanden, die beim Aufruf Daten an Dritte übertragen."] },
+      { "h": "Server-Logdateien",
+        "p": ["Der Hosting-Anbieter erhebt beim Abruf der Seite technisch notwendige Daten. Welche das sind, für welchen Zweck und wie lange sie gespeichert werden, ergänzt der Auftraggeber anhand der Angaben seines Anbieters: [[HOSTING-ANBIETER UND AUFTRAGSVERARBEITUNG]]"] },
+      { "h": "Kontaktformular",
+        "p": ["Wenn Sie das Anfrageformular nutzen, werden die eingegebenen Angaben zur Bearbeitung Ihrer Anfrage verarbeitet und gespeichert. Eine Weitergabe an Dritte erfolgt nicht.", "Empfänger und Speicherdauer: [[FORMULAR-EMPFÄNGER UND SPEICHERDAUER]]", "Rechtsgrundlage: [[RECHTSGRUNDLAGE FORMULAR]]"] },
+      { "h": "Ihre Rechte",
+        "p": ["Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie ein Widerspruchsrecht. Außerdem können Sie sich bei einer Aufsichtsbehörde beschweren.", "Zuständige Aufsichtsbehörde: [[AUFSICHTSBEHÖRDE]]"] },
+      { "h": "Änderungen",
+        "p": ["Stand dieser Erklärung: [[STAND DER DATENSCHUTZERKLÄRUNG]]"] }
+    ]
+  }
+}
