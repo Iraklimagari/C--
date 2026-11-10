@@ -181,11 +181,49 @@
     ueIo.observe(ue.querySelector(".ue__stage"));
   }
 
+  /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
+     Beim ersten Erscheinen einmal abspielen (.is-play; Ablauf in story.css). Die Fragen kreisen auf einer leicht
+     geneigten Ellipse um den Kopf: vorn (untere Haelfte) etwas groesser und vor der Figur, hinten kleiner und
+     dahinter. Laeuft nur, solange die Szene im Bild ist; bei Reduced Motion stehen sie still. */
+  var fr = document.querySelector("[data-frage]");
+  if (fr) (function () {
+    var scene = fr.querySelector(".frage__scene");
+    var chips = Array.prototype.slice.call(fr.querySelectorAll(".frage__chip"));
+    var VW = 640, CX = 320, CY = 100, RX = 230, RY = 46, TILT = -7 * Math.PI / 180;
+    var PERIOD = 20000, A0 = 2.35, ORBIT_AT = 3300;
+    var raf = 0, seen = false, inView = false, t0 = 0;
+    function place(ms) {
+      var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.84 : RX;
+      chips.forEach(function (c, i) {
+        var a = A0 + i * 2 * Math.PI / 3 + (ms / PERIOD) * 2 * Math.PI;
+        var ex = rx * Math.cos(a), ey = RY * Math.sin(a), front = Math.sin(a);
+        var x = CX + ex * Math.cos(TILT) - ey * Math.sin(TILT), y = CY + ex * Math.sin(TILT) + ey * Math.cos(TILT);
+        c.style.transform = "translate3d(" + (x * k).toFixed(1) + "px," + (y * k).toFixed(1) + "px,0) translate(-50%,-50%) scale(" + (0.9 + 0.1 * front).toFixed(3) + ")";
+        c.style.zIndex = front > 0 ? "3" : "1";
+        c.style.opacity = (0.72 + 0.28 * (front + 1) / 2).toFixed(3);
+      });
+    }
+    function tick(now) {
+      raf = 0;
+      place(Math.max(0, now - t0 - ORBIT_AT));
+      if (inView && !reduce) raf = window.requestAnimationFrame(tick);
+    }
+    function run() { if (!raf && inView && seen && !reduce) raf = window.requestAnimationFrame(tick); }
+    place(0);
+    window.addEventListener("resize", function () { if (!raf) place(seen && !reduce ? performance.now() - t0 - ORBIT_AT : 0); });
+    if (reduce || !("IntersectionObserver" in window)) { fr.classList.add("is-play"); return; }
+    new IntersectionObserver(function (es) {
+      inView = es[0].isIntersecting;
+      if (inView && !seen && es[0].intersectionRatio >= 0.3) { seen = true; t0 = performance.now(); fr.classList.add("is-play"); }
+      run();
+    }, { threshold: [0, 0.3] }).observe(scene);
+  })();
+
   /* --- Seitenlinie: In den stehenden Sektionen laeuft sie nicht hinter Text und Bildern durch. Sie blendet
      kurz davor weich aus und danach wieder ein (Maske auf der Linienebene, in Seitenkoordinaten). ---------- */
   var line = document.querySelector("[data-pageline]");
   /* Wunsch 08.11.: auch im Hero keine Linie; sie erscheint erst in den freien Flaechen der folgenden Seiten */
-  var hideIn = [document.querySelector(".hero"), document.querySelector(".ks__track"), document.querySelector(".ue__track")].filter(Boolean);
+  var hideIn = [document.querySelector(".hero"), document.querySelector(".ks__track"), document.querySelector(".frage"), document.querySelector(".ue__track")].filter(Boolean);
   var lastMask = "";
   function maskLine() {
     if (!line || !hideIn.length) return;

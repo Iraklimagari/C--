@@ -56,7 +56,7 @@ h1, h2,
 .hero--mark .hero__eyebrow { margin-bottom: 0; }
 /* Ueberschrift und Unterzeile fuellen die linke Seite: gross, im Raum unter der Oberzeile mittig */
 .hero--mark .hero__title {
-  max-width: min(44vw, 12em);
+  max-width: min(56vw, 14em);                         /* breiter (Wunsch 10.11.): 4 Zeilen, kleine Luecke zur Marke */
   margin-top: auto;
   font-family: var(--font-serif);
   font-weight: var(--w-head);
