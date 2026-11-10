@@ -75,13 +75,16 @@ def svg_frame(f):
     # Ellbogen als Gelenk: konvexe Huelle aus Ellbogenrundung und unterarmnahen Punkten -> keine Kerbe zwischen
     # Oberarm und Unterarm, in jeder Beugung
     from shapely.geometry import MultiPoint
-    def elbow(E, pts, us, r=22):
+    # Ellbogen: konvexe Huelle aus dem Ende des gezeichneten Oberarms und dem Anfang des Unterarms -> eine glatte
+    # Aussenlinie von Ober- zu Unterarm, ohne Hoecker und ohne Kerbe; der Winkel unter dem Ellbogen zum Koerper bleibt frei
+    SILP=list(TRUNK.exterior.coords)
+    def elbow(E, pts, us, side):
         near=[p for p,u in zip(pts,us) if u<0.46]
-        ring=[(E[0]+r*math.cos(a*math.pi/18), E[1]+r*math.sin(a*math.pi/18)) for a in range(36)]
-        return MultiPoint(near+ring).convex_hull
-    fillL=elbow(EL,g['larm'],g['lus']); fillR=elbow(ER,g['rarm'],g['rus'])
-    L=L.union(fillL); Rr=Rr.union(fillR)
+        up=[p for p in SILP if math.dist(p,E)<52 and p[1]>E[1]-46 and (p[0]<E[0]+14 if side<0 else p[0]>E[0]-14)]
+        return MultiPoint(near+up).convex_hull
+    L=L.union(elbow(EL,g['larm'],g['lus'],-1)); Rr=Rr.union(elbow(ER,g['rarm'],g['rus'],1))
     body=unary_union([TRUNK,L,Rr]).intersection(CUT)
+    L_draw=L.difference(Point(EL).buffer(64,quad_segs=32))      # obere Ebene nur ab dem Unterarm (der Ellbogen steckt im Koerper)
     trunk_vis=TRUNK.difference(unary_union([L,Rr])).intersection(CUT)
     def path(poly, smooth=1):
         if poly.is_empty: return ''
@@ -104,7 +107,7 @@ def svg_frame(f):
     pw=math.dist(ph[0],ph[1]); phh=math.dist(ph[1],ph[2])
     # Teil der Telefonhand, der vor dem Handy liegt (u>0.86): ueber dem Handy noch einmal schwarz
     rhand=Polygon([p for p,u in zip(g['rarm'],g['rus'])]).buffer(0).intersection(PH.buffer(14)).intersection(CUT)
-    return dict(body=path(body), trunk=path(trunk_vis,0), larm=path(L.intersection(CUT)), rhand=path(rhand),
+    return dict(body=path(body), trunk=path(trunk_vis,0), larm=path(L_draw.intersection(CUT)), rhand=path(rhand),
                 linesL=[taper(r) for r in runs(lpts,mL,8)], linesR=[taper(r) for r in runs(rpts,mR,8)],
                 phone=(pc,pw,phh,pang), cam=g['cam'], head=(hx,hy,R), glow=g['glow'], face=g['face'])
 def to_svg(o, w=1172, h=968):
