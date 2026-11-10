@@ -87,5 +87,10 @@ def place(pts, Wf, phif, W, phi, k):
 # Koerper = die Silhouette der Zeichnung (Torso, Schultern, Oberarme bis zum Ellbogen), unten verlaengert (Brustbild)
 SIL_D=G['SIL'].replace('C301 516 303 534 310 548 C330 560 436 560 456 548 C463 534 466 516 466 505','C301 520 302 552 302 600 C380 600 400 600 465 600 C465 552 466 520 466 505')
 TRUNK=Polygon(sample(parse(SIL_D),24)[0]).buffer(0)
+# links = Spiegelbild von rechts (die Zeichnung endet links am Ellbogen hoeher -> schraege Kante unten links)
+from shapely.geometry import box as _box
+AXIS=383.5
+_TR=TRUNK.intersection(_box(AXIS,0,800,800))
+TRUNK=unary_union([_TR,affinity.scale(_TR,xfact=-1,yfact=1,origin=(AXIS,0))]).buffer(0.01).buffer(-0.01)
 CUT=Polygon([(110,60),(660,60),(660,553)]+[(660-550*i/40, 553+10*math.sin(math.pi*i/40)) for i in range(41)]+[(110,553)])
 HEAD=(383,219,84)

@@ -6,7 +6,8 @@ from shapely.ops import unary_union
 def ease(t): return 4*t*t*t if t<0.5 else 1-pow(-2*t+2,3)/2
 def span(t,a,b): return max(0.0,min(1.0,(t-a)/(b-a)))
 def lerp(a,b,t): return a+(b-a)*t
-TOTAL=60
+TOTAL=120                                                        # 60 fps, 2 s
+FPS=60
 # Knochen der Endhaltung (zur gezeichneten Form passend)
 EL,WLf=(280,488),(338,364); ER,WRf=(500,480),(440,456)
 def frame_of(E,Wf):
@@ -44,9 +45,10 @@ def pose_arm(pts, E, L0, d0, phi, Lnew, wrist, k, hand_from=0.86, anchor=0.2, wi
         if widen: v*=widen(u)                                              # Unterarm so breit wie der andere
         if norm:                                                           # Start: gleich breit, gerade Kanten (beide Arme gleich)
             Wt,h,cw=norm
-            if h>0 and u<0.9:
+            hh=h*(1-smoothstep(0.78,0.96,u))                               # zur Hand hin weich auslaufen (keine Stufe)
+            if hh>0:
                 cc,ww=cw(u); vn=(v/(widen(u) if widen else 1)-cc)/ww*Wt
-                v=v*(1-h)+vn*h
+                v=v*(1-hh)+vn*hh
         pf=from_uv(u,v,E,Lnew,dn)                                         # Unterarm: verkuerzt entlang der Achse
         loc=rot(p,W0,-math.atan2(d0[1],d0[0])); lx,ly=loc[0]-W0[0],loc[1]-W0[1]
         ph=rot((Wn[0]+lx*k,Wn[1]+ly*k),Wn,phi+wrist)                      # Hand: am Handgelenk angehaengt
@@ -96,7 +98,7 @@ def runs(pts, mask, minlen=6):
     if len(cur)>minlen: out.append(cur)
     return out
 def svg_frame(f):
-    g=geo(f)
+    g=geo(f*30.0/FPS)                                               # Zeitplan in 30-fps-Einheiten (0..59.5)
     cx,cy,R=HEAD; hx,hy=cx+2.2*g['nod'], cy+3.0*g['nod']
     head=Point(hx,hy).buffer(R,quad_segs=48)
     L=Polygon(g['larm']).buffer(0); Rr=Polygon(g['rarm']).buffer(0); PH=Polygon(g['phone'])
@@ -111,6 +113,12 @@ def svg_frame(f):
         up=[p for p in SILP if math.dist(p,E)<52 and p[1]>E[1]-46 and (p[0]<E[0]+14 if side<0 else p[0]>E[0]-14)]
         return MultiPoint(near+up).convex_hull
     L=L.union(elbow(EL,g['larm'],g['lus'],-1)); Rr=Rr.union(elbow(ER,g['rarm'],g['rus'],1))
+    # unten (nur waehrend der Bewegung sichtbar): kleine Knoechel-Stufen der Faust weich runden
+    from shapely.geometry import box as _box
+    def soften(P, M, r=3.2):
+        Ps=P.buffer(r,quad_segs=16).buffer(-2*r,quad_segs=16).buffer(r,quad_segs=16)
+        return unary_union([P.difference(M), Ps.intersection(M)]).buffer(0)
+    L=soften(L,_box(150,512,334,640)); Rr=soften(Rr,_box(433,512,640,640))
     body=unary_union([TRUNK,L,Rr]).intersection(CUT)
     L_draw=L.difference(Point(EL).buffer(64,quad_segs=32))      # obere Ebene nur ab dem Unterarm (der Ellbogen steckt im Koerper)
     trunk_vis=TRUNK.difference(unary_union([L,Rr])).intersection(CUT)
@@ -129,8 +137,26 @@ def svg_frame(f):
         return pts,[((p[0]-E[0])*(W[0]-E[0])+(p[1]-E[1])*(W[1]-E[1]))/L2 for p in pts]
     lpts,lu=contour_u(L,EL,g['WL']); rpts,ru=contour_u(Rr,ER,g['WR'])
     # helle Linien erst, wenn der Unterarm sich vom Koerper loest (haengend: keine Linie)
-    mR=[g['ur']>0.1 and u>0.3 and cutin.contains(Point(p)) for p,u in zip(rpts,ru)]
-    mL=[g['ul']>0.1 and u>0.3 and cutin.contains(Point(p)) for p,u in zip(lpts,lu)]
+    # nur dort, wo hinter der Kante Schwarzes liegt: am weissen Hintergrund wuerde die Linie die Silhouette nur
+    # ausduennen (sichtbare Stufe am Linienanfang)
+    backR0=unary_union([TRUNK,PH]).intersection(CUT); backL0=unary_union([TRUNK,Rr,PH,head]).intersection(CUT)
+    def backed(pts, poly, back, d=3.0):
+        n=len(pts); out=[]
+        for i,p in enumerate(pts):
+            a,b=pts[i-2],pts[(i+2)%n]; tx,ty=b[0]-a[0],b[1]-a[1]; tl=math.hypot(tx,ty) or 1; nx,ny=-ty/tl,tx/tl
+            q=(p[0]+nx*d,p[1]+ny*d)
+            if poly.contains(Point(q)): q=(p[0]-nx*d,p[1]-ny*d)
+            out.append(back.contains(Point(q)))
+        k=14                                                          # kurze Luecken schliessen (keine Splitter)
+        res=out[:]
+        for i in range(n):
+            if not out[i]:
+                l=next((j for j in range(1,k+1) if out[(i-j)%n]),None); r=next((j for j in range(1,k+1) if out[(i+j)%n]),None)
+                if l and r and l+r<=k+1: res[i]=True
+        return res
+    bR=backed(rpts,Rr,backR0); bL=backed(lpts,L,backL0)
+    mR=[g['ur']>0.1 and u>0.3 and cutin.contains(Point(p)) and bk for p,u,bk in zip(rpts,ru,bR)]
+    mL=[g['ul']>0.1 and u>0.3 and cutin.contains(Point(p)) and bk for p,u,bk in zip(lpts,lu,bL)]
     handR=Rr.intersection(Polygon([(0,0),(0,0)]).buffer(0)) if False else None
     ph=g['phone']; pc=((ph[0][0]+ph[2][0])/2,(ph[0][1]+ph[2][1])/2); pang=math.degrees(math.atan2(ph[1][1]-ph[0][1],ph[1][0]-ph[0][0]))
     pw=math.dist(ph[0],ph[1]); phh=math.dist(ph[1],ph[2])
