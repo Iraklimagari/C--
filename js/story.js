@@ -189,18 +189,17 @@
   if (fr) (function () {
     var scene = fr.querySelector(".frage__scene");
     var chips = Array.prototype.slice.call(fr.querySelectorAll(".frage__chip"));
-    var VW = 640, CX = 320, CY = 100, RX = 230, RY = 46, TILT = -7 * Math.PI / 180;
-    var PERIOD = 20000, A0 = 2.35, ORBIT_AT = 2600;
+    /* Bahn nach der Skizze: oben, links und rechts um den Kopf; unten laufen die Blasen hinter der Figur durch */
+    var VW = 900, CX = 440, CY = 318, RX = 300, RY = 225;
+    var PERIOD = 26000, A0 = -Math.PI / 2, ORBIT_AT = 2600;
     var raf = 0, seen = false, inView = false, t0 = 0;
     function place(ms) {
-      var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.84 : RX;
+      var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.86 : RX;
       chips.forEach(function (c, i) {
         var a = A0 + i * 2 * Math.PI / 3 + (ms / PERIOD) * 2 * Math.PI;
-        var ex = rx * Math.cos(a), ey = RY * Math.sin(a), front = Math.sin(a);
-        var x = CX + ex * Math.cos(TILT) - ey * Math.sin(TILT), y = CY + ex * Math.sin(TILT) + ey * Math.cos(TILT);
-        c.style.transform = "translate3d(" + (x * k).toFixed(1) + "px," + (y * k).toFixed(1) + "px,0) translate(-50%,-50%) scale(" + (0.9 + 0.1 * front).toFixed(3) + ")";
-        c.style.zIndex = front > 0 ? "3" : "1";
-        c.style.opacity = (0.72 + 0.28 * (front + 1) / 2).toFixed(3);
+        var x = CX + rx * Math.cos(a), y = CY + RY * Math.sin(a), low = Math.sin(a) > 0.62;
+        c.style.transform = "translate3d(" + (x * k).toFixed(1) + "px," + (y * k).toFixed(1) + "px,0) translate(-50%,-50%)";
+        c.style.zIndex = low ? "1" : "3";
       });
     }
     function tick(now) {
