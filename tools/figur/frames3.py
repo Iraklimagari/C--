@@ -6,7 +6,7 @@ from shapely.ops import unary_union
 def ease(t): return 4*t*t*t if t<0.5 else 1-pow(-2*t+2,3)/2
 def span(t,a,b): return max(0.0,min(1.0,(t-a)/(b-a)))
 def lerp(a,b,t): return a+(b-a)*t
-TOTAL=120                                                        # 60 fps, 2 s
+TOTAL=90                                                         # 60 fps, 1,5 s (Wunsch 10.11.)
 FPS=60
 # Knochen der Endhaltung (zur gezeichneten Form passend)
 EL,WLf=(280,488),(338,364); ER,WRf=(500,480),(440,456)
@@ -98,7 +98,7 @@ def runs(pts, mask, minlen=6):
     if len(cur)>minlen: out.append(cur)
     return out
 def svg_frame(f):
-    g=geo(f*30.0/FPS)                                               # Zeitplan in 30-fps-Einheiten (0..59.5)
+    g=geo(f*59.5/(TOTAL-1))                                         # Zeitplan in Einheiten 0..59.5 (Endhaltung im letzten Bild)
     cx,cy,R=HEAD; hx,hy=cx+2.2*g['nod'], cy+3.0*g['nod']
     head=Point(hx,hy).buffer(R,quad_segs=48)
     L=Polygon(g['larm']).buffer(0); Rr=Polygon(g['rarm']).buffer(0); PH=Polygon(g['phone'])

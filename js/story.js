@@ -182,7 +182,7 @@
   }
 
   /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
-     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann der Auftakt (2 s), danach (.is-idle) die ruhige
+     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann der Auftakt (1,5 s), danach (.is-idle) die ruhige
      Schleife (Atmen, Kopf, Licht); die drei Fragen kreisen als Text um den Kopf (hinten hinter dem Kopf - per Maske -,
      kleiner und blasser, vorn davor). Die Figur kommt aus einem Video mit zwei Ebenen je Bild (links D, rechts M); sie
      werden Bild fuer Bild in zwei Canvas gemalt (immer dasselbe Bild), die sich per difference/multiply mit dem
@@ -307,8 +307,8 @@
             if (p && p.then) p.then(function () { draw(intro); }, noVideo);   /* Abspielen gesperrt (Stromsparen): Zeichnung */
             else draw(intro);
           }, 450);
-          window.setTimeout(function () { if (!looping && (intro.paused || intro.ended)) toLoop(); }, 450 + 2000 + 1500);
-          window.setTimeout(function () { if (!looping) toLoop(); }, 450 + 2000 + 6000);   /* Sicherheit */
+          window.setTimeout(function () { if (!looping && (intro.paused || intro.ended)) toLoop(); }, 450 + 1500 + 1500);
+          window.setTimeout(function () { if (!looping) toLoop(); }, 450 + 1500 + 6000);   /* Sicherheit */
         }
       }
       if (looping) { if (inView) { quiet(loop.play()); draw(loop); } else loop.pause(); }   /* ausserhalb ruht die Schleife */

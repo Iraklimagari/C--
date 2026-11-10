@@ -568,7 +568,7 @@ html:not(.js) .ks__bar { display: none; }
 .fig__breath { transform-origin: 383px 560px; }
 .fig__head { transform-origin: 383px 300px; }
 .frage__art { z-index: 2; }
-/* Figur als Video (tools/figur): Auftakt (120 Bilder, 60 fps, 2 s), danach eine ruhige Schleife (8 s: Atmen, Kopf,
+/* Figur als Video (tools/figur): Auftakt (90 Bilder, 60 fps, 1,5 s), danach eine ruhige Schleife (8 s: Atmen, Kopf,
    Licht). Jedes Videobild traegt zwei Ebenen nebeneinander; story.js malt sie in zwei Canvas, die sich mit dem
    Seitengrund mischen: Ergebnis = |Grund x M - D|. Auf hellem Grund ist das genau die Zeichnung (schwarze Figur,
    weisse Linien, warmes Licht). Im erzwungenen Dunkelmodus (Samsung Internet; nicht abschaltbar, nicht erkennbar)

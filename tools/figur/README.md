@@ -4,12 +4,12 @@ Vektorzeichnung nach dem Referenzbild des Inhabers (10.11.) und ihr Auftakt als 
 
 - `build.py` – die Bezier-Pfade der Endhaltung (Torso mit Schultern und Oberarmen als eine Silhouette,
   zeigende Hand, Telefonhand) und die auslaufenden hellen Linien -> `geo.json`.
-- `fig.py`, `frames3.py` – erzeugen die 120 Bilder des Auftakts (60 fps, 2 s). Jedes Bild ist eine ganze,
+- `fig.py`, `frames3.py` – erzeugen die 90 Bilder des Auftakts (60 fps, 1,5 s). Jedes Bild ist eine ganze,
   neu zusammengesetzte Silhouette: die gezeichneten Unterarm-/Handkonturen werden entlang ihrer Knochen
   gebeugt (Ellbogen, Handgelenk, Verkuerzung, Finger), mit dem Koerper vereinigt und am Ellbogen als
   runde Gelenkmasse geschlossen; helle Linien nur, wo Unterarm/Hand vor Schwarzem liegen.
   Der Koerper ist links das Spiegelbild von rechts (gleiche Ellbogen unten). Das letzte Bild ist das Endbild in `index.html` (`.frage__art`).
-- `figvid.py` – die Bilder der Videos: Auftakt (`intro`, 120 Bilder, 60 fps) und ruhige Schleife (`loop`, 8 s,
+- `figvid.py` – die Bilder der Videos: Auftakt (`intro`, 90 Bilder, 60 fps, 1,5 s) und ruhige Schleife (`loop`, 8 s,
   30 fps: Atmen, Kopf, Licht), mit durchsichtigem Grund.
 - `pack.py` – packt jedes Bild in zwei Ebenen nebeneinander (links D, rechts M, 16 px Spalt). Die Seite malt sie in
   zwei Canvas, die sich mit dem Seitengrund mischen: |Grund x M - D|. Auf Weiss ergibt das genau die Zeichnung; im
