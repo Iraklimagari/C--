@@ -24,7 +24,7 @@
 <link rel="preload" href="fonts/newsreader-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/styles.css?v=g2">
 <link rel="stylesheet" href="css/premium.css?v=18">
-<link rel="stylesheet" href="css/story.css?v=33">
+<link rel="stylesheet" href="css/story.css?v=34">
 <link rel="stylesheet" href="css/flat.css?v=9">
 <link rel="stylesheet" href="css/szenen.css?v=1">
 <link rel="stylesheet" href="css/space.css?v=5">
@@ -369,9 +369,8 @@
     <span class="frage__q">Was bieten Sie an?</span>
     <span class="frage__q">Was kostet das?</span>
     <span class="frage__q">Wie kann ich Sie erreichen?</span>
-    <video class="frage__video" muted playsinline preload="auto" poster="img/frage-start.webp?v=6" aria-hidden="true" tabindex="-1">
-      <source src="media/frage-intro.webm?v=6" type="video/webm"><source src="media/frage-intro.mp4?v=6" type="video/mp4">
-    </video>
+    <video class="frage__video" data-webm="media/frage-intro.webm?v=7" data-mp4="media/frage-intro.mp4?v=7" muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+    <video class="frage__loop" data-webm="media/frage-ruhe.webm?v=1" data-mp4="media/frage-ruhe.mp4?v=1" muted playsinline loop preload="auto" aria-hidden="true" tabindex="-1"></video>
     <svg class="frage__art" viewBox="90 96 586 484" focusable="false">
       <!-- Endbild der Figur (= letztes Bild des Videos media/frage-intro, erzeugt mit tools/figur): eine Silhouette aus Torso,
            Schultern und Armen, darueber Hand und Linien; Ruhe-Bewegung per CSS (Atmen, Kopf, Licht). -->
@@ -610,6 +609,6 @@
 </footer>
 <script src="js/app.js?v=w1" defer></script>
 <script src="js/hero-mark.js?v=12" defer></script>
-<script src="js/story.js?v=25" defer></script>
+<script src="js/story.js?v=26" defer></script>
 </body>
 </html>

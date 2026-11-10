@@ -182,31 +182,23 @@
   }
 
   /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
-     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann spielt das Video (60 Bilder, 2 s). An seinem Ende
-     (.is-idle) steht dieselbe Zeichnung als SVG da und bewegt sich ruhig; die drei Fragen kreisen als Text um den Kopf
-     (hinten hinter dem Kopf, kleiner und blasser, vorn davor). Reduced Motion, ohne Video: sofort das Endbild. */
+     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann der Auftakt als Video (2 s). Danach (.is-idle)
+     laeuft die ruhige Schleife als Video (.is-loop: Atmen, Kopf, Licht); die drei Fragen kreisen als Text um den Kopf
+     (hinten hinter dem Kopf, kleiner und blasser, vorn davor). Videos statt SVG, weil der erzwungene Dunkelmodus von
+     Samsung Internet Videos nicht umfaerbt. Faellt ein Video aus: die SVG-Zeichnung mit CSS-Bewegung. Reduced Motion:
+     das Endbild steht (erstes Bild der Schleife, ohne WebM die Zeichnung). */
   var fr = document.querySelector("[data-frage]");
   if (fr) (function () {
-    var scene = fr.querySelector(".frage__scene"), video = fr.querySelector(".frage__video");
+    var scene = fr.querySelector(".frage__scene"), video = fr.querySelector(".frage__video"), loop = fr.querySelector(".frage__loop");
     var qs = Array.prototype.slice.call(fr.querySelectorAll(".frage__q"));
     var VX = 90, VY = 96, VW = 586, CX = 383, CY = 205, RX = 200, RY = 46, TILT = -8 * Math.PI / 180;
     var PERIOD = 16000, A0 = [200, 320, 80].map(function (d) { return d * Math.PI / 180; });
     var STILL = [195, 345, -90].map(function (d) { return d * Math.PI / 180; });
     var IN_FOR = 700;
-    var raf = 0, inView = false, idleAt = 0, played = false;
-    /* Faerbt der Browser die Seite trotz "only light" dunkel um (aeltere Samsung-Internet-Versionen), bliebe nur das
-       Video hell (weisser Kasten). Dann ohne Video: gleich die Zeichnung, die der Browser mit umfaerbt. */
-    if (video && forcedDark()) { video.parentNode.removeChild(video); video = null; fr.classList.add("no-video"); }
-    function forcedDark() {
-      try {
-        var d = document.createElement("div");
-        d.style.cssText = "display:none;background-color:Canvas;color-scheme:only light";
-        document.body.appendChild(d);
-        var c = window.getComputedStyle(d).backgroundColor; d.parentNode.removeChild(d);
-        var m = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)$/.exec(c);
-        return !!m && (m[4] === undefined || +m[4] > 0) && (+m[1] + +m[2] + +m[3]) < 384;
-      } catch (e) { return false; }
-    }
+    var raf = 0, inView = false, idleAt = 0, played = false, looping = false;
+    var still = reduce || !("IntersectionObserver" in window);
+    /* Chromium (auch Samsung Internet): WebM mit durchsichtigem Grund. Safari/Firefox: MP4 auf Weiss. */
+    var alpha = !!video && /Chrome\/|Chromium\//.test(navigator.userAgent) && !!video.canPlayType && video.canPlayType('video/webm; codecs="vp09.00.10.08"') !== "";
     function place(ms, still) {
       var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.74 : RX;
       var fade = still ? 1 : Math.max(0, Math.min(1, ms / IN_FOR)), turn = still ? 0 : ms / PERIOD * 2 * Math.PI;
@@ -226,24 +218,47 @@
       if (idleAt) return;
       idleAt = performance.now(); fr.classList.add("is-idle"); run();
     }
-    var still = reduce || !("IntersectionObserver" in window);
+    function quiet(p) { if (p && p.catch) p.catch(function () {}); }
+    function noVideo() {                                               /* Video faellt aus: die Zeichnung uebernimmt */
+      looping = false; fr.classList.remove("has-video", "is-loop");
+      try { video.pause(); loop.pause(); } catch (e) {}
+      idle();
+    }
+    function toLoop() {                                                /* Auftakt zu Ende: nahtlos in die Schleife */
+      if (looping || !fr.classList.contains("has-video")) return;
+      looping = true;
+      loop.addEventListener("playing", function () { fr.classList.add("is-loop"); }, { once: true });
+      try { loop.currentTime = 0; quiet(loop.play()); } catch (e) { noVideo(); return; }
+      idle();                                                          /* bleibt die Schleife stehen: letztes Bild des Auftakts */
+    }
     window.addEventListener("resize", function () { if (still) place(0, true); else if (!raf && idleAt) place(performance.now() - idleAt, false); });
-    if (still) { fr.classList.add("is-play", "is-idle"); place(0, true); return; }
+    if (video && loop && (!still || alpha)) {
+      var kind = alpha ? "data-webm" : "data-mp4";
+      if (!alpha) fr.classList.add("frage--white");
+      loop.src = loop.getAttribute(kind); loop.addEventListener("error", noVideo);
+      if (!still) { video.src = video.getAttribute(kind); video.addEventListener("ended", toLoop); video.addEventListener("error", toLoop); }
+      fr.classList.add("has-video");
+    }
+    if (still) {                                                       /* Endbild: erstes Bild der Schleife bzw. Zeichnung */
+      fr.classList.add("is-play", "is-idle"); if (fr.classList.contains("has-video")) fr.classList.add("is-loop");
+      place(0, true); return;
+    }
     place(0, false);
-    if (video) { video.addEventListener("ended", idle); video.addEventListener("error", idle); }
     new IntersectionObserver(function (es) {
       inView = es[0].isIntersecting;
       if (inView && !played && es[0].intersectionRatio >= 0.3) {
         played = true; fr.classList.add("is-play");
-        if (!video) idle();                                          /* ohne Video: Zeichnung blendet mit der Buehne ein */
+        if (!fr.classList.contains("has-video")) idle();
         else {
           window.setTimeout(function () {
-            var p; try { video.currentTime = 0; p = video.play(); } catch (e) { idle(); }
-            if (p && p.catch) p.catch(idle);
+            var p; try { video.currentTime = 0; p = video.play(); } catch (e) { noVideo(); }
+            if (p && p.catch) p.catch(noVideo);                        /* Abspielen gesperrt (Stromsparen): Zeichnung */
           }, 450);
-          window.setTimeout(idle, 450 + 2000 + 1500);               /* Sicherheit, falls "ended" ausbleibt */
+          window.setTimeout(function () { if (!looping && (video.paused || video.ended)) toLoop(); }, 450 + 2000 + 1500);
+          window.setTimeout(function () { if (!looping) toLoop(); }, 450 + 2000 + 6000);   /* Sicherheit */
         }
       }
+      if (looping) { if (inView) quiet(loop.play()); else loop.pause(); }  /* ausserhalb des Bildes ruht die Schleife */
       run();
     }, { threshold: [0, 0.3] }).observe(scene);
   })();

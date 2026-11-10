@@ -568,12 +568,18 @@ html:not(.js) .ks__bar { display: none; }
 .fig__breath { transform-origin: 383px 560px; }
 .fig__head { transform-origin: 383px 300px; }
 .frage__art { z-index: 2; }
-/* Auftakt als Video (60 Bilder, 30 fps, 2 s; tools/figur): weisser Grund verschwindet per multiply im Seitengrund.
-   Danach uebernimmt die gleiche Zeichnung als SVG (.is-idle). */
-.frage__video { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; pointer-events: none; }
-html.js.motion-ok .frage:not(.is-idle) .frage__art { visibility: hidden; }
-.frage.is-idle .frage__video, html:not(.js) .frage__video, html.js:not(.motion-ok) .frage__video { display: none; }
-@media (prefers-reduced-motion: reduce) { .frage__video { display: none; } .frage__art { visibility: visible !important; } }
+/* Figur als Video (tools/figur): Auftakt (120 Bilder, 60 fps, 2 s), danach eine ruhige Schleife (8 s: Atmen,
+   Kopf, Licht). Videos faerbt kein Browser um - auch nicht der erzwungene Dunkelmodus von Samsung Internet, der
+   Inline-SVG grau macht. Chromium/Samsung: WebM mit durchsichtigem Grund und hellem Schein um die Figur (auf Weiss
+   unsichtbar, auf Dunkel bleibt die Figur sichtbar). Safari/Firefox (kein erzwungenes Dunkel): MP4 auf Weiss, per
+   multiply im Seitengrund. Die SVG-Zeichnung (.frage__art) bleibt fuer ohne Skript und falls ein Video ausfaellt. */
+.frage__video, .frage__loop { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.frage--white .frage__video, .frage--white .frage__loop { mix-blend-mode: multiply; }
+.frage__video, .frage__loop, html:not(.js) .frage__video, html:not(.js) .frage__loop { display: none; }
+.frage.has-video .frage__video, .frage.has-video .frage__loop { display: block; }
+.frage.has-video .frage__art { visibility: hidden; }
+.frage .frage__loop, .frage.is-loop .frage__video { visibility: hidden; }
+.frage.is-loop .frage__loop { visibility: visible; }
 /* Fragen kreisen um den Kopf (Wunsch 10.11.): reiner Text ohne Blase. Hinten (obere Bahnhaelfte) hinter dem Kopf,
    kleiner und blasser; vorn vor dem Kopf, mit hellem Schein, damit sie auch auf Schwarz lesbar bleiben. */
 .frage__q {
