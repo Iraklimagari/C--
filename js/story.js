@@ -182,22 +182,21 @@
   }
 
   /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
-     Beim ersten Erscheinen einmal abspielen (.is-play; Figur ganz in story.css). Die drei Fragen kreisen als reiner
-     Text auf einer leicht geneigten Bahn um den Kopf: hinten (obere Haelfte) hinter dem Kopf, kleiner und blasser,
-     vorn davor. Koordinaten wie die Zeichnung (viewBox 90 96 586 484). Bei Reduced Motion stehen sie still. */
+     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann spielt das Video (60 Bilder, 2 s). An seinem Ende
+     (.is-idle) steht dieselbe Zeichnung als SVG da und bewegt sich ruhig; die drei Fragen kreisen als Text um den Kopf
+     (hinten hinter dem Kopf, kleiner und blasser, vorn davor). Reduced Motion, ohne Video: sofort das Endbild. */
   var fr = document.querySelector("[data-frage]");
   if (fr) (function () {
-    var scene = fr.querySelector(".frage__scene");
+    var scene = fr.querySelector(".frage__scene"), video = fr.querySelector(".frage__video");
     var qs = Array.prototype.slice.call(fr.querySelectorAll(".frage__q"));
     var VX = 90, VY = 96, VW = 586, CX = 383, CY = 205, RX = 200, RY = 46, TILT = -8 * Math.PI / 180;
     var PERIOD = 16000, A0 = [200, 320, 80].map(function (d) { return d * Math.PI / 180; });
     var STILL = [195, 345, -90].map(function (d) { return d * Math.PI / 180; });
-    var IN_AT = 4000, IN_FOR = 700;
-    var raf = 0, seen = false, inView = false, t0 = 0;
+    var IN_FOR = 700;
+    var raf = 0, inView = false, idleAt = 0, played = false;
     function place(ms, still) {
       var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.74 : RX;
-      var fade = still ? 1 : Math.max(0, Math.min(1, (ms - IN_AT) / IN_FOR));
-      var turn = still ? 0 : Math.max(0, ms - IN_AT) / PERIOD * 2 * Math.PI;
+      var fade = still ? 1 : Math.max(0, Math.min(1, ms / IN_FOR)), turn = still ? 0 : ms / PERIOD * 2 * Math.PI;
       qs.forEach(function (q, i) {
         var a = (still ? STILL[i] : A0[i]) + turn, s = Math.sin(a);
         var ex = rx * Math.cos(a), ey = RY * s;
@@ -208,18 +207,27 @@
         q.style.opacity = ((still ? 1 : 0.8 + 0.2 * s) * fade).toFixed(3);
       });
     }
-    function tick(now) {
-      raf = 0;
-      place(now - t0, false);
-      if (inView) raf = window.requestAnimationFrame(tick);
+    function tick(now) { raf = 0; place(now - idleAt, false); if (inView) raf = window.requestAnimationFrame(tick); }
+    function run() { if (!raf && inView && idleAt && !reduce) raf = window.requestAnimationFrame(tick); }
+    function idle() {
+      if (idleAt) return;
+      idleAt = performance.now(); fr.classList.add("is-idle"); run();
     }
-    function run() { if (!raf && inView && seen && !reduce) raf = window.requestAnimationFrame(tick); }
-    window.addEventListener("resize", function () { if (reduce) place(0, true); else if (!raf && seen) place(performance.now() - t0, false); });
-    if (reduce || !("IntersectionObserver" in window)) { fr.classList.add("is-play"); place(0, true); return; }
+    window.addEventListener("resize", function () { if (reduce || !video) place(0, true); else if (!raf && idleAt) place(performance.now() - idleAt, false); });
+    if (reduce || !video || !("IntersectionObserver" in window)) { fr.classList.add("is-play", "is-idle"); place(0, true); return; }
     place(0, false);
+    video.addEventListener("ended", idle);
+    video.addEventListener("error", idle);
     new IntersectionObserver(function (es) {
       inView = es[0].isIntersecting;
-      if (inView && !seen && es[0].intersectionRatio >= 0.3) { seen = true; t0 = performance.now(); fr.classList.add("is-play"); }
+      if (inView && !played && es[0].intersectionRatio >= 0.3) {
+        played = true; fr.classList.add("is-play");
+        window.setTimeout(function () {
+          var p; try { video.currentTime = 0; p = video.play(); } catch (e) { idle(); }
+          if (p && p.catch) p.catch(idle);
+        }, 450);
+        window.setTimeout(idle, 450 + 2000 + 1500);                 /* Sicherheit, falls "ended" ausbleibt */
+      }
       run();
     }, { threshold: [0, 0.3] }).observe(scene);
   })();
