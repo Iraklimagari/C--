@@ -544,8 +544,8 @@ html:not(.js) .ks__bar { display: none; }
 /* ---------- Strichmann mit den drei Fragen (Wunsch 10.11.) -------------------------------------------------
    Nach "So finden Kunden zu Ihnen": eine schwarze Figur holt das Handy hervor, der Bildschirm geht an und sein
    Licht faellt auf das Gesicht; dann steckt er es weg, legt die Hand ans Kinn und denkt nach. Um den Kopf zieht
-   sich eine Umlaufbahn, auf der die drei Fragen kreisen (story.js setzt ihre Lage). Darunter je eine Erklaerung,
-   ohne Ueberschrift. Einmaliger Auftritt beim ersten Erscheinen; ohne Skript und bei Reduced Motion steht das
+   sich eine Umlaufbahn, auf der die drei Fragen kreisen (story.js setzt ihre Lage). Keine Liste darunter (Wunsch
+   10.11.). Einmaliger Auftritt beim ersten Erscheinen; ohne Skript und bei Reduced Motion steht das
    Endbild (denkend, Fragen um den Kopf) still da. */
 .frage {
   --pt: clamp(40px, 4vw + 16px, 88px);
@@ -585,33 +585,24 @@ html.js.motion-ok .frage:not(.is-idle) .frage__art { visibility: hidden; }
 html:not(.js) .frage__q:nth-of-type(1) { left: 4%; top: 20%; }                    /* ohne Skript: feste Plaetze um den Kopf */
 html:not(.js) .frage__q:nth-of-type(2) { right: 4%; left: auto; top: 26%; }
 html:not(.js) .frage__q:nth-of-type(3) { left: 50%; top: 2%; transform: translateX(-50%); }
-/* Erklaerungen */
-.frage__list { display: grid; gap: clamp(10px, 0.6vw + 6px, 16px); width: min(36rem, 100%); margin: clamp(18px, 2vw + 6px, 36px) auto 0; padding: 0 var(--gutter); list-style: none; }
-.frage__list li { position: relative; padding-left: 1.4em; font-size: clamp(17px, 0.35vw + 15.5px, 20px); line-height: 1.5; color: var(--ink); text-wrap: pretty; }
-.frage__list li::before { content: ""; position: absolute; left: 0.2em; top: 0.62em; width: 0.42em; height: 0.42em; border-radius: 50%; background: var(--brand); }
 
 /* --- Bewegung (nur mit Skript und Bewegung) ---
    .is-play: die Ueberschrift kommt zuerst, dann die Buehne; story.js startet das Video (Haende unten -> Handy hoch,
    Licht an -> andere Hand ans Kinn). .is-idle (nach dem Video): die gleiche Zeichnung als SVG mit ruhigen Schleifen
-   (Atmen, leichte Kopfneigung, das Licht des Handys atmet); die Fragen kreisen (story.js), die Erklaerungen erscheinen. */
+   (Atmen, leichte Kopfneigung, das Licht des Handys atmet); die Fragen kreisen (story.js). */
 html.js.motion-ok .frage:not(.is-play) .frage__title,
 html.js.motion-ok .frage:not(.is-play) .frage__scene,
-html.js.motion-ok .frage:not(.is-idle) .frage__list li,
 html.js.motion-ok .frage:not(.is-idle) .frage__q { opacity: 0 !important; }
 html.js.motion-ok .frage.is-play .frage__title { animation: fr-up 640ms cubic-bezier(0.23, 1, 0.32, 1) both; }
 html.js.motion-ok .frage.is-play .frage__scene { animation: fr-fade 360ms ease-out 250ms both; }
 html.js.motion-ok .frage.is-idle .fig__breath { animation: fr-breath 4.8s ease-in-out 0.4s infinite alternate; }
 html.js.motion-ok .frage.is-idle .fig__head { animation: fr-tilt 7.5s ease-in-out 0.6s infinite alternate; }
 html.js.motion-ok .frage.is-idle .fig__glow { animation: fr-glow 3.4s ease-in-out 0.3s infinite alternate; }
-html.js.motion-ok .frage.is-idle .frage__list li { animation: fr-up 520ms cubic-bezier(0.23, 1, 0.32, 1) both; }
-html.js.motion-ok .frage.is-idle .frage__list li:nth-child(1) { animation-delay: 200ms; }
-html.js.motion-ok .frage.is-idle .frage__list li:nth-child(2) { animation-delay: 280ms; }
-html.js.motion-ok .frage.is-idle .frage__list li:nth-child(3) { animation-delay: 360ms; }
 @keyframes fr-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fr-glow { from { opacity: 1; } to { opacity: 0.8; } }
 @keyframes fr-breath { from { transform: none; } to { transform: scale(1.006, 1.01); } }
 @keyframes fr-tilt { from { transform: rotate(-1.4deg); } to { transform: rotate(1.2deg); } }
 @keyframes fr-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .frage__list li, .frage__scene, .frage__title { animation: none !important; opacity: 1 !important; }
+  .frage__scene, .frage__title { animation: none !important; opacity: 1 !important; }
 }
