@@ -182,34 +182,54 @@
   }
 
   /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
-     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann der Auftakt als Video (2 s). Danach (.is-idle)
-     laeuft die ruhige Schleife als Video (.is-loop: Atmen, Kopf, Licht); die drei Fragen kreisen als Text um den Kopf
-     (hinten hinter dem Kopf, kleiner und blasser, vorn davor). Videos statt SVG, weil der erzwungene Dunkelmodus von
-     Samsung Internet Videos nicht umfaerbt. Faellt ein Video aus: die SVG-Zeichnung mit CSS-Bewegung. Reduced Motion:
-     das Endbild steht (erstes Bild der Schleife, ohne WebM die Zeichnung). */
+     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann der Auftakt (2 s), danach (.is-idle) die ruhige
+     Schleife (Atmen, Kopf, Licht); die drei Fragen kreisen als Text um den Kopf (hinten hinter dem Kopf - per Maske -,
+     kleiner und blasser, vorn davor). Die Figur kommt aus einem Video mit zwei Ebenen je Bild (links D, rechts M); sie
+     werden Bild fuer Bild in zwei Canvas gemalt (immer dasselbe Bild), die sich per difference/multiply mit dem
+     Seitengrund mischen (story.css): hell = schwarze Figur, im Samsung-Dunkelmodus = graue Figur ohne Kasten.
+     Faellt ein Video aus: die SVG-Zeichnung mit CSS-Bewegung. Reduced Motion: das Endbild steht. */
   var fr = document.querySelector("[data-frage]");
   if (fr) (function () {
-    var scene = fr.querySelector(".frage__scene"), video = fr.querySelector(".frage__video"), loop = fr.querySelector(".frage__loop");
+    var scene = fr.querySelector(".frage__scene");
+    var intro = fr.querySelector('.frage__src[data-src="intro"]'), loop = fr.querySelector('.frage__src[data-src="loop"]');
+    var cm = fr.querySelector(".frage__cm"), cd = fr.querySelector(".frage__cd");
+    var xm = cm && cm.getContext ? cm.getContext("2d") : null, xd = cd && cd.getContext ? cd.getContext("2d") : null;
+    if (xm && xd) { xm.imageSmoothingQuality = xd.imageSmoothingQuality = "high"; }
     var qs = Array.prototype.slice.call(fr.querySelectorAll(".frage__q"));
     var VX = 90, VY = 96, VW = 586, CX = 383, CY = 205, RX = 200, RY = 46, TILT = -8 * Math.PI / 180;
+    var HX = 383, HY = 219, HR = 84, LOOP_S = 8, GAP = 16;           /* Kopf (Zeichnung), Schleifenlaenge, Spalt im Video */
     var PERIOD = 16000, A0 = [200, 320, 80].map(function (d) { return d * Math.PI / 180; });
     var STILL = [195, 345, -90].map(function (d) { return d * Math.PI / 180; });
     var IN_FOR = 700;
-    var raf = 0, inView = false, idleAt = 0, played = false, looping = false;
+    var raf = 0, inView = false, idleAt = 0, played = false, looping = false, cur = null, drawing = 0;
     var still = reduce || !("IntersectionObserver" in window);
-    /* Chromium (auch Samsung Internet): WebM mit durchsichtigem Grund. Safari/Firefox: MP4 auf Weiss. */
-    var alpha = !!video && /Chrome\/|Chromium\//.test(navigator.userAgent) && !!video.canPlayType && video.canPlayType('video/webm; codecs="vp09.00.10.08"') !== "";
+    var sizes = qs.map(function () { return null; });
+    function head() {                                                  /* Kopfmitte wie in der Schleife (Atmen, Neigung) */
+      var t = looping && loop ? loop.currentTime : 0, w = 2 * Math.PI * t / LOOP_S;
+      var br = 0.5 - 0.5 * Math.cos(w), th = 1.3 * Math.PI / 180 * Math.sin(w);
+      var x = 383 + 81 * Math.sin(th), y = 300 - 81 * Math.cos(th);
+      return { x: 383 + (x - 383) * (1 + 0.006 * br), y: 560 + (y - 560) * (1 + 0.010 * br), r: HR * (1 + 0.008 * br) };
+    }
     function place(ms, still) {
       var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.74 : RX;
       var fade = still ? 1 : Math.max(0, Math.min(1, ms / IN_FOR)), turn = still ? 0 : ms / PERIOD * 2 * Math.PI;
+      var h = head();
       qs.forEach(function (q, i) {
         var a = (still ? STILL[i] : A0[i]) + turn, s = Math.sin(a);
         var ex = rx * Math.cos(a), ey = RY * s;
         var x = CX + ex * Math.cos(TILT) - ey * Math.sin(TILT), y = CY + ex * Math.sin(TILT) + ey * Math.cos(TILT);
-        var front = still || s > 0;
-        q.style.transform = "translate3d(" + ((x - VX) * k).toFixed(1) + "px," + ((y - VY) * k).toFixed(1) + "px,0) translate(-50%,-50%) scale(" + (still ? 1 : 0.91 + 0.09 * s).toFixed(3) + ")";
-        q.style.zIndex = front ? "3" : "1";
+        var front = still || s > 0, sc = still ? 1 : 0.91 + 0.09 * s;
+        var X = (x - VX) * k, Y = (y - VY) * k;
+        q.style.transform = "translate3d(" + X.toFixed(1) + "px," + Y.toFixed(1) + "px,0) translate(-50%,-50%) scale(" + sc.toFixed(3) + ")";
         q.style.opacity = ((still ? 1 : 0.8 + 0.2 * s) * fade).toFixed(3);
+        /* hinten: der Teil ueber dem Kopf wird ausgeblendet (die Figur liegt in den Canvas darunter) */
+        var m = "none";
+        if (!front) {
+          if (!sizes[i]) sizes[i] = [q.offsetWidth, q.offsetHeight];
+          var u = sizes[i][0] / 2 + ((h.x - VX) * k - X) / sc, v = sizes[i][1] / 2 + ((h.y - VY) * k - Y) / sc, r = h.r * k / sc;
+          m = "radial-gradient(circle at " + u.toFixed(1) + "px " + v.toFixed(1) + "px, transparent " + r.toFixed(1) + "px, #000 " + (r + 1).toFixed(1) + "px)";
+        }
+        q.style.webkitMaskImage = m; q.style.maskImage = m;
       });
     }
     function tick(now) { raf = 0; place(now - idleAt, false); if (inView) raf = window.requestAnimationFrame(tick); }
@@ -219,31 +239,63 @@
       idleAt = performance.now(); fr.classList.add("is-idle"); run();
     }
     function quiet(p) { if (p && p.catch) p.catch(function () {}); }
+    /* Malen: beide Ebenen aus demselben Videobild, damit sie nie auseinanderlaufen */
+    function fit() {
+      var d = Math.min(window.devicePixelRatio || 1, 2), w = Math.round(scene.clientWidth * d), h = Math.round(scene.clientHeight * d);
+      if (w && h && (cm.width !== w || cm.height !== h)) {
+        cm.width = cd.width = w; cm.height = cd.height = h; xm.imageSmoothingQuality = xd.imageSmoothingQuality = "high"; return true;
+      }
+      return false;
+    }
+    function paint(v) {
+      if (!v || v.readyState < 2 || !v.videoWidth) return false;
+      var hw = (v.videoWidth - GAP) / 2, vh = v.videoHeight;
+      try {
+        xd.drawImage(v, 0, 0, hw, vh, 0, 0, cd.width, cd.height);
+        xm.drawImage(v, hw + GAP, 0, hw, vh, 0, 0, cm.width, cm.height);
+      } catch (e) { return false; }
+      return true;
+    }
+    function frame() {
+      drawing = 0; paint(cur);
+      if (cur && !cur.paused && !cur.ended) drawing = window.requestAnimationFrame(frame);
+    }
+    function draw(v) { cur = v; if (!drawing) drawing = window.requestAnimationFrame(frame); }
     function noVideo() {                                               /* Video faellt aus: die Zeichnung uebernimmt */
-      looping = false; fr.classList.remove("has-video", "is-loop");
-      try { video.pause(); loop.pause(); } catch (e) {}
+      looping = false; fr.classList.remove("has-video");
+      try { intro.pause(); loop.pause(); } catch (e) {}
+      if (xm) { xm.clearRect(0, 0, cm.width, cm.height); xd.clearRect(0, 0, cd.width, cd.height); }
       idle();
     }
     function toLoop() {                                                /* Auftakt zu Ende: nahtlos in die Schleife */
       if (looping || !fr.classList.contains("has-video")) return;
       looping = true;
-      loop.addEventListener("playing", function () { fr.classList.add("is-loop"); }, { once: true });
+      loop.addEventListener("playing", function () { draw(loop); }, { once: true });
       try { loop.currentTime = 0; quiet(loop.play()); } catch (e) { noVideo(); return; }
       idle();                                                          /* bleibt die Schleife stehen: letztes Bild des Auftakts */
     }
-    window.addEventListener("resize", function () { if (still) place(0, true); else if (!raf && idleAt) place(performance.now() - idleAt, false); });
-    if (video && loop && (!still || alpha)) {
-      var kind = alpha ? "data-webm" : "data-mp4";
-      if (!alpha) fr.classList.add("frage--white");
-      loop.src = loop.getAttribute(kind); loop.addEventListener("error", noVideo);
-      if (!still) { video.src = video.getAttribute(kind); video.addEventListener("ended", toLoop); video.addEventListener("error", toLoop); }
-      fr.classList.add("has-video");
+    window.addEventListener("resize", function () {
+      if (fr.classList.contains("has-video") && fit()) paint(cur || loop);
+      sizes = qs.map(function () { return null; });
+      if (still) place(0, true); else if (!raf && idleAt) place(performance.now() - idleAt, false);
+    });
+    if (intro && loop && xm && xd) {
+      fr.classList.add("has-video"); fit();
+      var failed = function (e) { return e.target.tagName !== "SOURCE" || !e.target.nextElementSibling; };   /* erst wenn alle Quellen scheitern */
+      loop.addEventListener("error", function (e) { if (failed(e)) noVideo(); }, true);
+      intro.addEventListener("error", function (e) { if (failed(e) && !looping) toLoop(); }, true);
     }
     if (still) {                                                       /* Endbild: erstes Bild der Schleife bzw. Zeichnung */
-      fr.classList.add("is-play", "is-idle"); if (fr.classList.contains("has-video")) fr.classList.add("is-loop");
-      place(0, true); return;
+      fr.classList.add("is-play", "is-idle"); place(0, true);
+      if (fr.classList.contains("has-video")) {
+        var shown = false, show = function () { if (!shown && paint(loop)) shown = true; };
+        loop.addEventListener("loadeddata", show); loop.addEventListener("seeked", show); show();
+        window.setTimeout(function () { if (!shown) noVideo(); }, 4000);
+      }
+      return;
     }
     place(0, false);
+    if (fr.classList.contains("has-video")) intro.addEventListener("ended", toLoop);
     new IntersectionObserver(function (es) {
       inView = es[0].isIntersecting;
       if (inView && !played && es[0].intersectionRatio >= 0.3) {
@@ -251,14 +303,15 @@
         if (!fr.classList.contains("has-video")) idle();
         else {
           window.setTimeout(function () {
-            var p; try { video.currentTime = 0; p = video.play(); } catch (e) { noVideo(); }
-            if (p && p.catch) p.catch(noVideo);                        /* Abspielen gesperrt (Stromsparen): Zeichnung */
+            var p; try { intro.currentTime = 0; p = intro.play(); } catch (e) { noVideo(); return; }
+            if (p && p.then) p.then(function () { draw(intro); }, noVideo);   /* Abspielen gesperrt (Stromsparen): Zeichnung */
+            else draw(intro);
           }, 450);
-          window.setTimeout(function () { if (!looping && (video.paused || video.ended)) toLoop(); }, 450 + 2000 + 1500);
+          window.setTimeout(function () { if (!looping && (intro.paused || intro.ended)) toLoop(); }, 450 + 2000 + 1500);
           window.setTimeout(function () { if (!looping) toLoop(); }, 450 + 2000 + 6000);   /* Sicherheit */
         }
       }
-      if (looping) { if (inView) quiet(loop.play()); else loop.pause(); }  /* ausserhalb des Bildes ruht die Schleife */
+      if (looping) { if (inView) { quiet(loop.play()); draw(loop); } else loop.pause(); }   /* ausserhalb ruht die Schleife */
       run();
     }, { threshold: [0, 0.3] }).observe(scene);
   })();

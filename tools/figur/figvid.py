@@ -4,10 +4,10 @@ Videos faerbt der Browser nicht um - anders als Inline-SVG."""
 import math, os, sys
 sys.path.insert(0, '.')
 from frames3 import svg_frame, TOTAL
-HALO = 0.30          # Deckkraft des Scheins (nur auf dunklem Grund sichtbar)
+HALO = 0.0           # kein Schein mehr (Dunkelmodus per Mischung, siehe pack.py)
 def to_svg2(o, halo=HALO, breath=0.0, tilt=0.0, glow_mul=1.0, w=1172, h=968):
     (pc, pw, phh, pang) = o['phone']; hx, hy, R = o['head']
-    Ls = lambda arr: ''.join(f'<path d="{d}" fill="#fff"/>' for d in arr)
+    Ls = lambda arr: '<g clip-path="url(#si)">' + ''.join(f'<path d="{d}" fill="#fff"/>' for d in arr) + '</g>'   # Linien nie am Grund (pack.py)
     bt = f'translate(383 560) scale({1+0.006*breath:.5f} {1+0.010*breath:.5f}) translate(-383 -560)'
     ht = f'rotate({tilt:.4f} 383 300)'
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="90 96 586 484" width="{w}" height="{h}">
@@ -19,6 +19,7 @@ def to_svg2(o, halo=HALO, breath=0.0, tilt=0.0, glow_mul=1.0, w=1172, h=968):
  <linearGradient id="hfade" x1="0" y1="96" x2="0" y2="580" gradientUnits="userSpaceOnUse"><stop offset="0.86" stop-color="#fff"/><stop offset="0.95" stop-color="#fff" stop-opacity="0"/></linearGradient>
  <mask id="hmask" maskUnits="userSpaceOnUse" x="90" y="96" width="586" height="484"><rect x="90" y="96" width="586" height="484" fill="url(#hfade)"/></mask>
  <filter id="halo" x="-20%" y="-20%" width="140%" height="140%"><feMorphology operator="dilate" radius="2"/><feGaussianBlur stdDeviation="7"/></filter>
+ <clipPath id="si"><path d="{o['silin']}"/></clipPath>
  <clipPath id="tv"><path d="{o['trunk']}"/></clipPath><clipPath id="hd"><circle cx="{hx:.2f}" cy="{hy:.2f}" r="{R}"/></clipPath>
 </defs>
 <ellipse cx="383" cy="562" rx="150" ry="14" fill="url(#shadow)"/>

@@ -162,7 +162,8 @@ def svg_frame(f):
     pw=math.dist(ph[0],ph[1]); phh=math.dist(ph[1],ph[2])
     # Teil der Telefonhand, der vor dem Handy liegt (u>0.86): ueber dem Handy noch einmal schwarz
     rhand=Polygon([p for p,u in zip(g['rarm'],g['rus'])]).buffer(0).intersection(PH.buffer(14)).intersection(CUT)
-    return dict(body=path(body), trunk=path(trunk_vis,0), larm=path(L_draw.intersection(CUT)), rhand=path(rhand),
+    silin=unary_union([body, head.intersection(CUT)]).buffer(-1.6)          # fuer die Videos: Linien nur innen
+    return dict(silin=path(silin,0), body=path(body), trunk=path(trunk_vis,0), larm=path(L_draw.intersection(CUT)), rhand=path(rhand),
                 linesL=[taper(r,3.6,0.12,0.12) for r in runs(lpts,mL,8)], linesR=[taper(r,3.6,0.12,0.12) for r in runs(rpts,mR,8)],
                 phone=(pc,pw,phh,pang), cam=g['cam'], head=(hx,hy,R), glow=g['glow'], face=g['face'])
 def to_svg(o, w=1172, h=968):
