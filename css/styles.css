@@ -199,6 +199,14 @@
     U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* --- Dunkelmodus am Handy (Wunsch 10.11.) ----------------------------------
+   Die Seite ist hell gestaltet. Ohne Angabe faerben Browser im Dunkelmodus sie selbst um (Chrome "Websites
+   abdunkeln", Samsung Internet): Videos und Fotos bleiben dabei hell, alles andere wird dunkel -> weisse Kaesten,
+   graue Figur, fast unsichtbares Logo. "only light" sagt dem Browser: nicht umfaerben. Die Regel im
+   Dunkel-Media-Query ist das Zeichen fuer Samsung Internet, dass die Seite den Dunkelmodus selbst behandelt. */
+:root { color-scheme: only light; }
+@media (prefers-color-scheme: dark) { :root { color-scheme: only light; } }
+
 /* --- Reset ---------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 

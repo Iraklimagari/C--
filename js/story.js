@@ -194,6 +194,19 @@
     var STILL = [195, 345, -90].map(function (d) { return d * Math.PI / 180; });
     var IN_FOR = 700;
     var raf = 0, inView = false, idleAt = 0, played = false;
+    /* Faerbt der Browser die Seite trotz "only light" dunkel um (aeltere Samsung-Internet-Versionen), bliebe nur das
+       Video hell (weisser Kasten). Dann ohne Video: gleich die Zeichnung, die der Browser mit umfaerbt. */
+    if (video && forcedDark()) { video.parentNode.removeChild(video); video = null; fr.classList.add("no-video"); }
+    function forcedDark() {
+      try {
+        var d = document.createElement("div");
+        d.style.cssText = "display:none;background-color:Canvas;color-scheme:only light";
+        document.body.appendChild(d);
+        var c = window.getComputedStyle(d).backgroundColor; d.parentNode.removeChild(d);
+        var m = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)$/.exec(c);
+        return !!m && (m[4] === undefined || +m[4] > 0) && (+m[1] + +m[2] + +m[3]) < 384;
+      } catch (e) { return false; }
+    }
     function place(ms, still) {
       var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.74 : RX;
       var fade = still ? 1 : Math.max(0, Math.min(1, ms / IN_FOR)), turn = still ? 0 : ms / PERIOD * 2 * Math.PI;
@@ -213,20 +226,23 @@
       if (idleAt) return;
       idleAt = performance.now(); fr.classList.add("is-idle"); run();
     }
-    window.addEventListener("resize", function () { if (reduce || !video) place(0, true); else if (!raf && idleAt) place(performance.now() - idleAt, false); });
-    if (reduce || !video || !("IntersectionObserver" in window)) { fr.classList.add("is-play", "is-idle"); place(0, true); return; }
+    var still = reduce || !("IntersectionObserver" in window);
+    window.addEventListener("resize", function () { if (still) place(0, true); else if (!raf && idleAt) place(performance.now() - idleAt, false); });
+    if (still) { fr.classList.add("is-play", "is-idle"); place(0, true); return; }
     place(0, false);
-    video.addEventListener("ended", idle);
-    video.addEventListener("error", idle);
+    if (video) { video.addEventListener("ended", idle); video.addEventListener("error", idle); }
     new IntersectionObserver(function (es) {
       inView = es[0].isIntersecting;
       if (inView && !played && es[0].intersectionRatio >= 0.3) {
         played = true; fr.classList.add("is-play");
-        window.setTimeout(function () {
-          var p; try { video.currentTime = 0; p = video.play(); } catch (e) { idle(); }
-          if (p && p.catch) p.catch(idle);
-        }, 450);
-        window.setTimeout(idle, 450 + 2000 + 1500);                 /* Sicherheit, falls "ended" ausbleibt */
+        if (!video) idle();                                          /* ohne Video: Zeichnung blendet mit der Buehne ein */
+        else {
+          window.setTimeout(function () {
+            var p; try { video.currentTime = 0; p = video.play(); } catch (e) { idle(); }
+            if (p && p.catch) p.catch(idle);
+          }, 450);
+          window.setTimeout(idle, 450 + 2000 + 1500);               /* Sicherheit, falls "ended" ausbleibt */
+        }
       }
       run();
     }, { threshold: [0, 0.3] }).observe(scene);
