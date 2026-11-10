@@ -555,6 +555,10 @@ html:not(.js) .ks__bar { display: none; }
     radial-gradient(40% 46% at 50% 30%, color-mix(in srgb, var(--brand) 9%, transparent), transparent 72%),
     linear-gradient(180deg, var(--soft) 0%, var(--white) 50%, var(--soft) 100%);
 }
+/* Ueberschrift ueber der Figur, mittig (Wunsch 10.11.); sie erscheint zuerst */
+.frage__title { margin: 0 auto clamp(4px, 1vw, 16px); max-width: 26ch; padding-inline: var(--gutter); text-align: center;
+  font-family: var(--font-serif); font-weight: var(--w-head, 440); font-size: clamp(30px, 18px + 2vw, 46px); line-height: 1.1; letter-spacing: -0.018em;
+  color: var(--ink); text-wrap: balance; }
 .frage__scene { position: relative; width: min(600px, 100%); aspect-ratio: 586 / 484; margin-inline: auto; }
 .frage__scene > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 /* Figur (Vektorzeichnung): Tinte, feine helle Pinselstriche, warmes Licht des Handys, sehr leichte Glanzstelle */
@@ -563,9 +567,12 @@ html:not(.js) .ks__bar { display: none; }
 .fig__case { fill: #0b0d0e; stroke: #d6cfbb; stroke-width: 1.2; }
 .fig__cam { fill: #cfc9b8; }
 .fig__lens { fill: #3a3a38; }
-.fig, .fig__breath, .fig__rise, .fig__head, .fig__point, .fig__phone { transform-box: view-box; }
+.fig, .fig__breath, .fig__rise, .fig__head, .fig__point, .fig__phone, .fig__lift { transform-box: view-box; }
+.fig__lift--l { transform-origin: 281px 492px; }
+.fig__lift--r { transform-origin: 498px 482px; }
+.fig__face { opacity: 0.35; }
 .fig { transform-origin: 383px 556px; }
-.fig__breath { transform-origin: 383px 556px; }
+.fig__breath { transform-origin: 383px 560px; }
 .fig__head { transform-origin: 383px 300px; }
 .fig__point { transform-origin: 280px 490px; }
 .fig__phone { transform-origin: 512px 488px; }
@@ -587,29 +594,41 @@ html:not(.js) .frage__q:nth-of-type(3) { left: 50%; top: 2%; transform: translat
 .frage__list li::before { content: ""; position: absolute; left: 0.2em; top: 0.62em; width: 0.42em; height: 0.42em; border-radius: 50%; background: var(--brand); }
 
 /* --- Bewegung (nur mit Skript und Bewegung; .is-play setzt story.js beim ersten Erscheinen) ---
-   Zurueckhaltend: sanfter Auftritt, das Handy geht an (Licht), danach ruhige Schleifen: Atmen (Schultern heben
-   sich minimal, Kopf und Arme gehen mit), der Kopf neigt sich leicht, der Zeigefinger tippt ans Kinn, das Handy
-   bewegt sich kaum merklich und sein Licht atmet. Die Fragen erscheinen nacheinander und wiegen sich leicht. */
+   Zuerst die Ueberschrift, dann die Figur mit beiden Haenden unten; 1,3 s die eine Hand hebt das Handy vor die Brust,
+   2,2 s es geht an (warmes Licht, ein Hauch davon im Gesicht), 2,8 s die andere Hand kommt ans Kinn. Danach ruhige
+   Schleifen: Atmen, leichte Kopfneigung, der Zeigefinger tippt, das Handy und sein Licht bewegen sich kaum merklich;
+   ab 4 s kreisen die Fragen (story.js). */
+html.js.motion-ok .frage:not(.is-play) .frage__title,
 html.js.motion-ok .frage:not(.is-play) .frage__scene,
 html.js.motion-ok .frage:not(.is-play) .frage__list li,
-html.js.motion-ok .frage:not(.is-play) .fig__glow { opacity: 0; }
-html.js.motion-ok .frage.is-play .frage__scene { animation: fr-fade 300ms ease-out both; }
-html.js.motion-ok .frage.is-play .fig { animation: fr-in 900ms cubic-bezier(0.23, 1, 0.32, 1) both; }
-html.js.motion-ok .frage.is-play .fig__glow { animation: fr-on 600ms cubic-bezier(0.23, 1, 0.32, 1) 700ms both, fr-glow 3.4s ease-in-out 1.4s infinite alternate; }
-html.js.motion-ok .frage.is-play .fig__breath { animation: fr-breath 4.8s ease-in-out 1s infinite alternate; }
-html.js.motion-ok .frage.is-play .fig__rise { animation: fr-rise 4.8s ease-in-out 1s infinite alternate; }
+html.js.motion-ok .frage:not(.is-play) .frage__q,
+html.js.motion-ok .frage:not(.is-play) .fig__glow,
+html.js.motion-ok .frage:not(.is-play) .fig__face { opacity: 0; }
+html.js.motion-ok .frage:not(.is-play) .fig__lift--l { transform: rotate(152deg); }
+html.js.motion-ok .frage:not(.is-play) .fig__lift--r { transform: rotate(-109deg); }
+html.js.motion-ok .frage.is-play .frage__title { animation: fr-up 640ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+html.js.motion-ok .frage.is-play .frage__scene { animation: fr-fade 300ms ease-out 350ms both; }
+html.js.motion-ok .frage.is-play .fig { animation: fr-in 800ms cubic-bezier(0.23, 1, 0.32, 1) 400ms both; }
+html.js.motion-ok .frage.is-play .fig__lift--r { animation: fr-lift-r 850ms cubic-bezier(0.77, 0, 0.175, 1) 1300ms both; }
+html.js.motion-ok .frage.is-play .fig__glow { animation: fr-on 520ms cubic-bezier(0.23, 1, 0.32, 1) 2200ms both, fr-glow 3.4s ease-in-out 3.2s infinite alternate; }
+html.js.motion-ok .frage.is-play .fig__face { animation: fr-face 1800ms ease-out 2220ms both; }
+html.js.motion-ok .frage.is-play .fig__lift--l { animation: fr-lift-l 950ms cubic-bezier(0.77, 0, 0.175, 1) 2800ms both; }
+html.js.motion-ok .frage.is-play .fig__breath { animation: fr-breath 4.8s ease-in-out 3.9s infinite alternate; }
+html.js.motion-ok .frage.is-play .fig__rise { animation: fr-rise 4.8s ease-in-out 3.9s infinite alternate; }
 html.js.motion-ok .frage.is-play .fig__rise--head { animation-name: fr-rise-head; }
-html.js.motion-ok .frage.is-play .fig__head { animation: fr-tilt 7.5s ease-in-out 1.6s infinite alternate; }
-html.js.motion-ok .frage.is-play .fig__point { animation: fr-tap 3.6s ease-in-out 1.2s infinite alternate; }
-html.js.motion-ok .frage.is-play .fig__phone { animation: fr-hold 6.2s ease-in-out 1.8s infinite alternate; }
-html.js.motion-ok .frage:not(.is-play) .frage__q { opacity: 0; }
+html.js.motion-ok .frage.is-play .fig__head { animation: fr-tilt 7.5s ease-in-out 4s infinite alternate; }
+html.js.motion-ok .frage.is-play .fig__point { animation: fr-tap 3.6s ease-in-out 3.9s infinite alternate; }
+html.js.motion-ok .frage.is-play .fig__phone { animation: fr-hold 6.2s ease-in-out 4.2s infinite alternate; }
 html.js.motion-ok .frage.is-play .frage__list li { animation: fr-up 520ms cubic-bezier(0.23, 1, 0.32, 1) both; }
-html.js.motion-ok .frage.is-play .frage__list li:nth-child(1) { animation-delay: 1500ms; }
-html.js.motion-ok .frage.is-play .frage__list li:nth-child(2) { animation-delay: 1580ms; }
-html.js.motion-ok .frage.is-play .frage__list li:nth-child(3) { animation-delay: 1660ms; }
+html.js.motion-ok .frage.is-play .frage__list li:nth-child(1) { animation-delay: 4300ms; }
+html.js.motion-ok .frage.is-play .frage__list li:nth-child(2) { animation-delay: 4380ms; }
+html.js.motion-ok .frage.is-play .frage__list li:nth-child(3) { animation-delay: 4460ms; }
 @keyframes fr-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fr-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fr-lift-r { from { transform: rotate(-109deg); } to { transform: none; } }
+@keyframes fr-lift-l { from { transform: rotate(152deg); } to { transform: none; } }
 @keyframes fr-on { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fr-face { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0.35; } }
 @keyframes fr-glow { from { opacity: 1; } to { opacity: 0.8; } }
 @keyframes fr-breath { from { transform: none; } to { transform: scale(1.008, 1.012); } }
 @keyframes fr-rise { from { transform: none; } to { transform: translateY(-1.4px); } }
@@ -619,5 +638,5 @@ html.js.motion-ok .frage.is-play .frage__list li:nth-child(3) { animation-delay:
 @keyframes fr-hold { from { transform: none; } to { transform: rotate(1.3deg); } }
 @keyframes fr-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .frage__list li, .frage__scene { animation: none !important; opacity: 1 !important; }
+  .frage__list li, .frage__scene, .frage__title { animation: none !important; opacity: 1 !important; }
 }

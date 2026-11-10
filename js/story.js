@@ -192,7 +192,7 @@
     var VX = 90, VY = 96, VW = 586, CX = 383, CY = 205, RX = 200, RY = 46, TILT = -8 * Math.PI / 180;
     var PERIOD = 16000, A0 = [200, 320, 80].map(function (d) { return d * Math.PI / 180; });
     var STILL = [195, 345, -90].map(function (d) { return d * Math.PI / 180; });
-    var IN_AT = 1100, IN_FOR = 700;
+    var IN_AT = 4000, IN_FOR = 700;
     var raf = 0, seen = false, inView = false, t0 = 0;
     function place(ms, still) {
       var k = scene.clientWidth / VW, rx = scene.clientWidth < 480 ? RX * 0.74 : RX;
