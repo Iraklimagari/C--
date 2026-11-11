@@ -43,6 +43,29 @@ function init(root) {
   const heroEl = root.closest(".hero");
   const go = () => { if (heroEl) heroEl.classList.add("is-go"); };
   const titleEl = document.querySelector(".hero--mark .hero__title");
+  /* Unschaerfe nur auf den Linien der Marke und von oben nach unten auslaufend (Wunsch 11.11.): oben 10 px, unten
+     scharf. Die unscharfe Marke wird auf ihre eigene Form beschnitten (kein Schein auf den Grund) und ueber einen
+     senkrechten Verlauf mit der scharfen gemischt. Fuer die Linie (SVG) und die 3D-Marke (Canvas) derselbe Filter. */
+  const NS = "http://www.w3.org/2000/svg";
+  const GRAD = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="8" height="64" ' +
+    'viewBox="0 0 8 64" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>' +
+    '<rect width="8" height="64" fill="url(#g)"/></svg>');
+  const pbDefs = document.createElementNS(NS, "defs");
+  pbDefs.innerHTML = '<filter id="mark-pb" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" ' +
+    'color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">' +
+    '<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b0"/>' +
+    '<feComposite in="b0" in2="SourceAlpha" operator="in" result="b"/>' +          /* nur innerhalb der Linien, kein Schein */
+    '<feImage preserveAspectRatio="none" result="m"/>' +
+    '<feComposite in="b" in2="m" operator="in" result="t"/><feComposite in="SourceGraphic" in2="m" operator="out" result="s"/>' +
+    '<feMerge><feMergeNode in="t"/><feMergeNode in="s"/></feMerge></filter>';
+  ink.insertBefore(pbDefs, ink.firstChild);
+  const pbF = pbDefs.querySelector("filter"), pbBlur = pbDefs.querySelector("feGaussianBlur"), pbImg = pbDefs.querySelector("feImage");
+  pbImg.setAttribute("href", GRAD); pbImg.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", GRAD);
+  const inkWrap = document.createElementNS(NS, "g");             /* ohne eigene Verschiebung: Filter in Pixeln der Buehne */
+  inkG.parentNode.insertBefore(inkWrap, inkG); inkWrap.appendChild(inkG);
+  /* Safari zeichnet SVG-Filter auf HTML-Elementen (Canvas) unzuverlaessig: dort nur die Linie unscharf */
+  const canvasPB = !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   /* --- Masse der Marke (Einheiten der viewBox 1095) ---------------------------------------- */
   const VB = 1095, C0 = VB / 2;
@@ -104,6 +127,11 @@ function init(root) {
     L = VB * s;
     ink.setAttribute("viewBox", "0 0 " + W + " " + H);
     inkG.setAttribute("transform", "translate(" + (cx - L / 2).toFixed(2) + " " + (cy - L / 2).toFixed(2) + ") scale(" + s.toFixed(5) + ")");
+    /* Verlauf der Unschaerfe: von etwas ueber der Oberkante der Marke (voll) bis zu ihrer Unterkante (scharf) */
+    const mTop = cy - L / 2 + VIS.y0 * s, mBot = cy - L / 2 + VIS.y1 * s, pad = 40;
+    pbF.setAttribute("width", String(W)); pbF.setAttribute("height", String(H));
+    pbImg.setAttribute("x", "0"); pbImg.setAttribute("width", String(W));
+    pbImg.setAttribute("y", (mTop - pad).toFixed(1)); pbImg.setAttribute("height", Math.max(1, mBot - mTop + pad).toFixed(1));
     /* Startpunkt der Seitenlinie: unter der Spitze der Nadel, im Fuss verborgen. Sie baut sich danach neu. */
     const ex = cx + (EXIT.x - C0) * s, ey = cy + (EXIT.y - C0) * s;
     if (Math.abs(exitEl.offsetLeft - ex) > 0.5 || Math.abs(exitEl.offsetTop - ey) > 0.5) {
@@ -292,9 +320,9 @@ function init(root) {
     ink.style.opacity = on ? "0" : "1";
   }
 
-  /* Wunsch 11.11.: die Marke kommt wie die Woerter der Ueberschrift - aus 10 px Unschaerfe und von 0,38 em weiter
-     unten, im selben Takt (140 ms Verzug, 1 s, gleiche Kurve). Sie bleibt unscharf, solange die Linie schreibt, und
-     wird klar, sobald sie in 3D uebergeht. Gilt fuer beide Ebenen (SVG-Linie und WebGL). */
+  /* Wunsch 11.11.: die Marke kommt wie die Woerter der Ueberschrift - aus der Unschaerfe (oben 10 px, nach unten
+     auslaufend, nur auf der Marke) und von 0,38 em weiter unten, im selben Takt (140 ms Verzug, 1 s, gleiche Kurve).
+     Sie bleibt so, solange die Linie schreibt, und wird klar, sobald sie in 3D uebergeht. */
   const BLUR = 10, RISE_EM = 0.38;
   const enter = bezier(0.23, 1, 0.32, 1);
   let fxB = -1, fxR = -1;
@@ -305,9 +333,11 @@ function init(root) {
     const bb = Math.round(b * BLUR * 20) / 20, rr = Math.round(r * rise * 10) / 10;
     if (bb === fxB && rr === fxR) return;
     fxB = bb; fxR = rr;
-    const f = bb > 0 ? "blur(" + bb + "px)" : "", tr = rr > 0 ? "translate3d(0," + rr + "px,0)" : "";
-    const wc = bb > 0 || rr > 0 ? "transform, filter" : "";
-    for (const el of [ink, canvas]) { el.style.filter = f; el.style.transform = tr; el.style.willChange = wc; }
+    const tr = rr > 0 ? "translate3d(0," + rr + "px,0)" : "";
+    if (bb > 0) { pbBlur.setAttribute("stdDeviation", String(bb)); inkWrap.setAttribute("filter", "url(#mark-pb)"); }
+    else inkWrap.removeAttribute("filter");
+    canvas.style.filter = bb > 0 && canvasPB ? "url(#mark-pb)" : "";
+    for (const el of [ink, canvas]) { el.style.transform = tr; el.style.willChange = rr > 0 ? "transform" : ""; }
   }
 
   function frame(now) {
