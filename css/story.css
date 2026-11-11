@@ -48,20 +48,9 @@
   margin: 10px 0 12px; font-family: var(--font-display); font-weight: 650;
   font-size: clamp(26px, 1.2vw + 14px, 36px); line-height: 1.15; letter-spacing: -0.02em; color: var(--ink);
 }
-/* Ueberschriften hervorgehoben (Wunsch 11.11.): ein tuerkiser Markerstrich zieht unter dem Wort von links nach rechts
-   durch - beim Titel einmal, wenn der Abschnitt ins Bild kommt (.is-hl), bei jedem Schritt, sobald er erscheint. */
-.ks__hl {
-  --hl: color-mix(in srgb, var(--brand) 36%, transparent);
-  background-image: linear-gradient(transparent 56%, var(--hl) 56%, var(--hl) 90%, transparent 90%);
-  background-repeat: no-repeat; background-position: 0 0; background-size: 0% 100%;
-  -webkit-box-decoration-break: clone; box-decoration-break: clone; padding-inline: 0.06em;
-  transition: background-size 0s linear 240ms;                         /* weg erst, wenn der Schritt ausgeblendet ist */
-}
-.ks__step.is-active .ks__hl,
-.ks.is-hl .ks__title .ks__hl { background-size: 100% 100%; transition: background-size 620ms cubic-bezier(0.23, 1, 0.32, 1) 300ms; }
-.ks.is-hl .ks__title .ks__hl { transition-delay: 150ms; transition-duration: 900ms; }
-.js .ks:not(.is-hl) .ks__hl { background-size: 0% 100%; }               /* erst, wenn der Abschnitt zu sehen ist */
-html:not(.js) .ks__hl, .js .ks.is-done .ks__hl { background-size: 100% 100%; }
+/* Ueberschriften hervorgehoben (Wunsch 11.11.): in unserem Blau - im Titel "Kunden zu Ihnen", dazu jede Schritt-
+   Ueberschrift (wie "wie vor Ort." im Hero: --brand-deep, gut lesbar auf Weiss) */
+.ks__hl { color: var(--brand-deep); }
 .ks__step-text { margin: 0; max-width: 31em; font-size: clamp(17px, 0.5vw + 11.5px, 21px); line-height: 1.5; color: var(--text-2); }
 .ks__bar { display: flex; gap: 8px; margin-top: clamp(22px, 3.4svh, 36px); }
 .ks__bar i { width: 34px; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--brand-deep) 18%, transparent);

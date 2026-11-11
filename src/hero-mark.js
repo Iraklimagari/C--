@@ -38,6 +38,11 @@ function init(root) {
   const LOGO_D = fillEl.getAttribute("d");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const deskQ = window.matchMedia("(min-width: 64em)");
+  /* Wunsch 11.11.: Ueberschrift und Marke kommen zusammen. Der Text-Auftakt (premium.css) wartet auf .is-go, das im
+     selben Moment gesetzt wird, in dem die Zeitachse der Marke startet (nach dem Aufbau der 3D-Szene). */
+  const heroEl = root.closest(".hero");
+  const go = () => { if (heroEl) heroEl.classList.add("is-go"); };
+  const titleEl = document.querySelector(".hero--mark .hero__title");
 
   /* --- Masse der Marke (Einheiten der viewBox 1095) ---------------------------------------- */
   const VB = 1095, C0 = VB / 2;
@@ -149,7 +154,7 @@ function init(root) {
   try {
     renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
   } catch (e) { renderer = null; }
-  if (!renderer || !renderer.getContext()) { root.classList.add("is-static"); return; }
+  if (!renderer || !renderer.getContext()) { root.classList.add("is-static"); go(); return; }
 
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = SRGBColorSpace;
@@ -287,10 +292,29 @@ function init(root) {
     ink.style.opacity = on ? "0" : "1";
   }
 
+  /* Wunsch 11.11.: die Marke kommt wie die Woerter der Ueberschrift - aus 10 px Unschaerfe und von 0,38 em weiter
+     unten, im selben Takt (140 ms Verzug, 1 s, gleiche Kurve). Sie bleibt unscharf, solange die Linie schreibt, und
+     wird klar, sobald sie in 3D uebergeht. Gilt fuer beide Ebenen (SVG-Linie und WebGL). */
+  const BLUR = 10, RISE_EM = 0.38;
+  const enter = bezier(0.23, 1, 0.32, 1);
+  let fxB = -1, fxR = -1;
+  function intro(t) {
+    const r = 1 - enter(span(t, 140, 1140));
+    const b = t < T.gl ? 1 : 1 - easeOut(span(t, T.gl, T.gl + 700));
+    const rise = r > 0 && titleEl ? parseFloat(getComputedStyle(titleEl).fontSize) * RISE_EM : 0;
+    const bb = Math.round(b * BLUR * 20) / 20, rr = Math.round(r * rise * 10) / 10;
+    if (bb === fxB && rr === fxR) return;
+    fxB = bb; fxR = rr;
+    const f = bb > 0 ? "blur(" + bb + "px)" : "", tr = rr > 0 ? "translate3d(0," + rr + "px,0)" : "";
+    const wc = bb > 0 || rr > 0 ? "transform, filter" : "";
+    for (const el of [ink, canvas]) { el.style.filter = f; el.style.transform = tr; el.style.willChange = wc; }
+  }
+
   function frame(now) {
     const dt = last ? Math.min(50, now - last) : 0;
     last = now; clock += dt;
     const t = DBG !== null ? Number(DBG) : reduce ? 1e9 : clock;
+    intro(t);
     if (t < T.gl + 300) draw2d(t);
     setGL(t >= T.gl);
     const dp = 1 - Math.pow(1 - span(t, T.d0, T.d1), 2.2);   /* setzt mit Schwung ein, kommt weich zur Ruhe */
@@ -339,10 +363,24 @@ function init(root) {
   renderer.initTexture(brushed.normal);                /* Texturen vorab hochladen: kein Ruckler im Wechsel-Bild */
   renderer.initTexture(brushed.rough);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(rebuild);   /* Textbreite steht erst mit den Schriften fest */
+  intro(DBG !== null ? Number(DBG) : reduce ? 1e9 : 0);   /* Startzustand (unscharf, tiefer) vor dem ersten Bild */
+  go();
   kick();
 }
 
 /* --- Hilfen ----------------------------------------------------------------------------------- */
+/* CSS-Kurve cubic-bezier(x1, y1, x2, y2) als Funktion (wie --ease-enter) */
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const X = (u) => ((ax * u + bx) * u + cx) * u, Y = (u) => ((ay * u + by) * u + cy) * u, dX = (u) => (3 * ax * u + 2 * bx) * u + cx;
+  return (x) => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let u = x;
+    for (let i = 0; i < 8; i++) { const d = dX(u); if (Math.abs(d) < 1e-6) break; u -= (X(u) - x) / d; }
+    u = Math.min(1, Math.max(0, u));
+    return Y(u);
+  };
+}
 function splitWords(h) {
   /* Jedes Wort in <span class="hw" style="--i:n">; Leerzeichen bleiben Text (Zeilenumbruch wie vorher),
      umgebende Spannen (z. B. die Betonung "wie vor Ort.") bleiben erhalten. */

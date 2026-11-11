@@ -69,13 +69,6 @@
   /* --- 1. Kundenweg --------------------------------------------------------------------------- */
   var finishKs = null;
   var ks = document.querySelector("[data-ks]");
-  if (ks) {                                                        /* Markerstrich im Titel, einmal beim Erscheinen */
-    var ksTitle = ks.querySelector(".ks__title");
-    if (reduce || !ksTitle || !("IntersectionObserver" in window)) ks.classList.add("is-hl");
-    else new IntersectionObserver(function (es, o) {
-      if (es[0].isIntersecting) { ks.classList.add("is-hl"); o.disconnect(); }
-    }, { threshold: 0.6 }).observe(ksTitle);
-  }
   if (ks) (function () {
     var track = ks.querySelector(".ks__track");
     var steps = ks.querySelectorAll(".ks__step"), bars = ks.querySelectorAll(".ks__bar i");

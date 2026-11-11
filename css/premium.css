@@ -163,16 +163,22 @@ html.js .hero.hero--mark .hero__copy .hero__eyebrow,
 html.js .hero.hero--mark .hero__copy h1.hero__title,
 html.js .hero.hero--mark .hero__copy .hero__phrase,
 html.js .hero.hero--mark .hero__copy .hero__hl { animation: none; }
-html.js.motion-ok .hero.hero--mark .hero__copy .hero__eyebrow { animation: hero-up 700ms var(--ease-enter) 40ms both; }
+/* Wunsch 11.11.: der Auftakt startet zusammen mit der Bildmarke - hero-mark.js setzt .is-go, sobald deren Zeitachse
+   laeuft (nach dem Aufbau der 3D-Szene). Bis dahin unsichtbar; Sicherheit: nach 2,5 s in jedem Fall sichtbar. */
+html.js.motion-ok .hero.hero--mark:not(.is-go) .hero__copy .hero__eyebrow,
+html.js.motion-ok .hero.hero--mark:not(.is-go) .hero__copy h1.hero__title,
+html.js.motion-ok .hero.hero--mark:not(.is-go) .hero__copy .hero__sub,
+html.js.motion-ok .hero.hero--mark:not(.is-go) .hero__copy .hero__actions { opacity: 0; animation: hero-show 1ms linear 2500ms forwards; }
+html.js.motion-ok .hero.hero--mark.is-go .hero__copy .hero__eyebrow { animation: hero-up 700ms var(--ease-enter) 40ms both; }
 /* bis die Woerter aufgeteilt sind, unsichtbar; Sicherheit: nach 2,5 s in jedem Fall sichtbar */
 html.js.motion-ok .hero.hero--mark .hero__copy h1.hero__title:not(.is-split) { opacity: 0; animation: hero-show 1ms linear 2500ms forwards; }
 .hero--mark .hero__title.is-split .hw { display: inline-block; }
-html.js.motion-ok .hero.hero--mark .hero__title.is-split .hw {
+html.js.motion-ok .hero.hero--mark.is-go .hero__title.is-split .hw {
   animation: hero-word 1000ms var(--ease-enter) both;
   animation-delay: calc(140ms + var(--i, 0) * 55ms);
 }
-html.js.motion-ok .hero.hero--mark .hero__copy .hero__sub { animation: hero-up 900ms var(--ease-enter) 760ms both; }
-html.js.motion-ok .hero.hero--mark .hero__copy .hero__actions { animation: hero-up 900ms var(--ease-enter) 900ms both; }
+html.js.motion-ok .hero.hero--mark.is-go .hero__copy .hero__sub { animation: hero-up 900ms var(--ease-enter) 760ms both; }
+html.js.motion-ok .hero.hero--mark.is-go .hero__copy .hero__actions { animation: hero-up 900ms var(--ease-enter) 900ms both; }
 @media (prefers-reduced-motion: reduce) {
   html.js .hero.hero--mark .hero__title.is-split .hw,
   html.js .hero.hero--mark .hero__copy .hero__eyebrow,
