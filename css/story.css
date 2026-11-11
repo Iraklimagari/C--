@@ -52,6 +52,12 @@
    Ueberschrift (wie "wie vor Ort." im Hero: --brand-deep, gut lesbar auf Weiss) */
 .ks__hl { color: var(--brand-deep); }
 .ks__step-text { margin: 0; max-width: 31em; font-size: clamp(17px, 0.5vw + 11.5px, 21px); line-height: 1.5; color: var(--text-2); }
+/* Neuer Text (11.11.): Zeile unter dem Titel, Kernsatz je Schritt (fett) und der Gedanke des Kunden (kursiv) */
+.ks__sub { margin: calc(-1 * clamp(14px, 2.6svh, 34px)) 0 clamp(22px, 3.6svh, 40px); max-width: 31em;
+           font-size: clamp(17px, 0.5vw + 11.5px, 21px); line-height: 1.45; color: var(--text-2); }
+.ks__step-lead { margin: 0 0 6px; max-width: 31em; font-size: clamp(17px, 0.5vw + 11.5px, 21px); line-height: 1.4; color: var(--ink); }
+.ks__step-lead strong { font-weight: 600; }
+.ks__step-thought { margin: 12px 0 0; max-width: 31em; font-size: clamp(16px, 0.4vw + 11px, 19px); line-height: 1.45; color: var(--ink-70, var(--text-2)); }
 .ks__bar { display: flex; gap: 8px; margin-top: clamp(22px, 3.4svh, 36px); }
 .ks__bar i { width: 34px; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--brand-deep) 18%, transparent);
              transition: background-color 300ms ease; }
@@ -450,7 +456,10 @@
             gap: 14px; height: calc(100svh - var(--nav-h)); padding-block: 14px 18px; }
   .ks__title { font-size: clamp(28px, 7.2vw, 44px); max-width: none; margin-bottom: 8px; }
   .ks__step-title { font-size: 21px; margin: 4px 0 5px; }
-  .ks__step-text { font-size: 15px; line-height: 1.45; }
+  .ks__step-text { font-size: 14.5px; line-height: 1.42; }
+  .ks__sub { margin: -4px 0 6px; font-size: 14.5px; }
+  .ks__step-lead { margin-bottom: 2px; font-size: 15px; line-height: 1.35; }
+  .ks__step-thought { margin-top: 5px; font-size: 14px; line-height: 1.38; }
     .ks__bar { margin-top: 10px; }
   .ks__bar i { width: 22px; height: 3px; }
   .ks-phone { justify-self: center; height: 100%; max-height: 720px; min-height: 0; }
@@ -458,7 +467,9 @@
 @media (min-width: 48em) and (max-width: 63.99em) {
   .ks__title { font-size: 46px; }
   .ks__step-title { font-size: 27px; }
-  .ks__step-text { font-size: 18px; }
+  .ks__step-text { font-size: 17px; }
+  .ks__sub, .ks__step-lead { font-size: 17px; }
+  .ks__step-thought { font-size: 16px; }
 }
 
 /* ---------- Ohne Skript / weniger Bewegung --------------------------------------------------------- */
@@ -474,7 +485,8 @@ html:not(.js) .ks__bar { display: none; }
 .ks.is-done .ks__track { height: auto; }
 .ks.is-done .ks__stage { position: relative; height: auto; padding-block: calc(var(--nav-h) + 48px) 72px; }
 .ks.is-done .ks__step { grid-area: auto; opacity: 1; transform: none; margin-bottom: 20px; }
-.ks.is-done .ks__step-text { font-size: clamp(16px, 0.3vw + 13.5px, 18px); }
+.ks.is-done .ks__step-text, .ks.is-done .ks__step-lead { font-size: clamp(16px, 0.3vw + 13.5px, 18px); }
+.ks.is-done .ks__step-thought { font-size: clamp(15px, 0.3vw + 12.5px, 17px); margin-top: 6px; }
 .ks.is-done .ks__bar { display: none; }
 .ks.is-done *, .ks.is-done *::before, .ks.is-done *::after { transition: none !important; animation: none !important; }
 @media (max-width: 63.99em) {
