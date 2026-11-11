@@ -4,6 +4,7 @@ Videos faerbt der Browser nicht um - anders als Inline-SVG."""
 import math, os, sys
 sys.path.insert(0, '.')
 from frames3 import svg_frame, TOTAL
+INK, PHONE = "#01ABC3", "#0b1114"   # Figur in Markenfarbe (Wunsch 11.11.), Handy dunkel
 HALO = 0.0           # kein Schein mehr (Dunkelmodus per Mischung, siehe pack.py)
 def to_svg2(o, halo=HALO, breath=0.0, tilt=0.0, glow_mul=1.0, w=1172, h=968):
     (pc, pw, phh, pang) = o['phone']; hx, hy, R = o['head']
@@ -14,7 +15,7 @@ def to_svg2(o, halo=HALO, breath=0.0, tilt=0.0, glow_mul=1.0, w=1172, h=968):
 <defs>
  <radialGradient id="glow" cx="390" cy="430" r="96" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fffaf0" stop-opacity=".96"/><stop offset=".32" stop-color="#efe5cc" stop-opacity=".6"/><stop offset="1" stop-color="#efe5cc" stop-opacity="0"/></radialGradient>
  <radialGradient id="face" cx="392" cy="318" r="92" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f6edd6" stop-opacity=".55"/><stop offset="1" stop-color="#f6edd6" stop-opacity="0"/></radialGradient>
- <radialGradient id="sheen" cx="292" cy="336" r="150" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3b4246" stop-opacity=".32"/><stop offset="1" stop-color="#3b4246" stop-opacity="0"/></radialGradient>
+ <radialGradient id="sheen" cx="292" cy="336" r="150" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#007F91" stop-opacity=".2"/><stop offset="1" stop-color="#007F91" stop-opacity="0"/></radialGradient>
  <radialGradient id="shadow" cx="383" cy="562" r="130" gradientTransform="matrix(1 0 0 .09 0 511.4)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#0b1114" stop-opacity=".2"/><stop offset="1" stop-color="#0b1114" stop-opacity="0"/></radialGradient>
  <linearGradient id="hfade" x1="0" y1="96" x2="0" y2="580" gradientUnits="userSpaceOnUse"><stop offset="0.86" stop-color="#fff"/><stop offset="0.95" stop-color="#fff" stop-opacity="0"/></linearGradient>
  <mask id="hmask" maskUnits="userSpaceOnUse" x="90" y="96" width="586" height="484"><rect x="90" y="96" width="586" height="484" fill="url(#hfade)"/></mask>
@@ -25,15 +26,15 @@ def to_svg2(o, halo=HALO, breath=0.0, tilt=0.0, glow_mul=1.0, w=1172, h=968):
 <ellipse cx="383" cy="562" rx="150" ry="14" fill="url(#shadow)"/>
 <g transform="{bt}">
 <g mask="url(#hmask)"><g opacity="{halo:.3f}" filter="url(#halo)" fill="#fff"><path d="{o['body']}"/><g transform="{ht}"><circle cx="{hx:.2f}" cy="{hy:.2f}" r="{R}"/></g></g></g>
-<path d="{o['body']}" fill="#0b0d0e"/>
+<path d="{o['body']}" fill="{INK}"/>
 <rect x="220" y="280" width="330" height="330" fill="url(#sheen)" clip-path="url(#tv)"/>
 <rect x="220" y="280" width="330" height="330" fill="url(#glow)" clip-path="url(#tv)" opacity="{o['glow']*glow_mul:.3f}"/>
-<rect x="{pc[0]-pw/2:.2f}" y="{pc[1]-phh/2:.2f}" width="{pw:.2f}" height="{phh:.2f}" rx="8" transform="rotate({pang:.2f} {pc[0]:.2f} {pc[1]:.2f})" fill="#0b0d0e" stroke="#d6cfbb" stroke-width="1.2"/>
+<rect x="{pc[0]-pw/2:.2f}" y="{pc[1]-phh/2:.2f}" width="{pw:.2f}" height="{phh:.2f}" rx="8" transform="rotate({pang:.2f} {pc[0]:.2f} {pc[1]:.2f})" fill="{PHONE}" stroke="#d6cfbb" stroke-width="1.2"/>
 <circle cx="{o['cam'][0]:.2f}" cy="{o['cam'][1]:.2f}" r="3.2" fill="#cfc9b8"/><circle cx="{o['cam'][0]:.2f}" cy="{o['cam'][1]:.2f}" r="1.3" fill="#3a3a38"/>
-<path d="{o['rhand']}" fill="#0b0d0e"/>{Ls(o['linesR'])}
-<g transform="{ht}"><circle cx="{hx:.2f}" cy="{hy:.2f}" r="{R}" fill="#0b0d0e"/>
+<path d="{o['rhand']}" fill="{INK}"/>{Ls(o['linesR'])}
+<g transform="{ht}"><circle cx="{hx:.2f}" cy="{hy:.2f}" r="{R}" fill="{INK}"/>
 <rect x="290" y="130" width="190" height="180" fill="url(#face)" clip-path="url(#hd)" opacity="{o['face']:.3f}"/></g>
-<path d="{o['larm']}" fill="#0b0d0e"/>{Ls(o['linesL'])}
+<path d="{o['larm']}" fill="{INK}"/>{Ls(o['linesL'])}
 </g>
 </svg>'''
 LOOP_S, LOOP_FPS = 8.0, 30

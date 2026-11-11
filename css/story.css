@@ -559,9 +559,9 @@ html:not(.js) .ks__bar { display: none; }
 .frage__scene { position: relative; width: min(600px, 100%); aspect-ratio: 586 / 484; margin-inline: auto; }
 .frage__scene > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 /* Figur (Vektorzeichnung): Tinte, feine helle Pinselstriche, warmes Licht des Handys, sehr leichte Glanzstelle */
-.fig__ink { fill: #0b0d0e; }
+.fig__ink { fill: var(--brand, #01ABC3); }                       /* Figur in Markenfarbe (Wunsch 11.11.) */
 .fig__line { fill: #fff; }
-.fig__case { fill: #0b0d0e; stroke: #d6cfbb; stroke-width: 1.2; }
+.fig__case { fill: #0b1114; stroke: #d6cfbb; stroke-width: 1.2; }
 .fig__cam { fill: #cfc9b8; }
 .fig__lens { fill: #3a3a38; }
 .fig__breath, .fig__head { transform-box: view-box; }
@@ -569,19 +569,15 @@ html:not(.js) .ks__bar { display: none; }
 .fig__head { transform-origin: 383px 300px; }
 .frage__art { z-index: 2; }
 /* Figur als Video (tools/figur): Auftakt (90 Bilder, 60 fps, 1,5 s), danach eine ruhige Schleife (8 s: Atmen, Kopf,
-   Licht). Jedes Videobild traegt zwei Ebenen nebeneinander; story.js malt sie in zwei Canvas, die sich mit dem
-   Seitengrund mischen: Ergebnis = |Grund x M - D|. Auf hellem Grund ist das genau die Zeichnung (schwarze Figur,
-   weisse Linien, warmes Licht). Im erzwungenen Dunkelmodus (Samsung Internet; nicht abschaltbar, nicht erkennbar)
-   dunkelt der Browser nur den Seitengrund ab - Video und Canvas laesst er, wie sie sind -, und dieselbe Mischung
-   ergibt eine graue Figur mit grauem Gesicht, ohne Kasten (Wunsch 10.11.). Dafuer darf zwischen Canvas und
-   Abschnitt nichts isolieren (kein opacity/transform auf .frage__scene). Die SVG-Zeichnung (.frage__art) bleibt fuer
-   ohne Skript und falls ein Video ausfaellt. */
+   Licht). Figur in Markenfarbe (Wunsch 11.11.), auf hellem wie dunklem Grund gleich. Jedes Videobild traegt Farbe und
+   Deckkraft nebeneinander; story.js setzt sie in einem WebGL-Canvas zusammen -> echter durchsichtiger Grund in jedem
+   Browser. Video und Canvas faerbt auch der erzwungene Dunkelmodus von Samsung Internet nicht um (nicht abschaltbar,
+   nicht erkennbar): die Figur bleibt blau, ohne Kasten. Die SVG-Zeichnung (.frage__art) bleibt fuer ohne Skript und
+   falls Video oder WebGL ausfallen. */
 .frage__src { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
-.frage__cm, .frage__cd { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
-.frage__cm { mix-blend-mode: multiply; }
-.frage__cd { mix-blend-mode: difference; }
-.frage__src, .frage__cm, .frage__cd { display: none; }
-.frage.has-video .frage__src, .frage.has-video .frage__cm, .frage.has-video .frage__cd { display: block; }
+.frage__gl { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
+.frage__src, .frage__gl { display: none; }
+.frage.has-video .frage__src, .frage.has-video .frage__gl { display: block; }
 .frage.has-video .frage__art { visibility: hidden; }
 /* Fragen kreisen um den Kopf (Wunsch 10.11.): reiner Text ohne Blase. Hinten (obere Bahnhaelfte) hinter dem Kopf,
    kleiner und blasser; vorn vor dem Kopf, mit hellem Schein, damit sie auch auf Schwarz lesbar bleiben. */
@@ -605,7 +601,7 @@ html.js.motion-ok .frage:not(.is-play) .frage__art,
 html.js.motion-ok .frage:not(.is-idle) .frage__q { opacity: 0 !important; }
 html.js.motion-ok .frage.is-play .frage__title { animation: fr-up 640ms cubic-bezier(0.23, 1, 0.32, 1) both; }
 html.js.motion-ok .frage.is-play .frage__scene > canvas,
-html.js.motion-ok .frage.is-play .frage__art { animation: fr-fade 360ms ease-out 250ms both; }   /* nicht die Buehne: sie wuerde die Mischung isolieren */
+html.js.motion-ok .frage.is-play .frage__art { animation: fr-fade 360ms ease-out 250ms both; }
 html.js.motion-ok .frage.is-idle .fig__breath { animation: fr-breath 4.8s ease-in-out 0.4s infinite alternate; }
 html.js.motion-ok .frage.is-idle .fig__head { animation: fr-tilt 7.5s ease-in-out 0.6s infinite alternate; }
 html.js.motion-ok .frage.is-idle .fig__glow { animation: fr-glow 3.4s ease-in-out 0.3s infinite alternate; }

@@ -184,17 +184,15 @@
   /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
      Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann der Auftakt (1,5 s), danach (.is-idle) die ruhige
      Schleife (Atmen, Kopf, Licht); die drei Fragen kreisen als Text um den Kopf (hinten hinter dem Kopf - per Maske -,
-     kleiner und blasser, vorn davor). Die Figur kommt aus einem Video mit zwei Ebenen je Bild (links D, rechts M); sie
-     werden Bild fuer Bild in zwei Canvas gemalt (immer dasselbe Bild), die sich per difference/multiply mit dem
-     Seitengrund mischen (story.css): hell = schwarze Figur, im Samsung-Dunkelmodus = graue Figur ohne Kasten.
+     kleiner und blasser, vorn davor). Die Figur kommt aus einem Video mit Farbe (links) und Deckkraft (rechts) je
+     Bild; ein WebGL-Canvas setzt beides Bild fuer Bild zusammen -> blaue Figur mit durchsichtigem Grund, auf hellem wie
+     auf abgedunkeltem Grund (Samsung) gleich, ohne Kasten.
      Faellt ein Video aus: die SVG-Zeichnung mit CSS-Bewegung. Reduced Motion: das Endbild steht. */
   var fr = document.querySelector("[data-frage]");
   if (fr) (function () {
     var scene = fr.querySelector(".frage__scene");
     var intro = fr.querySelector('.frage__src[data-src="intro"]'), loop = fr.querySelector('.frage__src[data-src="loop"]');
-    var cm = fr.querySelector(".frage__cm"), cd = fr.querySelector(".frage__cd");
-    var xm = cm && cm.getContext ? cm.getContext("2d") : null, xd = cd && cd.getContext ? cd.getContext("2d") : null;
-    if (xm && xd) { xm.imageSmoothingQuality = xd.imageSmoothingQuality = "high"; }
+    var cv = fr.querySelector(".frage__gl"), gl = glSetup(cv);
     var qs = Array.prototype.slice.call(fr.querySelectorAll(".frage__q"));
     var VX = 90, VY = 96, VW = 586, CX = 383, CY = 205, RX = 200, RY = 46, TILT = -8 * Math.PI / 180;
     var HX = 383, HY = 219, HR = 84, LOOP_S = 8, GAP = 16;           /* Kopf (Zeichnung), Schleifenlaenge, Spalt im Video */
@@ -239,20 +237,40 @@
       idleAt = performance.now(); fr.classList.add("is-idle"); run();
     }
     function quiet(p) { if (p && p.catch) p.catch(function () {}); }
-    /* Malen: beide Ebenen aus demselben Videobild, damit sie nie auseinanderlaufen */
+    /* WebGL: Farbe (linke Haelfte) x Deckkraft (rechte Haelfte) -> vormultipliziertes RGBA */
+    function glSetup(c) {
+      if (!c || !c.getContext) return null;
+      var o = { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false };
+      var g = null; try { g = c.getContext("webgl", o) || c.getContext("experimental-webgl", o); } catch (e) {}
+      if (!g) return null;
+      function sh(type, src) { var s = g.createShader(type); g.shaderSource(s, src); g.compileShader(s); return g.getShaderParameter(s, g.COMPILE_STATUS) ? s : null; }
+      var vs = sh(g.VERTEX_SHADER, "attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}");
+      var fs = sh(g.FRAGMENT_SHADER, "precision mediump float;varying vec2 v;uniform sampler2D t;uniform vec2 k;" +
+        "void main(){vec3 c=texture2D(t,vec2(v.x*k.x,v.y)).rgb;float a=texture2D(t,vec2(v.x*k.x+k.y,v.y)).r;gl_FragColor=vec4(c*a,a);}");
+      if (!vs || !fs) return null;
+      var pr = g.createProgram(); g.attachShader(pr, vs); g.attachShader(pr, fs); g.linkProgram(pr);
+      if (!g.getProgramParameter(pr, g.LINK_STATUS)) return null;
+      g.useProgram(pr);
+      var b = g.createBuffer(); g.bindBuffer(g.ARRAY_BUFFER, b); g.bufferData(g.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), g.STATIC_DRAW);
+      var loc = g.getAttribLocation(pr, "p"); g.enableVertexAttribArray(loc); g.vertexAttribPointer(loc, 2, g.FLOAT, false, 0, 0);
+      var tx = g.createTexture(); g.bindTexture(g.TEXTURE_2D, tx);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.LINEAR);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE);
+      return { g: g, k: g.getUniformLocation(pr, "k") };
+    }
     function fit() {
       var d = Math.min(window.devicePixelRatio || 1, 2), w = Math.round(scene.clientWidth * d), h = Math.round(scene.clientHeight * d);
-      if (w && h && (cm.width !== w || cm.height !== h)) {
-        cm.width = cd.width = w; cm.height = cd.height = h; xm.imageSmoothingQuality = xd.imageSmoothingQuality = "high"; return true;
-      }
+      if (w && h && (cv.width !== w || cv.height !== h)) { cv.width = w; cv.height = h; return true; }
       return false;
     }
     function paint(v) {
-      if (!v || v.readyState < 2 || !v.videoWidth) return false;
-      var hw = (v.videoWidth - GAP) / 2, vh = v.videoHeight;
+      if (!gl || !v || v.readyState < 2 || !v.videoWidth) return false;
+      var g = gl.g, W = v.videoWidth, hw = (W - GAP) / 2;
       try {
-        xd.drawImage(v, 0, 0, hw, vh, 0, 0, cd.width, cd.height);
-        xm.drawImage(v, hw + GAP, 0, hw, vh, 0, 0, cm.width, cm.height);
+        g.viewport(0, 0, cv.width, cv.height);
+        g.texImage2D(g.TEXTURE_2D, 0, g.RGB, g.RGB, g.UNSIGNED_BYTE, v);
+        g.uniform2f(gl.k, hw / W, (hw + GAP) / W);
+        g.clearColor(0, 0, 0, 0); g.clear(g.COLOR_BUFFER_BIT); g.drawArrays(g.TRIANGLE_STRIP, 0, 4);
       } catch (e) { return false; }
       return true;
     }
@@ -264,7 +282,7 @@
     function noVideo() {                                               /* Video faellt aus: die Zeichnung uebernimmt */
       looping = false; fr.classList.remove("has-video");
       try { intro.pause(); loop.pause(); } catch (e) {}
-      if (xm) { xm.clearRect(0, 0, cm.width, cm.height); xd.clearRect(0, 0, cd.width, cd.height); }
+      if (gl) { try { gl.g.clearColor(0, 0, 0, 0); gl.g.clear(gl.g.COLOR_BUFFER_BIT); } catch (e) {} }
       idle();
     }
     function toLoop() {                                                /* Auftakt zu Ende: nahtlos in die Schleife */
@@ -279,8 +297,9 @@
       sizes = qs.map(function () { return null; });
       if (still) place(0, true); else if (!raf && idleAt) place(performance.now() - idleAt, false);
     });
-    if (intro && loop && xm && xd) {
+    if (intro && loop && gl) {
       fr.classList.add("has-video"); fit();
+      cv.addEventListener("webglcontextlost", function (e) { e.preventDefault(); gl = null; noVideo(); });
       var failed = function (e) { return e.target.tagName !== "SOURCE" || !e.target.nextElementSibling; };   /* erst wenn alle Quellen scheitern */
       loop.addEventListener("error", function (e) { if (failed(e)) noVideo(); }, true);
       intro.addEventListener("error", function (e) { if (failed(e) && !looping) toLoop(); }, true);
