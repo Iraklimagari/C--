@@ -2285,10 +2285,6 @@ html.js .faq__item.is-open .faq__panel { visibility: visible; transition-delay: 
 
 .cta__body { color: var(--text-2); max-width: 44ch; font-size: clamp(16px, 15px + 0.3vw, 19px); line-height: 1.6; }
 
-/* Zwischenueberschrift im Kontakt (neuer Text 11.11.) */
-.cta__sub { margin: var(--s-2, 8px) 0 0; font-family: var(--font-display); font-size: clamp(20px, 15px + 0.7vw, 26px); line-height: 1.2;
-            letter-spacing: -0.015em; font-weight: 600; max-width: 26ch; text-wrap: balance; }
-
 .cta__direct { display: grid; justify-items: start; gap: 8px; margin-top: 8px; }
 
 .cta__wa-note { font-size: var(--fs-sm); line-height: 1.5; color: var(--text-2); }

@@ -52,9 +52,7 @@
    Ueberschrift (wie "wie vor Ort." im Hero: --brand-deep, gut lesbar auf Weiss) */
 .ks__hl { color: var(--brand-deep); }
 .ks__step-text { margin: 0; max-width: 31em; font-size: clamp(17px, 0.5vw + 11.5px, 21px); line-height: 1.5; color: var(--text-2); }
-/* Neuer Text (11.11.): Zeile unter dem Titel, Kernsatz je Schritt (fett) und der Gedanke des Kunden (kursiv) */
-.ks__sub { margin: calc(-1 * clamp(14px, 2.6svh, 34px)) 0 clamp(22px, 3.6svh, 40px); max-width: 31em;
-           font-size: clamp(17px, 0.5vw + 11.5px, 21px); line-height: 1.45; color: var(--text-2); }
+/* Neuer Text (11./12.11.): Kernsatz je Schritt (fett) und der Gedanke des Kunden (kursiv) */
 .ks__step-lead { margin: 0 0 6px; max-width: 31em; font-size: clamp(17px, 0.5vw + 11.5px, 21px); line-height: 1.4; color: var(--ink); }
 .ks__step-lead strong { font-weight: 600; }
 .ks__step-thought { margin: 12px 0 0; max-width: 31em; font-size: clamp(16px, 0.4vw + 11px, 19px); line-height: 1.45; color: var(--ink-70, var(--text-2)); }
@@ -457,7 +455,6 @@
   .ks__title { font-size: clamp(28px, 7.2vw, 44px); max-width: none; margin-bottom: 8px; }
   .ks__step-title { font-size: 21px; margin: 4px 0 5px; }
   .ks__step-text { font-size: 14.5px; line-height: 1.42; }
-  .ks__sub { margin: -4px 0 6px; font-size: 14.5px; }
   .ks__step-lead { margin-bottom: 2px; font-size: 15px; line-height: 1.35; }
   .ks__step-thought { margin-top: 5px; font-size: 14px; line-height: 1.38; }
     .ks__bar { margin-top: 10px; }
@@ -468,7 +465,7 @@
   .ks__title { font-size: 46px; }
   .ks__step-title { font-size: 27px; }
   .ks__step-text { font-size: 17px; }
-  .ks__sub, .ks__step-lead { font-size: 17px; }
+  .ks__step-lead { font-size: 17px; }
   .ks__step-thought { font-size: 16px; }
 }
 
@@ -583,8 +580,8 @@ html:not(.js) .ks__bar { display: none; }
 .fig__breath { transform-origin: 383px 560px; }
 .fig__head { transform-origin: 383px 300px; }
 .frage__art { z-index: 2; }
-/* Figur als Video (tools/figur): Auftakt (90 Bilder, 60 fps, 1,5 s), danach eine ruhige Schleife (8 s: Atmen, Kopf,
-   Licht). Figur in Markenfarbe (Wunsch 11.11.), auf hellem wie dunklem Grund gleich. Jedes Videobild traegt Farbe und
+/* Figur als Video (tools/figur): eine ruhige Schleife in der Endhaltung (8 s: Atmen, Kopf, Licht); der Auftakt mit
+   Hand und Handy entfaellt (Wunsch 12.11.). Figur in Markenfarbe (Wunsch 11.11.), auf hellem wie dunklem Grund gleich. Jedes Videobild traegt Farbe und
    Deckkraft nebeneinander; story.js setzt sie in einem WebGL-Canvas zusammen -> echter durchsichtiger Grund in jedem
    Browser. Video und Canvas faerbt auch der erzwungene Dunkelmodus von Samsung Internet nicht um (nicht abschaltbar,
    nicht erkennbar): die Figur bleibt blau, ohne Kasten. Die SVG-Zeichnung (.frage__art) bleibt fuer ohne Skript und

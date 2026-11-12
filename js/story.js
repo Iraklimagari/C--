@@ -182,8 +182,9 @@
   }
 
   /* --- 4. Strichmann mit den drei Fragen (Wunsch 10.11.) --------------------------------------------------
-     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann der Auftakt (1,5 s), danach (.is-idle) die ruhige
-     Schleife (Atmen, Kopf, Licht); die drei Fragen kreisen als Text um den Kopf (hinten hinter dem Kopf - per Maske -,
+     Beim ersten Erscheinen (.is-play): zuerst die Ueberschrift, dann blendet die Figur gleich in ihrer Endhaltung ein
+     (Wunsch 12.11.: kein Auftakt mehr mit Hand und Handy) und ruht in der Schleife (Atmen, Kopf, Licht); die drei
+     Fragen kreisen als Text um den Kopf (hinten hinter dem Kopf - per Maske -,
      kleiner und blasser, vorn davor). Die Figur kommt aus einem Video mit Farbe (links) und Deckkraft (rechts) je
      Bild; ein WebGL-Canvas setzt beides Bild fuer Bild zusammen -> blaue Figur mit durchsichtigem Grund, auf hellem wie
      auf abgedunkeltem Grund (Samsung) gleich, ohne Kasten.
@@ -191,7 +192,7 @@
   var fr = document.querySelector("[data-frage]");
   if (fr) (function () {
     var scene = fr.querySelector(".frage__scene");
-    var intro = fr.querySelector('.frage__src[data-src="intro"]'), loop = fr.querySelector('.frage__src[data-src="loop"]');
+    var loop = fr.querySelector('.frage__src[data-src="loop"]'), painted = false;
     var cv = fr.querySelector(".frage__gl"), gl = glSetup(cv);
     var qs = Array.prototype.slice.call(fr.querySelectorAll(".frage__q"));
     var VX = 90, VY = 96, VW = 586, CX = 383, CY = 205, RX = 200, RY = 46, TILT = -8 * Math.PI / 180;
@@ -272,6 +273,7 @@
         g.uniform2f(gl.k, hw / W, (hw + GAP) / W);
         g.clearColor(0, 0, 0, 0); g.clear(g.COLOR_BUFFER_BIT); g.drawArrays(g.TRIANGLE_STRIP, 0, 4);
       } catch (e) { return false; }
+      painted = true;
       return true;
     }
     function frame() {
@@ -281,28 +283,30 @@
     function draw(v) { cur = v; if (!drawing) drawing = window.requestAnimationFrame(frame); }
     function noVideo() {                                               /* Video faellt aus: die Zeichnung uebernimmt */
       looping = false; fr.classList.remove("has-video");
-      try { intro.pause(); loop.pause(); } catch (e) {}
+      try { loop.pause(); } catch (e) {}
       if (gl) { try { gl.g.clearColor(0, 0, 0, 0); gl.g.clear(gl.g.COLOR_BUFFER_BIT); } catch (e) {} }
       idle();
     }
-    function toLoop() {                                                /* Auftakt zu Ende: nahtlos in die Schleife */
+    function toLoop() {                                                /* Figur erscheint und ruht in der Schleife */
       if (looping || !fr.classList.contains("has-video")) return;
       looping = true;
       loop.addEventListener("playing", function () { draw(loop); }, { once: true });
-      try { loop.currentTime = 0; quiet(loop.play()); } catch (e) { noVideo(); return; }
-      idle();                                                          /* bleibt die Schleife stehen: letztes Bild des Auftakts */
+      var p; try { p = loop.play(); } catch (e) { noVideo(); return; }
+      if (p && p.catch) p.catch(function () { if (!paint(loop)) noVideo(); });   /* gesperrt (Stromsparen): erstes Bild */
+      idle();
+      window.setTimeout(function () { if (!painted && !paint(loop)) noVideo(); }, 4000);   /* Sicherheit */
     }
     window.addEventListener("resize", function () {
       if (fr.classList.contains("has-video") && fit()) paint(cur || loop);
       sizes = qs.map(function () { return null; });
       if (still) place(0, true); else if (!raf && idleAt) place(performance.now() - idleAt, false);
     });
-    if (intro && loop && gl) {
+    if (loop && gl) {
       fr.classList.add("has-video"); fit();
       cv.addEventListener("webglcontextlost", function (e) { e.preventDefault(); gl = null; noVideo(); });
       var failed = function (e) { return e.target.tagName !== "SOURCE" || !e.target.nextElementSibling; };   /* erst wenn alle Quellen scheitern */
       loop.addEventListener("error", function (e) { if (failed(e)) noVideo(); }, true);
-      intro.addEventListener("error", function (e) { if (failed(e) && !looping) toLoop(); }, true);
+      loop.addEventListener("loadeddata", function () { paint(loop); });   /* erstes Bild steht bereit, bevor sie einblendet */
     }
     if (still) {                                                       /* Endbild: erstes Bild der Schleife bzw. Zeichnung */
       fr.classList.add("is-play", "is-idle"); place(0, true);
@@ -314,21 +318,12 @@
       return;
     }
     place(0, false);
-    if (fr.classList.contains("has-video")) intro.addEventListener("ended", toLoop);
     new IntersectionObserver(function (es) {
       inView = es[0].isIntersecting;
       if (inView && !played && es[0].intersectionRatio >= 0.3) {
         played = true; fr.classList.add("is-play");
         if (!fr.classList.contains("has-video")) idle();
-        else {
-          window.setTimeout(function () {
-            var p; try { intro.currentTime = 0; p = intro.play(); } catch (e) { noVideo(); return; }
-            if (p && p.then) p.then(function () { draw(intro); }, noVideo);   /* Abspielen gesperrt (Stromsparen): Zeichnung */
-            else draw(intro);
-          }, 450);
-          window.setTimeout(function () { if (!looping && (intro.paused || intro.ended)) toLoop(); }, 450 + 1500 + 1500);
-          window.setTimeout(function () { if (!looping) toLoop(); }, 450 + 1500 + 6000);   /* Sicherheit */
-        }
+        else toLoop();
       }
       if (looping) { if (inView) { quiet(loop.play()); draw(loop); } else loop.pause(); }   /* ausserhalb ruht die Schleife */
       run();

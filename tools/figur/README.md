@@ -9,8 +9,8 @@ Vektorzeichnung nach dem Referenzbild des Inhabers (10.11.) und ihr Auftakt als 
   gebeugt (Ellbogen, Handgelenk, Verkuerzung, Finger), mit dem Koerper vereinigt und am Ellbogen als
   runde Gelenkmasse geschlossen; helle Linien nur, wo Unterarm/Hand vor Schwarzem liegen.
   Der Koerper ist links das Spiegelbild von rechts (gleiche Ellbogen unten). Das letzte Bild ist das Endbild in `index.html` (`.frage__art`).
-- `figvid.py` – die Bilder der Videos: Auftakt (`intro`, 90 Bilder, 60 fps, 1,5 s) und ruhige Schleife (`loop`, 8 s,
-  30 fps: Atmen, Kopf, Licht), mit durchsichtigem Grund.
+- `figvid.py` – die Bilder der Videos: Auftakt (`intro`, 90 Bilder, 60 fps, 1,5 s; seit 12.11. nicht mehr auf der Seite)
+  und ruhige Schleife (`loop`, 8 s, 30 fps: Atmen, Kopf, Licht), mit durchsichtigem Grund.
 - `pack.py` – packt jedes Bild als zwei Kacheln nebeneinander in ein normales Video (links Farbe, rechts Deckkraft,
   16 px Spalt). Die Seite setzt sie in einem WebGL-Canvas zusammen: Figur in Markenfarbe mit echtem durchsichtigem
   Grund, in jedem Browser. Video und Canvas faerbt auch der erzwungene Dunkelmodus von Samsung Internet nicht um.
