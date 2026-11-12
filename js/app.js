@@ -230,10 +230,10 @@ var NAHLIO = (function () {
       }
       subBtn.setAttribute("aria-expanded", open ? "true" : "false");
       subPanel.classList.toggle("is-open", open);
-      /* Das Menue setzt die Leiste fort: sie bleibt deckend, bis es ganz zu ist (nav.css: 360 ms). */
+      /* Das Menue setzt die Leiste fort: sie bleibt deckend, bis es ganz zu ist (nav.css: 200 ms). */
       window.clearTimeout(barTimer);
       if (open) nav.classList.add("has-sub");
-      else barTimer = window.setTimeout(function () { nav.classList.remove("has-sub"); }, 370);
+      else barTimer = window.setTimeout(function () { nav.classList.remove("has-sub"); }, 210);
     }
     /* Klick auf den Knopf: auf/zu. War die Liste gerade nur per Zeigen offen, bleibt sie offen (sonst wuerde
        der Klick, mit dem man auf dem Knopf ankommt, sie sofort wieder schliessen). */

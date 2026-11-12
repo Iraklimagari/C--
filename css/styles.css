@@ -627,13 +627,14 @@ main { position: relative; isolation: isolate; }
   .nav__subbtn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
                      transition: transform 200ms var(--ease-out); }
   .nav__subbtn[aria-expanded="true"] svg { transform: rotate(180deg); }
-  /* Wunsch 29.10.: Das Menue ist eine Verlaengerung der Leiste: es schliesst buendig an ihre Unterkante an, gleiche
-     Flaeche, eckig. Es waechst von der linken oberen Ecke aus als Rechteck (clip-path an der Liste). Die Bruecke
+  /* Das Menue ist eine Verlaengerung der Leiste (Wunsch 29.10.): buendig an ihrer Unterkante, gleiche Flaeche, eckig.
+     Wunsch 12.11.: neu, nur Text (keine Symbole), andere Bewegung: die Flaeche rollt von der Leiste nach unten auf
+     (clip-path), die fuenf Eintraege folgen kurz versetzt von oben; zu geht es schneller und ohne Versatz. Die Bruecke
      (::before) fuellt den Weg vom Link bis zur Unterkante der Leiste, damit der Zeiger den Bereich nie verlaesst. */
   .nav__sub {
     position: absolute; top: calc(50% + var(--nav-h) / 2); left: -18px; z-index: 2;
-    width: 320px; visibility: hidden;
-    transition: visibility 0s linear 360ms;
+    width: 300px; visibility: hidden;
+    transition: visibility 0s linear 200ms;
   }
   .nav__sub::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(var(--nav-h) / 2); }
   .nav__sub.is-open { visibility: visible; transition-delay: 0s; }
@@ -642,40 +643,52 @@ main { position: relative; isolation: isolate; }
   html:not(.js) .nav__item--sub:focus-within .nav__sub { visibility: visible; transition-delay: 0s; }
   html:not(.js) .nav__subbtn { display: none; }
   .nav__sublist {
-    display: grid; gap: 0; padding: 6px;
+    display: grid; gap: 0; padding: 8px 0 10px;
     border-radius: 0; color: var(--nav-fg);
     background: var(--nav-bg);
     border: 1px solid var(--nav-line); border-top: 0;
     box-shadow: 0 16px 28px -14px color-mix(in srgb, var(--ink) 30%, transparent);
-    clip-path: inset(0 100% 100% 0);
-    transition: clip-path 360ms cubic-bezier(0.3, 0.7, 0.2, 1);
+    clip-path: inset(0 -40px 100% -40px);
+    transition: clip-path 180ms var(--ease-out);
   }
+  .nav__sublist > li { opacity: 0; transform: translate3d(0, -8px, 0); transition: opacity 120ms ease, transform 180ms var(--ease-out); }
   .nav__sub.is-open .nav__sublist,
   html:not(.js) .nav__item--sub:hover .nav__sublist,
-  html:not(.js) .nav__item--sub:focus-within .nav__sublist { clip-path: inset(0 -40px -40px -40px); }
+  html:not(.js) .nav__item--sub:focus-within .nav__sublist { clip-path: inset(0 -40px -40px -40px); transition-duration: 300ms; }
+  .nav__sub.is-open .nav__sublist > li,
+  html:not(.js) .nav__item--sub:hover .nav__sublist > li,
+  html:not(.js) .nav__item--sub:focus-within .nav__sublist > li {
+    opacity: 1; transform: none;
+    transition: opacity 240ms ease, transform 420ms var(--ease-out);
+    transition-delay: calc(50ms + var(--n, 0) * 38ms);
+  }
+  .nav__sublist > li:nth-child(2) { --n: 1; } .nav__sublist > li:nth-child(3) { --n: 2; }
+  .nav__sublist > li:nth-child(4) { --n: 3; } .nav__sublist > li:nth-child(5) { --n: 4; }
   .nav__sublink {
-    display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: 10px;
-    min-height: 46px; padding: 6px 8px; border-radius: 0;
-    color: inherit; text-decoration: none; transform-origin: 50% 50%;
-    transition: background-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out),
-                transform 240ms cubic-bezier(0.3, 1.4, 0.5, 1);
+    position: relative; display: block; padding: 9px 20px 10px;
+    color: inherit; text-decoration: none;
+    transition: background-color 180ms var(--ease-out);
   }
-  .nav__sublink:hover, .nav__sublink:focus-visible {
-    transform: scale(1.03);
-    background: color-mix(in srgb, var(--brand) 20%, var(--nav-bg));
-    box-shadow: inset 3px 0 0 var(--nav-accent);
+  /* Zeigen: Akzentstrich links waechst, der Text rueckt ein Stueck ein, der Name nimmt die Akzentfarbe an */
+  .nav__sublink::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; background: var(--nav-accent);
+                          transform: scaleY(0); transform-origin: 50% 0; transition: transform 220ms var(--ease-out); }
+  .nav__sublink-txt { display: grid; gap: 1px; min-width: 0; transition: transform 220ms var(--ease-out); }
+  .nav__sublink-txt b { font-size: 15px; font-weight: 600; line-height: 1.3; transition: color 180ms var(--ease-out); }
+  .nav__sublink-txt small { font-size: 13px; line-height: 1.35; color: var(--nav-fg-2); }
+  .nav__sublink:focus-visible { background: color-mix(in srgb, var(--brand) 12%, var(--nav-bg)); }
+  .nav__sublink:focus-visible::before { transform: none; }
+  .nav__sublink:focus-visible .nav__sublink-txt { transform: translate3d(6px, 0, 0); }
+  .nav__sublink:focus-visible .nav__sublink-txt b { color: var(--nav-accent); }
+  @media (hover: hover) and (pointer: fine) {
+    .nav__sublink:hover { background: color-mix(in srgb, var(--brand) 12%, var(--nav-bg)); }
+    .nav__sublink:hover::before { transform: none; }
+    .nav__sublink:hover .nav__sublink-txt { transform: translate3d(6px, 0, 0); }
+    .nav__sublink:hover .nav__sublink-txt b { color: var(--nav-accent); }
   }
-  .nav__sublink-ic { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 0;
-                     background: color-mix(in srgb, var(--brand) 12%, transparent); color: var(--nav-accent);
-                     transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out); }
-  .nav__sublink:hover .nav__sublink-ic, .nav__sublink:focus-visible .nav__sublink-ic { background: var(--nav-accent); color: var(--white); }
-  .nav:where([data-state="dark"]) .nav__sublink:hover .nav__sublink-ic { color: var(--ink); }
-  .nav__sublink-ic svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-  .nav__sublink-txt { display: grid; gap: 0; min-width: 0; }
-  .nav__sublink-txt b { font-size: 14.5px; font-weight: 600; line-height: 1.3; transition: color 200ms var(--ease-out); }
-  .nav__sublink:hover .nav__sublink-txt b { color: var(--nav-accent); }
-  .nav__sublink-txt small { font-size: 12.5px; line-height: 1.35; color: var(--nav-fg-2); }
-  @media (prefers-reduced-motion: reduce) { .nav__sublist { transition: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .nav__sublist, .nav__sublist > li, .nav__sublink::before, .nav__sublink-txt { transition: none !important; }
+    .nav__sublist > li { transform: none; }
+  }
 }
 
 .nav__actions { display: none; }
@@ -787,15 +800,18 @@ main { position: relative; isolation: isolate; }
 .nav__panel-subbtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
                          transition: transform 200ms var(--ease-out); }
 .nav__panel-subbtn[aria-expanded="true"] svg { transform: rotate(180deg); }
-.nav__panel-sub { display: grid; gap: 2px; padding: 0 0 var(--s-4) 25px; }
+/* Wunsch 12.11.: nur Text (keine Symbole); eine feine Linie links fasst die fuenf Leistungen zusammen. Beim Aufklappen
+   kommen sie kurz versetzt von oben. */
+.nav__panel-sub { display: grid; gap: 0; margin: 0 0 var(--s-4) 2px; padding: 0 0 0 18px;
+                  border-left: 1px solid color-mix(in srgb, var(--brand) 45%, transparent); }
 .nav__panel-sub[hidden] { display: none; }
-.nav__panel-sublink {
-  display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 12px;
-  min-height: 48px; padding: 6px 0; color: var(--soft); text-decoration: none;
-}
-.nav__panel-sublink-ic { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
-                         background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); }
-.nav__panel-sublink-ic svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav__panel-sub > li { animation: nav-sub-in 420ms var(--ease-out) both; animation-delay: calc(var(--n, 0) * 40ms); }
+.nav__panel-sub > li:nth-child(2) { --n: 1; } .nav__panel-sub > li:nth-child(3) { --n: 2; }
+.nav__panel-sub > li:nth-child(4) { --n: 3; } .nav__panel-sub > li:nth-child(5) { --n: 4; }
+@keyframes nav-sub-in { from { opacity: 0; transform: translate3d(0, -8px, 0); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .nav__panel-sub > li { animation: none; } }
+.nav__panel-sublink { display: block; min-height: 48px; padding: 8px 0; color: var(--soft); text-decoration: none; }
+.nav__panel-sublink:active .nav__panel-sublink-txt b { color: var(--brand); }
 .nav__panel-sublink-txt { display: grid; gap: 1px; min-width: 0; }
 .nav__panel-sublink-txt b { font-size: 16px; font-weight: 600; line-height: 1.3; }
 .nav__panel-sublink-txt small { font-size: 14px; line-height: 1.35; color: var(--mist-70); }
@@ -805,9 +821,6 @@ main { position: relative; isolation: isolate; }
 .nav__panel-cta .btn--wa { --btn-bg: transparent; --btn-fg: var(--soft); --btn-bd: color-mix(in srgb, var(--mist) 40%, transparent); }
 
 body.nav-open { overflow: hidden; }
-
-/* Neue Leistungs-Symbole (components.SERVICE_ICONS): Flaechen .d leicht getoent, Striche in currentColor. */
-.nav__sublink-ic svg .d, .nav__panel-sublink-ic svg .d { fill: currentColor; opacity: 0.18; stroke: none; }
 
 /* ==== line.css ==== */
 /* ==========================================================================
