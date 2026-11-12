@@ -43,29 +43,6 @@ function init(root) {
   const heroEl = root.closest(".hero");
   const go = () => { if (heroEl) heroEl.classList.add("is-go"); };
   const titleEl = document.querySelector(".hero--mark .hero__title");
-  /* Unschaerfe nur auf den Linien der Marke und von oben nach unten auslaufend (Wunsch 11.11.): oben 10 px, unten
-     scharf. Die unscharfe Marke wird auf ihre eigene Form beschnitten (kein Schein auf den Grund) und ueber einen
-     senkrechten Verlauf mit der scharfen gemischt. Fuer die Linie (SVG) und die 3D-Marke (Canvas) derselbe Filter. */
-  const NS = "http://www.w3.org/2000/svg";
-  const GRAD = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="8" height="64" ' +
-    'viewBox="0 0 8 64" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>' +
-    '<rect width="8" height="64" fill="url(#g)"/></svg>');
-  const pbDefs = document.createElementNS(NS, "defs");
-  pbDefs.innerHTML = '<filter id="mark-pb" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" ' +
-    'color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">' +
-    '<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b0"/>' +
-    '<feComposite in="b0" in2="SourceAlpha" operator="in" result="b"/>' +          /* nur innerhalb der Linien, kein Schein */
-    '<feImage preserveAspectRatio="none" result="m"/>' +
-    '<feComposite in="b" in2="m" operator="in" result="t"/><feComposite in="SourceGraphic" in2="m" operator="out" result="s"/>' +
-    '<feMerge><feMergeNode in="t"/><feMergeNode in="s"/></feMerge></filter>';
-  ink.insertBefore(pbDefs, ink.firstChild);
-  const pbF = pbDefs.querySelector("filter"), pbBlur = pbDefs.querySelector("feGaussianBlur"), pbImg = pbDefs.querySelector("feImage");
-  pbImg.setAttribute("href", GRAD); pbImg.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", GRAD);
-  const inkWrap = document.createElementNS(NS, "g");             /* ohne eigene Verschiebung: Filter in Pixeln der Buehne */
-  inkG.parentNode.insertBefore(inkWrap, inkG); inkWrap.appendChild(inkG);
-  /* Safari zeichnet SVG-Filter auf HTML-Elementen (Canvas) unzuverlaessig: dort nur die Linie unscharf */
-  const canvasPB = !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   /* --- Masse der Marke (Einheiten der viewBox 1095) ---------------------------------------- */
   const VB = 1095, C0 = VB / 2;
@@ -127,11 +104,6 @@ function init(root) {
     L = VB * s;
     ink.setAttribute("viewBox", "0 0 " + W + " " + H);
     inkG.setAttribute("transform", "translate(" + (cx - L / 2).toFixed(2) + " " + (cy - L / 2).toFixed(2) + ") scale(" + s.toFixed(5) + ")");
-    /* Verlauf der Unschaerfe: von etwas ueber der Oberkante der Marke (voll) bis zu ihrer Unterkante (scharf) */
-    const mTop = cy - L / 2 + VIS.y0 * s, mBot = cy - L / 2 + VIS.y1 * s, pad = 40;
-    pbF.setAttribute("width", String(W)); pbF.setAttribute("height", String(H));
-    pbImg.setAttribute("x", "0"); pbImg.setAttribute("width", String(W));
-    pbImg.setAttribute("y", (mTop - pad).toFixed(1)); pbImg.setAttribute("height", Math.max(1, mBot - mTop + pad).toFixed(1));
     /* Startpunkt der Seitenlinie: unter der Spitze der Nadel, im Fuss verborgen. Sie baut sich danach neu. */
     const ex = cx + (EXIT.x - C0) * s, ey = cy + (EXIT.y - C0) * s;
     if (Math.abs(exitEl.offsetLeft - ex) > 0.5 || Math.abs(exitEl.offsetTop - ey) > 0.5) {
@@ -210,7 +182,9 @@ function init(root) {
   /* Gebuerstetes Metall in der Markenfarbe: feine waagerechte Schliffspuren (Normal-Map), leichte Flecken
      (Rauheit), gestreckte Glanzlichter quer zum Schliff (Anisotropie) */
   const brushed = brushedMaps(512);
-  const U = { uFlat: { value: 1 }, uFlatColor: { value: srgbVec(BRAND) } };
+  /* Wunsch 12.11.: 2D- und 3D-Marke sollen dieselbe Farbe haben. Die Vorderseite bleibt deshalb auch im Licht fast
+     genau die Markenfarbe (uFront); nur die Flanken sind dunkler - sie machen die Tiefe. */
+  const U = { uFlat: { value: 1 }, uFlatColor: { value: srgbVec(BRAND) }, uFront: { value: 0.86 } };
   const mat = new MeshPhysicalMaterial({
     color: new Color(BRAND), metalness: 1.0, roughness: 0.42,
     roughnessMap: brushed.rough, normalMap: brushed.normal, normalScale: new Vector2(0.6, 0.6),
@@ -320,23 +294,18 @@ function init(root) {
     ink.style.opacity = on ? "0" : "1";
   }
 
-  /* Wunsch 11.11.: die Marke kommt wie die Woerter der Ueberschrift - aus der Unschaerfe (oben 10 px, nach unten
-     auslaufend, nur auf der Marke) und von 0,38 em weiter unten, im selben Takt (140 ms Verzug, 1 s, gleiche Kurve).
-     Sie bleibt so, solange die Linie schreibt, und wird klar, sobald sie in 3D uebergeht. */
-  const BLUR = 10, RISE_EM = 0.38;
+  /* Wunsch 11.11.: die Marke kommt mit der Ueberschrift - von 0,38 em weiter unten, im selben Takt (140 ms Verzug,
+     1 s, gleiche Kurve wie die Woerter). Wunsch 12.11.: ohne Unschaerfe. */
+  const RISE_EM = 0.38;
   const enter = bezier(0.23, 1, 0.32, 1);
-  let fxB = -1, fxR = -1;
+  let fxR = -1;
   function intro(t) {
     const r = 1 - enter(span(t, 140, 1140));
-    const b = t < T.gl ? 1 : 1 - easeOut(span(t, T.gl, T.gl + 700));
     const rise = r > 0 && titleEl ? parseFloat(getComputedStyle(titleEl).fontSize) * RISE_EM : 0;
-    const bb = Math.round(b * BLUR * 20) / 20, rr = Math.round(r * rise * 10) / 10;
-    if (bb === fxB && rr === fxR) return;
-    fxB = bb; fxR = rr;
+    const rr = Math.round(r * rise * 10) / 10;
+    if (rr === fxR) return;
+    fxR = rr;
     const tr = rr > 0 ? "translate3d(0," + rr + "px,0)" : "";
-    if (bb > 0) { pbBlur.setAttribute("stdDeviation", String(bb)); inkWrap.setAttribute("filter", "url(#mark-pb)"); }
-    else inkWrap.removeAttribute("filter");
-    canvas.style.filter = bb > 0 && canvasPB ? "url(#mark-pb)" : "";
     for (const el of [ink, canvas]) { el.style.transform = tr; el.style.willChange = rr > 0 ? "transform" : ""; }
   }
 
@@ -524,11 +493,15 @@ function flipWinding(g) {
   for (const a of attrs) a.needsUpdate = true;
 }
 function injectFlat(mat, U) {
-  /* uFlat = 1: genau die Markenfarbe (sRGB), deckungsgleich mit der 2D-Marke; 0: volles Licht */
+  /* uFlat = 1: genau die Markenfarbe (sRGB), deckungsgleich mit der 2D-Marke; 0: volles Licht.
+     uFront: Anteil Markenfarbe, der auf der Vorderseite (Normale nach vorn) immer bleibt. */
   mat.onBeforeCompile = (sh) => {
-    sh.uniforms.uFlat = U.uFlat; sh.uniforms.uFlatColor = U.uFlatColor;
-    sh.fragmentShader = "uniform float uFlat;\nuniform vec3 uFlatColor;\n" + sh.fragmentShader.replace(
+    sh.uniforms.uFlat = U.uFlat; sh.uniforms.uFlatColor = U.uFlatColor; sh.uniforms.uFront = U.uFront;
+    sh.vertexShader = "varying float vFrontK;\n" + sh.vertexShader.replace(
+      "#include <begin_vertex>",
+      "#include <begin_vertex>\n  vFrontK = smoothstep(0.6, 0.98, normal.z);");
+    sh.fragmentShader = "uniform float uFlat;\nuniform float uFront;\nuniform vec3 uFlatColor;\nvarying float vFrontK;\n" + sh.fragmentShader.replace(
       "#include <dithering_fragment>",
-      "#include <dithering_fragment>\n  gl_FragColor.rgb = mix(gl_FragColor.rgb, uFlatColor, uFlat);");
+      "#include <dithering_fragment>\n  gl_FragColor.rgb = mix(gl_FragColor.rgb, uFlatColor, max(uFlat, uFront * vFrontK));");
   };
 }

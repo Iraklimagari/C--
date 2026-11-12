@@ -164,12 +164,12 @@
       {
         "key": "kontakt",
         "label": "KONTAKT & WHATSAPP",
-        "headline": "Aus einer Frage wird eine Anfrage.",
-        "paragraph": "Preise klären, Termine anfragen oder direkt mit Ihnen schreiben — alles in WhatsApp.",
+        "headline": "Ihr Betrieb macht Feierabend. Ihr WhatsApp-Assistent nicht.",
+        "paragraph": "Ein Kunde hat eine Frage – vielleicht gerade dann, wenn Sie beschäftigt sind oder längst Feierabend haben. Ihr WhatsApp-Assistent ist auch dann erreichbar, beantwortet häufige Fragen automatisch und nimmt Terminanfragen entgegen. Damit kein Anliegen bis zum nächsten Morgen warten muss.",
         "bullets": [
-          "Termin anfragen",
-          "Preise & Leistungen ansehen",
-          "Direkt mit Ihnen schreiben"
+          "Häufige Fragen automatisch beantworten",
+          "Leistungen & Preise direkt im Chat zeigen",
+          "Terminanfragen jederzeit entgegennehmen"
         ],
         "closing": "Auf Wunsch mit automatischen Antworten.",
         "links": [
@@ -189,12 +189,12 @@
       {
         "key": "google",
         "label": "GOOGLE-PROFIL",
-        "headline": "Bei Google gefunden. Auf den ersten Blick verstanden.",
-        "paragraph": "Wir optimieren Ihr Profil — für mehr lokale Sichtbarkeit, einen überzeugenden ersten Eindruck und direkte Kontaktwege.",
+        "headline": "Gefunden werden. Im Gedächtnis bleiben.",
+        "paragraph": "Ihr Google-Profil ist oft der erste Kontakt mit Ihrem Betrieb. Wir machen daraus einen Auftritt, der mit starken Bildern, klaren Informationen und einfachen Kontaktwegen überzeugt.",
         "bullets": [
-          "Leistungen & Kategorien präzisieren",
-          "Website, Menü & Kontakt direkt verlinken",
-          "Öffnungszeiten & Kontaktdaten aktualisieren"
+          "Profil & Leistungen gezielt optimieren",
+          "Bilder, Öffnungszeiten & Infos aktualisieren",
+          "Website, Menü & Kontakt direkt verlinken"
         ],
         "links": [
           {
@@ -212,12 +212,12 @@
       {
         "key": "fotos",
         "label": "FOTOS & KURZVIDEOS",
-        "headline": "Ihr Betrieb. Echt im Bild.",
-        "paragraph": "Wir fotografieren und filmen bei Ihnen vor Ort — Räume, Angebote und Ihre Arbeit im Detail.",
+        "headline": "Ihr Betrieb. Von seiner besten Seite.",
+        "paragraph": "Zeigen Sie, was Ihren Betrieb besonders macht. Wir halten echte Momente, Menschen und Details in professionellen Fotos und Kurzvideos fest – direkt bei Ihnen vor Ort. Für frische Bilder, die Eindruck hinterlassen und Ihren Online-Auftritt aufwerten.",
         "bullets": [
-          "15–20 bearbeitete Fotos",
-          "Kurzclips à 15 Sekunden",
-          "Für Google, Website & Social Media"
+          "Echte Einblicke in Räume, Team, Angebote & Details",
+          "Lebendige Kurzvideos, die Ihren Betrieb erlebbar machen",
+          "Professionell bearbeitet für Google, Website, Menüs & Social Media"
         ],
         "links": [],
         "image": {
@@ -230,12 +230,12 @@
       {
         "key": "karte",
         "label": "DIGITALE KARTE",
-        "headline": "Ihr Angebot. Auf einen Blick.",
-        "paragraph": "Wir erstellen digitale Speisekarten, Preislisten und Leistungskataloge — damit Kunden schnell finden, was zu ihnen passt.",
+        "headline": "Alles im Blick. Alles, was Sie bieten.",
+        "paragraph": "Ob Speisekarte, Preisliste oder Servicekatalog – wir verwandeln Ihr Angebot in eine moderne, digitale Übersicht. Ansprechend gestaltet, klar strukturiert und auf jedem Smartphone bequem durchzusehen. Als eigenständige Seite oder direkt in Ihre Website integriert.",
         "bullets": [
-          "Übersichtlich nach Kategorien",
-          "Auf dem Smartphone leicht lesbar",
-          "Leistungen und Preise direkt vergleichen"
+          "Speisekarten, Preislisten & Leistungen digital gestalten",
+          "Bilder, Beschreibungen & Preise übersichtlich präsentieren",
+          "Mobil optimiert – eigenständig oder in Ihre Website integriert"
         ],
         "links": [
           {
@@ -254,12 +254,12 @@
       {
         "key": "website",
         "label": "ONE-PAGE-WEBSITE",
-        "headline": "Ihr Betrieb. Alles auf einer Seite.",
-        "paragraph": "Wir gestalten Ihren Webauftritt — mit Bildern, Angeboten und direkten Kontaktwegen. Ihre digitale Menü-, Preis- oder Servicekarte ist integriert.",
+        "headline": "Ein Klick. Ihr ganzer Betrieb.",
+        "paragraph": "Ein Kunde klickt auf Ihre Website – und findet alles, was ihn überzeugt. Wir bringen Ihre Leistungen, Bilder und Angebote auf einer modernen Seite zusammen. Klar präsentiert, einfach zu bedienen und mit direktem Weg zur Anfrage.",
         "bullets": [
-          "Individuelles Design für Ihren Betrieb",
-          "Klar strukturiert auf Smartphone & Desktop",
-          "Anrufen, schreiben oder einen Termin anfragen"
+          "Individuelles Design, das zu Ihrem Betrieb passt",
+          "Leistungen, Bilder & Preise übersichtlich vereint",
+          "Mobil optimiert & direkte Kontaktmöglichkeiten"
         ],
         "links": [
           {
